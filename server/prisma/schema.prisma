@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled (pgbouncer) — used at runtime
+  directUrl = env("DIRECT_URL") // direct connection — used by migrations
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  sessions     Session[]
+}
+
+model Session {
+  id             String     @id @default(cuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescription String?
+  status         String     @default("draft")
+  createdAt      DateTime   @default(now())
+  questions      Question[]
+}
+
+model Question {
+  id        String  @id @default(cuid())
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  tier      String // 'warmup' | 'behavioral' | 'technical'
+  text      String
+  order     Int
+}
