@@ -1,7 +1,25 @@
+# Dependencies
 node_modules/
-dist/
-.env
-.DS_Store
-.claude/settings.local.json
 
+# Build output
+dist/
+
+# Secrets / env — ignore all env files except the committed template
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS / editor junk
+.DS_Store
+.vscode/
+.idea/
+
+# Claude Code personal overrides (keep private, don't commit)
+.claude/settings.local.json
+.claude/CLAUDE.local.md
+
+# Prisma generated client (if output outside node_modules)
 /generated/prisma
