@@ -4,6 +4,7 @@ import type { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import { authRouter } from './routes/auth';
 import { sessionsRouter } from './routes/sessions';
+import { logger } from './utils/logger';
 import type { HealthResponse } from '@shared/types';
 
 const app = express();
@@ -25,10 +26,10 @@ app.use('/api/sessions', sessionsRouter);
 
 // Express 5 forwards rejected promises here automatically.
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err);
+  logger.error('Unhandled request error', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(env.port, () => {
-  console.log(`Server listening on http://localhost:${env.port}`);
+  logger.info(`Server listening on http://localhost:${env.port}`);
 });

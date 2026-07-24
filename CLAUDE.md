@@ -19,6 +19,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - Zod validation on every route input; error responses are `{ error: string }` (`ApiError`)
 - Session queries always scoped by `userId` (ownership check + lookup in one query)
 - Login/register share one generic 401 message — never reveal whether an email exists
+- **Never use `console.log` in production code** — use the logger in `server/src/utils/logger.ts`
 - Client tsconfig has `erasableSyntaxOnly` — no TS parameter properties or enums
 
 ## Commands
