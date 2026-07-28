@@ -27,10 +27,38 @@ model Session {
 }
 
 model Question {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   sessionId String
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   tier      String // 'warmup' | 'behavioral' | 'technical'
   text      String
   order     Int
+  createdAt DateTime @default(now())
+  answers   Answer[] // 一对多 一个question可以有多个answer
+  resumeBased Boolean @default(false)
+}
+
+model Answer {
+  id          String       @id @default(cuid()) //primary key
+  questionId  String // foreign key
+  question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  content     String
+  createdAt   DateTime     @default(now())
+  scoreReport ScoreReport? // 反向关系:一个 answer 最多一份报告(? = 可能还没评分)
+}
+
+model ScoreReport {
+  id                 String   @id @default(cuid()) //primary key
+  answerId           String   @unique // foreign key
+  answer             Answer   @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  contentScore       Int
+  languageScore      Int
+  deliveryScore      Int
+  contentContext     String
+  languageContext    String
+  deliveryContext    String
+  languageErrorList  Json
+  polishedVersion    String
+  structuralExemplar String
+  createdAt          DateTime @default(now())
 }
