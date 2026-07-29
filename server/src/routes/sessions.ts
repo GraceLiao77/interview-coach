@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/requireAuth';
 import type { QuestionDto, QuestionTier, SessionDto } from '@shared/types';
+import { generateQuestions } from '../services/questionService'
 
 const createSessionSchema = z.object({
   jobDescription: z.string().max(20_000).optional(),
@@ -99,3 +100,15 @@ sessionsRouter.delete('/:id', async (req, res) => {
   }
   res.status(204).end();
 });
+
+sessionsRouter.post('/:id/generate-questions', async(req, res) => {
+  const session = await prisma.session.findFirst({ // findFirst返回第一条匹配的
+    where: { id: req.params.id, userId: req.userId}
+  })
+  if (!session) {
+    res.status(404).json({ error: 'session not found'})
+    return;
+  }
+  const result = await generateQuestions(session.jobDescription ?? 'please upload jobscription')
+  res.json(result)
+})

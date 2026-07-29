@@ -36,6 +36,9 @@ model Question {
   createdAt DateTime @default(now())
   answers   Answer[] // 一对多 一个question可以有多个answer
   resumeBased Boolean @default(false)
+  
+  @@unique([sessionId, text]) 
+  //- @(一个)= 字段级属性 → 写在某个字段那一行(如 id String @id)。- @@(两个)= 模型级属性 → 写在自己单独一行(模型块内,通常放最下面)。当属性跨多个字段时用(比如这里 [sessionId, text] 是两个字段的组合唯一)。所以 @@index、@@unique、@@map 这些"双 @"的,都是独立成行、放模型底部。
 }
 
 model Answer {
