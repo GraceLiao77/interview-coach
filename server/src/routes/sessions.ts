@@ -110,5 +110,19 @@ sessionsRouter.post('/:id/generate-questions', async(req, res) => {
     return;
   }
   const result = await generateQuestions(session.jobDescription ?? 'please upload jobscription')
-  res.json(result)
+  await prisma.question.createMany({
+    data: result.questions.map((q) => ({
+      sessionId: session.id,
+      tier: q.tier as QuestionTier,
+      text: q.text,
+      order: q.order,
+      resumeBased: q.resumeBased
+    })),
+    skipDuplicates: true // 没这个选项,重复点击 → @@unique([sessionId, text]) 会抛错 (unique constraint violation),整个请求 fail。有这个 → 重复行静默跳过 (silently skipped),请求成功,DB 状态一致 → idempotent(幂等)
+  });
+  const updated = await prisma.session.findUnique({
+    where: { id: session.id },
+    include: questionsOrdered,
+  });
+  res.json(toSessionDto(updated!));
 })
