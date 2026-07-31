@@ -5,6 +5,7 @@ import { requireAuth } from '../middleware/requireAuth';
 import type { QuestionDto, QuestionTier, SessionDto } from '@shared/types';
 import { generateQuestions } from '../services/questionService'
 
+
 const createSessionSchema = z.object({
   jobDescription: z.string().max(20_000).optional(),
   questions: z
@@ -126,3 +127,4 @@ sessionsRouter.post('/:id/generate-questions', async(req, res) => {
   });
   res.json(toSessionDto(updated!));
 })
+
