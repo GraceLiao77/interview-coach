@@ -56,3 +56,9 @@ main {
 .error {
   color: #c0392b;
 }
+
+.session-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}

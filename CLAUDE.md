@@ -24,7 +24,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 
 ## Commands
 
-- Server dev: `cd server && npm run dev` (port 3000)
+- Server dev: `cd server && npm run dev` (port 3009)
 - Client dev: `cd client && npm run dev` (port 5173)
 - Typecheck: `npx tsc --noEmit` (server) / `npx tsc -b` (client)
 - Migrations: `cd server && npx prisma migrate dev`

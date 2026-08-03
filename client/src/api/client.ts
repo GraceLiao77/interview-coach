@@ -1,6 +1,6 @@
 import type { ApiError } from '@shared/types'
 
-const API_BASE = 'http://localhost:3000'
+const API_BASE = 'http://localhost:3009'
 const TOKEN_KEY = 'interview-coach-token'
 
 export function getToken(): string | null {
@@ -28,12 +28,14 @@ export class ApiRequestError extends Error {
 /** Fetch wrapper: prefixes the API base URL, sends JSON, attaches the JWT if present. */
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
+  // tell service type is json
   headers.set('Content-Type', 'application/json')
+  // get token from localstorage
   const token = getToken()
   if (token) headers.set('Authorization', `Bearer ${token}`)
 
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers })
-  if (res.status === 204) return undefined as T
+  if (res.status === 204) return undefined as T // no content: delete successful
 
   const body: unknown = await res.json().catch(() => null)
   if (!res.ok) {
@@ -41,4 +43,15 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
     throw new ApiRequestError(res.status, message)
   }
   return body as T
+}
+
+export async function get<T>(path: string): Promise<T> {
+  return api<T>(path)
+}
+
+export async function post<T>(path: string, body?: unknown): Promise<T> {
+    return api<T>(path, {
+      method: 'POST',
+      ...(body !== undefined && {body: JSON.stringify(body)})
+    })
 }
