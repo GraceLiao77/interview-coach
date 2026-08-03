@@ -1,0 +1,234 @@
+/* Interview page — presentation only (CSS by AI; logic is yours). */
+
+.interview {
+  max-width: 760px;
+  margin: 2.5rem auto;
+  padding: 0 1.25rem;
+  font-family: system-ui, sans-serif;
+  color: #1a1a1a;
+}
+
+.interview-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.interview-header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.back-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.jd {
+  color: #555;
+  background: #f5f6f8;
+  border: 1px solid #eceef1;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.primary-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 0.6rem 1.15rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.primary-btn:hover {
+  background: #1d4ed8;
+}
+.primary-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.9rem;
+}
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+/* ---- Question card ---- */
+.q-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.15rem 1.3rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.q-tier {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #2563eb;
+  background: #eef4ff;
+  border-radius: 999px;
+  padding: 0.18rem 0.65rem;
+  margin-bottom: 0.6rem;
+}
+
+.q-text {
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin: 0.2rem 0 0.85rem;
+}
+
+.q-answer {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font: inherit;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+}
+.q-answer:focus {
+  outline: 2px solid #bfdbfe;
+  border-color: #93c5fd;
+}
+
+.submit-btn {
+  margin-top: 0.7rem;
+  background: #111827;
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 0.5rem 1.05rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.submit-btn:hover {
+  background: #000;
+}
+.submit-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---- Score card ---- */
+.score-card {
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.score-card h4 {
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+}
+
+.axes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem;
+}
+.axis-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.axis-label {
+  font-size: 0.82rem;
+  color: #4b5563;
+}
+.axis-score {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.axis-max {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  font-weight: 400;
+  margin-left: 1px;
+}
+.axis-bar {
+  height: 6px;
+  background: #eef0f3;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0.35rem 0;
+}
+.axis-fill {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 999px;
+}
+.axis-note {
+  font-size: 0.76rem;
+  color: #6b7280;
+  margin: 0.3rem 0 0;
+  line-height: 1.4;
+}
+
+/* ---- Language errors table ---- */
+.lang-errors table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+.lang-errors th {
+  text-align: left;
+  color: #9ca3af;
+  font-weight: 500;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+.lang-errors td {
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+}
+.lang-errors .orig {
+  color: #b91c1c;
+}
+.lang-errors .rewrite {
+  color: #15803d;
+}
+.lang-errors .pattern {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+/* ---- Polished / exemplar ---- */
+.polished p,
+.exemplar p {
+  background: #f5f6f8;
+  border-radius: 9px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 560px) {
+  .axes {
+    grid-template-columns: 1fr;
+  }
+  .lang-errors table {
+    font-size: 0.8rem;
+  }
+}

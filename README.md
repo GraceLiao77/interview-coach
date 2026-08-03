@@ -65,7 +65,7 @@ cd server
 npm install
 cp .env.example .env        # fill in DATABASE_URL, DIRECT_URL, JWT_SECRET
 npx prisma migrate dev      # create tables
-npm run dev                 # http://localhost:3000
+npm run dev                 # http://localhost:3009
 
 # 2. Client (new terminal)
 cd client
@@ -82,7 +82,7 @@ npm run dev                 # http://localhost:5173
 ## Verify it works
 
 ```bash
-curl http://localhost:3000/api/health
+curl http://localhost:3009/api/health
 # → {"status":"ok","timestamp":"..."}
 ```
 

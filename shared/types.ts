@@ -59,6 +59,43 @@ export interface CreateSessionRequest {
   }>;
 }
 
+// ---- Answers & scoring (step 4) ----
+
+export interface AnswerDto {
+  id: string;
+  questionId: string;
+  content: string;
+  createdAt: string;
+}
+
+/** One ESL language mistake: the user's words, a native rewrite, and the pattern name. */
+export interface LanguageError {
+  original: string;
+  rewrite: string;
+  pattern: string;
+}
+
+export interface ScoreReportDto {
+  id: string;
+  answerId: string;
+  contentScore: number;
+  languageScore: number;
+  deliveryScore: number;
+  contentContext: string;
+  languageContext: string;
+  deliveryContext: string;
+  languageErrorList: LanguageError[];
+  polishedVersion: string;
+  structuralExemplar: string;
+  createdAt: string;
+}
+
+/** Response of POST /api/questions/:id/answers */
+export interface SubmitAnswerResponse {
+  answer: AnswerDto;
+  score: ScoreReportDto;
+}
+
 // ---- Errors ----
 
 export interface ApiError {

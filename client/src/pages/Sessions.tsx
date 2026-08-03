@@ -99,9 +99,14 @@ export function Sessions() {
                 {s.jobDescription && <p className="jd-preview">{s.jobDescription.slice(0, 120)}…</p>}
                 <p>{s.questions.length} questions</p>
               </div>
-              <button type="button" onClick={() => void deleteSession(s.id)}>
-                Delete
-              </button>
+              <div className="session-actions">
+                <button type="button" onClick={() => navigate(`/interview/${s.id}`)}>
+                  Practice
+                </button>
+                <button type="button" onClick={() => void deleteSession(s.id)}>
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>

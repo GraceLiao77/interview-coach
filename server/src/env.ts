@@ -12,7 +12,7 @@ function required(name: string): string {
 
 export const env = {
   jwtSecret: required('JWT_SECRET'),
-  port: Number(process.env.PORT ?? 3000),
+  port: Number(process.env.PORT ?? 3009),
   anthropicApiKey: required('ANTHROPIC_API_KEY'),
   mockAi: process.env.MOCK_AI === 'true',
 };
