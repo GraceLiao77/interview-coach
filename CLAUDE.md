@@ -4,11 +4,11 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 
 ## Tech stack (FIXED — do not change)
 
-- **Client**: React + Vite + TypeScript (`client/`), deploys to Vercel
-- **Server**: Express 5 + TypeScript, NOT Next.js (`server/`), runs with `tsx`, deploys to Fly.io
+- **Client**: React + Vite + TypeScript (`client/`), deploys to **AWS** (S3 + CloudFront)
+- **Server**: Express 5 + TypeScript, NOT Next.js (`server/`), runs with `tsx`, deploys to **AWS** (App Runner)
 - **DB**: PostgreSQL on Supabase + Prisma 6 (`server/prisma/schema.prisma`); pooled `DATABASE_URL` (6543, pgbouncer) + `DIRECT_URL` (5432) for migrations
 - **Auth**: JWT (`jsonwebtoken`, 7d expiry) + bcryptjs; `requireAuth` middleware sets `req.userId`
-- **AI (later steps)**: Claude API (analysis/questions/evaluation — output MUST be strict JSON, no markdown fences); Whisper API (authoritative transcription)
+- **AI**: Claude API (analysis/questions/evaluation — output MUST be strict JSON, no markdown fences); **Groq-hosted** Whisper `whisper-large-v3-turbo` (authoritative transcription). Two independent mock flags: `MOCK_AI` (Claude) and `MOCK_TRANSCRIPTION` (Groq)
 - Monorepo `client/` + `server/` + `shared/`, **no pnpm workspaces**
 - TypeScript **strict mode** everywhere; TS 7 (`baseUrl` removed — `paths` are tsconfig-relative)
 
@@ -34,7 +34,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - [x] 1. Minimal loop: Express `/api/health` + client fetch + CORS
 - [x] 2. Prisma + Supabase; Session/Question CRUD
 - [x] 3. JWT register/login + `requireAuth`; client AuthContext + Login/Register/Sessions pages
-- [ ] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite)
+- [x] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite). Voice is **Chrome-only** (deliberate MVP trade-off, no mimeType negotiation)
 - [ ] 5. Resume upload (PDF) + JD match analysis (match score, missing skills → priority question topics)
 - [ ] 6. Cross-session weakness profile + targeted drills
 
