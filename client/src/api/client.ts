@@ -28,8 +28,9 @@ export class ApiRequestError extends Error {
 /** Fetch wrapper: prefixes the API base URL, sends JSON, attaches the JWT if present. */
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
-  // tell service type is json
-  headers.set('Content-Type', 'application/json')
+  // FormData 必须让浏览器自己设 Content-Type —— 它要生成一个随机 boundary 写进 header,
+  // 手动设就没有 boundary,服务端解析不了 multipart。
+  if (!(options.body instanceof FormData)) headers.set('Content-Type', 'application/json')
   // get token from localstorage
   const token = getToken()
   if (token) headers.set('Authorization', `Bearer ${token}`)
@@ -52,6 +53,9 @@ export async function get<T>(path: string): Promise<T> {
 export async function post<T>(path: string, body?: unknown): Promise<T> {
     return api<T>(path, {
       method: 'POST',
-      ...(body !== undefined && {body: JSON.stringify(body)})
+      // FormData 原样传 —— JSON.stringify(formData) 不报错,但会静默变成 "{}" 把数据丢光。
+      ...(body !== undefined && {
+        body: body instanceof FormData ? body : JSON.stringify(body),
+      })
     })
 }

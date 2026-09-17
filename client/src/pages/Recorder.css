@@ -1,0 +1,196 @@
+/* Recorder — presentation only (CSS by AI; logic is yours). */
+
+.recorder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+/* ---- buttons ---- */
+.rec-btn {
+  border: none;
+  border-radius: 9px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.rec-start {
+  background: #2563eb;
+  color: #fff;
+}
+.rec-start:hover {
+  background: #1d4ed8;
+}
+.rec-stop {
+  background: #dc2626;
+  color: #fff;
+}
+.rec-stop:hover {
+  background: #b91c1c;
+}
+
+/* ---- recording-in-progress row ---- */
+.rec-live {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+}
+
+/* pulsing red dot */
+.rec-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dc2626;
+  animation: rec-pulse 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+}
+
+/* animated fake waveform */
+.rec-wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 22px;
+}
+.rec-wave span {
+  width: 3px;
+  height: 100%;
+  background: #2563eb;
+  border-radius: 2px;
+  transform-origin: center;
+  animation: rec-bar 1s ease-in-out infinite;
+}
+.rec-wave span:nth-child(1) {
+  animation-delay: 0s;
+}
+.rec-wave span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.rec-wave span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+.rec-wave span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+.rec-wave span:nth-child(5) {
+  animation-delay: 0.24s;
+}
+.rec-wave span:nth-child(6) {
+  animation-delay: 0.12s;
+}
+.rec-wave span:nth-child(7) {
+  animation-delay: 0s;
+}
+@keyframes rec-bar {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* timer */
+.rec-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+  color: #991b1b;
+  min-width: 3.5ch;
+}
+
+/* playback */
+.rec-playback {
+  height: 38px;
+  max-width: 320px;
+}
+
+/* ---- disabled (uploading / scoring in progress) ---- */
+.rec-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.rec-btn:disabled:hover {
+  background: #2563eb;
+}
+
+/* ---- transcribing / uploading status ----
+   Markup: <p className="rec-status"><span className="rec-spinner" aria-hidden />Transcribing…</p> */
+.rec-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.rec-spinner {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  border: 2px solid #d1d5db;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: rec-spin 0.7s linear infinite;
+}
+@keyframes rec-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- error (mic permission denied, upload failed, transcription failed) ----
+   Markup: <p className="rec-error" role="alert">…</p> */
+.rec-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  padding: 0.45rem 0.7rem;
+}
+
+/* ---- nested inside a question card ---- */
+.q-card .recorder {
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed #e5e7eb;
+  width: 100%;
+}
+
+/* "or record your answer" divider label, if you want one above the recorder */
+.rec-label {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+/* respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .rec-dot,
+  .rec-wave span,
+  .rec-spinner {
+    animation: none;
+  }
+}

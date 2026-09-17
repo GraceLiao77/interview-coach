@@ -5,15 +5,15 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/requireAuth';
+import { transcribe } from '../services/transcriptionService'
+import multer from 'multer';
+import { logger } from '../utils/logger';
 
 export const questionsRouter = Router();
-// .use() 是用来注册「中间件 (middleware)」的
-// 中间件就是:在请求到达最终 handler 之前,先跑一遍的函数。 它的签名是 (req, res, next):
-// - 做点事(比如验 JWT)
-// - 然后 next() = "放行,交给下一个" —— 或者直接 res.status(401) = "拦下,不放行"
-//  没有 requireAuth → req.userId 是 undefined。
-// - 而 Prisma 里 where: { session: { userId: undefined } } 的 undefined 意思是"忽略这个条件" → 归属校验直接失效,任何人都能回答任何题!
-questionsRouter.use(requireAuth) //   // ← 加这行,所有端点先验 JWT,保证 req.userId 存在、且用户已登录的门。 少了它,后面所有归属校验都是空的
+
+// 所有端点先验 JWT。少了这行 req.userId 是 undefined,而 Prisma 里
+// where: { userId: undefined } 意思是"忽略这个条件" → 下面的归属校验会全部失效。
+questionsRouter.use(requireAuth)
 
 const answerSchema = z.object({ answer: z.string().min(1) });
 
@@ -26,18 +26,12 @@ questionsRouter.post('/:id/answers', async(req, res) => {
         return
     }
     const answerText = parsed.data.answer
-    // // 2. 找题 + 验归属(穿过关系) 不懂
+
+    // Question 自己没有 userId,归属藏在 session → user。穿过关系过滤 = 一次 JOIN,
+    // 别人的题对你来说"根本不存在"(findFirst 返回 null → 404)。
     const question = await prisma.question.findFirst({
       where: {
         id: req.params.id,
-        // filter query
-        // ③ 为什么要验归属?—— 不验会怎样?
-        // 假设你去掉 session: { userId },只写 where: { id: req.params.id }:
-        // ▎ 攻击者(用户 B)只要知道/猜到用户 A 的某个 questionId,就能往 /api/questions/<A的题id>/answers 提交答案 → 污染 A 的数据,甚至读到 A 的题目内容。
-
-        // 加上归属校验后:
-        // - 如果这道题的 session 不是你的 → findFirst 返回 null → 你的代码返回 404。
-        // - 你只能回答自己的题。 别人的题对你来说"根本不存在"。
         session: {
             userId: req.userId
         }
@@ -54,3 +48,53 @@ questionsRouter.post('/:id/answers', async(req, res) => {
     
     res.json(saved)
   })
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 25 * 1024 * 1024 } // Groq 免费层单文件上限
+})
+
+// upload.single('audio') 挂在单条路由上,不能用 .use() —— 否则上面那条 JSON 路由
+// 也会被拿去解析 multipart。字段名 'audio' 必须和前端 form.append('audio', blob) 一致。
+questionsRouter.post<{ id: string }>('/:id/answers/audio', upload.single('audio'), async(req, res) => {
+  // 如果音频文件不存在
+  if (!req.file) {
+    res.status(400).json({ error: 'audio file is required'})
+    return
+  }
+  // 验归属
+  const question = await prisma.question.findFirst({
+      where: {
+        id: req.params.id,
+        session: {
+          userId: req.userId
+        }
+      }
+  })
+  if (!question) {
+    res.status(404).json({ error: 'question not found'})
+    return
+  }
+  // 音频文件语音转化为text
+  let transcript: string                    // ← 声明在 try 外面,否则 try 结束就出作用域了
+  try {
+    transcript = await transcribe(req.file.buffer)
+  } catch (e) {
+    logger.error('Groq transcription failed', e)        // 原始错误只进日志
+    res.status(502).json({ error: '没听清，请重新录一次' })
+    return
+  }
+
+  // 如果音频文件为空，不触发groq
+  if (!transcript.trim()) {
+    res.status(400).json({ error: 'audio file is empty，please try again'})
+    return
+  }
+  // score
+  const report = await scoreAnswer(question.text, transcript)
+  // store answer + scoreReport
+  const saved = await saveAnswerWithScore(question.id, transcript, report)
+
+  res.json(saved)
+
+})

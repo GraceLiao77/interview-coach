@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { QuestionDto, ScoreReportDto } from '@shared/types'
-import { submitAnswer } from '../api/interview'
+import { submitAnswer, submitAudioAnswer } from '../api/interview'
+import { Recorder } from './Recorder'
 
 const TIER_LABELS: Record<QuestionDto['tier'], string> = {
   warmup: 'Warmup',
@@ -25,7 +26,22 @@ export function QuestionCard({ question }: QuestionCardProps) {
     try {
       const res = await submitAnswer(question.id, answer) // 卡片自己调 API
       setScore(res.score)
-      
+
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  /** 录音提交:转写 + 评分一次返回,把 transcript 回填进 textarea 让用户看到 Whisper 听成了什么。 */
+  async function handleAudio(blob: Blob) {
+    setSubmitting(true)
+    setError(null)
+    try {
+      const res = await submitAudioAnswer(question.id, blob)
+      setAnswer(res.answer.content)
+      setScore(res.score)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
     } finally {
@@ -54,6 +70,8 @@ export function QuestionCard({ question }: QuestionCardProps) {
       >
         {submitting ? 'Scoring…' : 'Submit & Score'}
       </button>
+
+      <Recorder onComplete={(blob) => void handleAudio(blob)} disabled={submitting} />
 
       {error && <p className="error">{error}</p>}
       {score && <ScoreCard score={score} />}

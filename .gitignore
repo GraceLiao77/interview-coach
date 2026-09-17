@@ -23,3 +23,9 @@ dist/
 
 # Prisma generated client (if output outside node_modules)
 /generated/prisma
+
+# Personal interview prep notes (not part of the product)
+/interview/
+
+# Diary notes kept local: fundamentals that don't belong in a public portfolio repo
+docs/diary/local/
