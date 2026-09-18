@@ -50,7 +50,19 @@
   z-index: 0;
   border-radius: inherit;
   overflow: hidden;
-  background: linear-gradient(135deg, #3a3a3a, #0a0a0a); /* WebGL 起不来时的兜底 */
+  /* 静态金属环:保证整圈都有金属,着色器只负责在上面加流动的高光。
+     不垫这一层的话,着色器暗的那一侧看起来就像"没包到"。 */
+  background: conic-gradient(
+    from 210deg,
+    #5f5f5f,
+    #eaeaea,
+    #8d8d8d,
+    #ffffff,
+    #6a6a6a,
+    #d5d5d5,
+    #7a7a7a,
+    #5f5f5f
+  );
 }
 .lmb-shader canvas {
   position: absolute;
@@ -59,6 +71,9 @@
   height: 100% !important;
   display: block;
   border-radius: inherit;
+  /* screen 只提亮不压暗 —— 着色器暗的地方直接透出底下的金属环,
+     这样整圈永远是完整的,着色器只负责在上面跑流动的高光。 */
+  mix-blend-mode: screen;
 }
 
 /* ② 中间层:深色药丸,留出 2px 让金属从边缘透出来 */
@@ -121,4 +136,9 @@
     animation: none;
     display: none;
   }
+}
+
+/* 禁用:环压暗,视觉上也说明"现在点不了" */
+.lmb:disabled .lmb-shader {
+  filter: brightness(0.6) saturate(0.4);
 }

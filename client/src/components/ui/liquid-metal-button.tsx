@@ -44,6 +44,7 @@ export function LiquidMetalButton({
         host,
         liquidMetalFragmentShader,
         {
+          // 外观
           u_repetition: 4,
           u_softness: 0.5,
           u_shiftRed: 0.3,
@@ -51,10 +52,21 @@ export function LiquidMetalButton({
           u_distortion: 0,
           u_contour: 0,
           u_angle: 45,
-          u_scale: 8,
           u_shape: 1,
-          u_offsetX: 0.1,
-          u_offsetY: -0.1,
+          u_colorBack: [0, 0, 0, 0], // 透明:让底下的静态金属环透出来
+          u_colorTint: [1, 1, 1, 1],
+          u_isImage: false,
+          // 布局:原始代码漏了整组 sizing uniform,其中 u_fit 不传的话图案不会铺满
+          // 元素 —— 按钮又宽又扁,结果就是只有左半边有金属、右半边发黑。
+          u_fit: 2, // 2 = cover
+          u_scale: 1,
+          u_rotation: 0,
+          u_originX: 0.5,
+          u_originY: 0.5,
+          u_offsetX: 0,
+          u_offsetY: 0,
+          u_worldWidth: 0,
+          u_worldHeight: 0,
         },
         undefined,
         IDLE_SPEED,
