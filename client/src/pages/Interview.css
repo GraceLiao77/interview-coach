@@ -139,6 +139,58 @@
   min-width: 0;
 }
 
+/* ---- 分类 tab(segmented control) ---- */
+.tier-tabs {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 2px;
+  padding: 4px;
+  background: #f1f2f4;
+  border-radius: 12px;
+  margin-bottom: -0.25rem; /* 抵消一点 .questions 的 gap,让它贴近第一张卡 */
+}
+
+.tier-tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28rem;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.tier-tab:hover:not(.is-active) {
+  color: var(--ink);
+}
+.tier-tab.is-active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.tier-tab:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.tier-tab-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+.tier-tab.is-active .tier-tab-count {
+  color: var(--ink-3);
+}
+
 /* ============================================================
    Buttons
    `.btn-ai` = 会触发 AI 生成的按钮,带一道流光。页面级的出题按钮用的是
