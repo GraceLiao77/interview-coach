@@ -1,0 +1,49 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 9px;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+/* 可点击的祖先层级 */
+a.breadcrumb-item:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+a.breadcrumb-item:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+/* 当前页:灰底药丸,不可点 */
+.breadcrumb-item.is-current {
+  background: var(--surface-3);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: default;
+}
+
+.breadcrumb-icon {
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.breadcrumb-sep {
+  flex-shrink: 0;
+  color: var(--ink-4);
+}

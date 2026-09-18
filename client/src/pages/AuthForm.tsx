@@ -30,8 +30,8 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <main>
-      <h1>Interview Coach</h1>
-      <h2>{mode === 'login' ? 'Log in' : 'Create an account'}</h2>
+      <h1 className="auth-title">Interview Coach</h1>
+      <h2 className="panel-title">{mode === 'login' ? 'Log in' : 'Create an account'}</h2>
       <form onSubmit={handleSubmit} className="auth-form">
         <label>
           Email
@@ -55,7 +55,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           />
         </label>
         {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={busy}>
+        <button type="submit" className="submit-btn" disabled={busy}>
           {mode === 'login' ? 'Log in' : 'Register'}
         </button>
       </form>

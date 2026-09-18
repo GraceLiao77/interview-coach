@@ -1,15 +1,6 @@
-/* Interview page — 黑白为主的克制配色;只有评分区允许用彩色。 */
+/* Interview page。主题变量在 index.css 的 :root 里。 */
 
 .interview {
-  --ink: #0a0a0a;
-  --ink-2: #404040;
-  --ink-3: #737373;
-  --ink-4: #a3a3a3;
-  --line: #e5e5e5;
-  --line-soft: #f0f0f0;
-  --surface: #fff;
-  --surface-2: #fafafa;
-
   max-width: 1180px;
   margin: 2.5rem auto;
   padding: 0 1.5rem;
@@ -106,30 +97,7 @@
 }
 
 .interview-header {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-.interview-header h1 {
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
-.back-link {
-  color: var(--ink-3);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.15s;
-}
-.back-link:hover {
-  color: var(--ink);
-}
-
-.error {
-  color: #b42318;
-  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
 }
 
 .questions {
@@ -145,7 +113,7 @@
   align-self: flex-start;
   gap: 2px;
   padding: 4px;
-  background: #f1f2f4;
+  background: var(--surface-3);
   border-radius: 12px;
   margin-bottom: -0.25rem; /* 抵消一点 .questions 的 gap,让它贴近第一张卡 */
 }
@@ -189,65 +157,6 @@
 }
 .tier-tab.is-active .tier-tab-count {
   color: var(--ink-3);
-}
-
-/* ============================================================
-   Buttons
-   `.btn-ai` = 会触发 AI 生成的按钮,带一道流光。页面级的出题按钮用的是
-   LiquidMetalButton(着色器),题卡里重复出现的提交按钮用这个更轻量的版本。
-   ============================================================ */
-
-.submit-btn {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background: var(--ink);
-  color: #fff;
-  border: none;
-  border-radius: 9px;
-  padding: 0.55rem 1.1rem;
-  font: inherit;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-}
-.submit-btn:hover:not(:disabled) {
-  background: #262626;
-}
-.submit-btn:active:not(:disabled) {
-  transform: translateY(1px);
-}
-.submit-btn:disabled {
-  background: var(--ink-4);
-  cursor: default;
-}
-
-/* 流光:一道斜向高光反复扫过,暗示"这颗按钮背后有模型在跑" */
-.btn-ai:not(:disabled)::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.28) 48%,
-    rgba(255, 255, 255, 0.5) 52%,
-    transparent 65%
-  );
-  transform: translateX(-120%);
-  animation: btn-shine 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-@keyframes btn-shine {
-  0%,
-  65% {
-    transform: translateX(-120%);
-  }
-  100% {
-    transform: translateX(120%);
-  }
 }
 
 /* ============================================================
@@ -489,10 +398,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btn-ai::after {
-    animation: none;
-    opacity: 0;
-  }
   .axis-fill {
     transition: none;
   }

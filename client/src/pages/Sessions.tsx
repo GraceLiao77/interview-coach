@@ -4,6 +4,8 @@ import type { CreateSessionRequest, SessionDto } from '@shared/types'
 import { api, ApiRequestError } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import { normalizeJobDescription } from '../utils/jobDescription'
+import { Breadcrumb } from '../components/ui/breadcrumb'
+import { Home } from 'lucide-react'
 
 export function Sessions() {
   const { user, logout } = useAuth()
@@ -60,12 +62,13 @@ export function Sessions() {
 
   return (
     <main>
-      <header className="page-header">
-        <h1>Interview Coach</h1>
-        <div>
-          <span>{user?.email}</span>{' '}
+      <header className="home-header">
+        <Breadcrumb items={[{ label: 'Home', icon: Home }]} />
+        <div className="home-user">
+          <span>{user?.email}</span>
           <button
             type="button"
+            className="ghost-btn"
             onClick={() => {
               logout()
               navigate('/login')
@@ -76,43 +79,61 @@ export function Sessions() {
         </div>
       </header>
 
-      <section>
-        <h2>New mock session</h2>
+      <section className="panel">
+        <h2 className="panel-title">New mock session</h2>
         <form onSubmit={createSession} className="session-form">
           <textarea
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Paste the job description here (optional for now — AI question generation comes in a later step)"
-            rows={4}
+            placeholder="Paste the job description here — it's what the questions get generated from."
+            rows={5}
           />
-          <button type="submit">Create session</button>
+          <button type="submit" className="submit-btn">
+            Create session
+          </button>
         </form>
       </section>
 
       {error && <p className="error">{error}</p>}
 
       <section>
-        <h2>Your sessions</h2>
-        {sessions.length === 0 && <p>No sessions yet — create one above.</p>}
-        <ul className="session-list">
-          {sessions.map((s) => (
-            <li key={s.id}>
-              <div>
-                <strong>{s.status}</strong> · {new Date(s.createdAt).toLocaleString()}
-                {s.jobDescription && <p className="jd-preview">{s.jobDescription.slice(0, 120)}…</p>}
-                <p>{s.questions.length} questions</p>
-              </div>
-              <div className="session-actions">
-                <button type="button" onClick={() => navigate(`/interview/${s.id}`)}>
-                  Practice
-                </button>
-                <button type="button" onClick={() => void deleteSession(s.id)}>
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <h2 className="panel-title">Your sessions</h2>
+        {sessions.length === 0 ? (
+          <p className="empty-note">No sessions yet — create one above.</p>
+        ) : (
+          <ul className="session-list">
+            {sessions.map((s) => (
+              <li key={s.id} className="session-card">
+                <div>
+                  <div className="session-meta">
+                    <span className="session-status">{s.status}</span>
+                    <span>{new Date(s.createdAt).toLocaleString()}</span>
+                  </div>
+                  {s.jobDescription && (
+                    <p className="jd-preview">{s.jobDescription.slice(0, 140).replace(/^##\s*/gm, '')}…</p>
+                  )}
+                  <p className="session-count">{s.questions.length} questions</p>
+                </div>
+                <div className="session-actions">
+                  <button
+                    type="button"
+                    className="submit-btn"
+                    onClick={() => navigate(`/interview/${s.id}`)}
+                  >
+                    Practice
+                  </button>
+                  <button
+                    type="button"
+                    className="ghost-btn ghost-btn--danger"
+                    onClick={() => void deleteSession(s.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </main>
   )

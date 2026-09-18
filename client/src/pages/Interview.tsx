@@ -5,6 +5,8 @@ import { QuestionCard } from './QuestionCard'
 import './Interview.css'
 import { useParams } from 'react-router-dom'
 import { LiquidMetalButton } from '../components/ui/liquid-metal-button'
+import { Breadcrumb } from '../components/ui/breadcrumb'
+import { Home, MessagesSquare } from 'lucide-react'
 import { JobDescription } from './JobDescription'
 
 const TIERS: Array<{ id: QuestionTier; label: string }> = [
@@ -78,8 +80,12 @@ export function Interview() {
   return (
     <main className="interview">
       <header className="interview-header">
-        <a className="back-link" href="/">← Back</a>
-        <h1>Mock Interview</h1>
+        <Breadcrumb
+          items={[
+            { label: 'Home', icon: Home, to: '/' },
+            { label: 'Mock Interview', icon: MessagesSquare },
+          ]}
+        />
       </header>
 
       <div className="interview-body">
