@@ -1,9 +1,18 @@
 import { useMemo } from 'react'
-import { parseJobDescription } from '../utils/jobDescription'
+import { normalizeJobDescription, parseJobDescription } from '../utils/jobDescription'
+
+/** 存库时有没有规范化过 —— 老数据(格式化功能上线前存的)一个标记都没有 */
+function isNormalized(text: string): boolean {
+  return /^(##|-)\s/m.test(text)
+}
 
 /** 把存库的 markdown-lite JD 渲染成标题 / 列表 / 段落,而不是一大坨。 */
 export function JobDescription({ text }: { text: string }) {
-  const blocks = useMemo(() => parseJobDescription(text), [text])
+  // 老数据在渲染时补一次规范化,这样不用写数据迁移脚本
+  const blocks = useMemo(
+    () => parseJobDescription(isNormalized(text) ? text : normalizeJobDescription(text)),
+    [text],
+  )
 
   return (
     <div className="jd-body">
