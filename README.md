@@ -11,6 +11,16 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 - 🎯 **Three-axis scoring** — every answer is scored separately on **Content** (STAR structure, specifics, quantified results), **Language** (grammar, word order, vocabulary), and **Delivery** (filler words, pace, pauses) — never one vague total
 - ✍️ **Two optimized versions of your answer** — a *polished* version that keeps your own experiences (something you can actually say out loud), and a *structural exemplar* that annotates the gaps instead of handing you a script to memorize
 
+## Screenshots
+
+**Sessions** — paste a job description, and each saved session tracks its own question set.
+
+![Sessions list: a form for pasting a job description, and saved sessions showing status, date and question count](docs/screenshots/home.png)
+
+**Mock interview** — the job description stays pinned on the left while you work through the questions on the right, split by tier. Answer by typing, or record and edit the transcript.
+
+![Mock interview page: job description panel on the left with a Generate Questions button, question cards on the right grouped into Warmup / Behavioral / Technical tabs](docs/screenshots/interview.png)
+
 ## Feature roadmap
 
 | # | Feature | Status |
