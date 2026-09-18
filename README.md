@@ -2,10 +2,13 @@
 
 A mock interview platform for **non-native English-speaking engineers** job-hunting overseas (starting with New Zealand 🇳🇿).
 
+Paste a job description, get a tiered set of interview questions, and **answer them out loud or by typing**. Spoken answers are transcribed by **Groq-hosted Whisper**, and the transcript is scored by the **Claude API** on content, language and delivery — with the transcript shown back to you so you can correct it before submitting.
+
 Most AI mock-interview tools score *what* you said. Interview Coach also cares about *how* you said it — because for ESL candidates, "I fixed bug in production" and "I fixed **a** bug in production" are the difference between sounding junior and sounding fluent.
 
 ## What makes it different
 
+- 🎙️ **Answer by voice, not just by typing** — typing hides the problems that actually cost you the interview: hesitation, filler words, and having to organise a sentence in real time. While recording you see only a waveform and a timer, never live subtitles, so you can't quietly self-correct mid-sentence.
 - 🗣️ **ESL-tailored language feedback** — names the exact error pattern (e.g. *"missing article before a countable noun — a common Chinese-L1 transfer"*) and shows your original sentence next to a native-sounding rewrite
 - 📈 **Cross-session weakness tracking** — accumulates your error patterns over time (*"you dropped articles in 12 of your last 20 answers"*) and suggests targeted drills
 - 🎯 **Three-axis scoring** — every answer is scored separately on **Content** (STAR structure, specifics, quantified results), **Language** (grammar, word order, vocabulary), and **Delivery** (filler words, pace, pauses) — never one vague total

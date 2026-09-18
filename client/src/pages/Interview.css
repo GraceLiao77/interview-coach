@@ -22,7 +22,7 @@
   top: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1rem; /* 渐隐和生成按钮之间留口气 */
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--surface-2);
@@ -66,6 +66,8 @@
   overscroll-behavior: contain;
   min-height: 0;
   max-height: min(48vh, 420px);
+  /* 给渐隐留点空:不然最后一行会被切在句子中间、还紧贴着生成按钮 */
+  padding-bottom: 4px;
   font-size: 0.82rem;
   line-height: 1.6;
   color: var(--ink-2);
