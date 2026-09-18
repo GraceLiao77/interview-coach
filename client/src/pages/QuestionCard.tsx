@@ -52,7 +52,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
 
   return (
     <section className="q-card">
-      <span className="q-tier">{TIER_LABELS[question.tier]}</span>
+      <span className={`q-tier q-tier--${question.tier}`}>{TIER_LABELS[question.tier]}</span>
       <p className="q-text">{question.text}</p>
 
       <textarea

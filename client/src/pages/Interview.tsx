@@ -5,6 +5,7 @@ import { QuestionCard } from './QuestionCard'
 import './Interview.css'
 import { useParams } from 'react-router-dom'
 import { LiquidMetalButton } from '../components/ui/liquid-metal-button'
+import { JobDescription } from './JobDescription'
 
 export function Interview() {
   const {sessionId } = useParams<{sessionId: string}>()
@@ -56,15 +57,33 @@ export function Interview() {
         <h1>Mock Interview</h1>
       </header>
 
-     {sessionData?.jobDescription && <p className="jd">{sessionData.jobDescription}</p>}
+      <div className="interview-body">
+        {/* 左栏:JD + 正下方等宽的生成按钮 */}
+        <aside className="jd-panel">
+          {sessionData?.jobDescription ? (
+            <>
+              <h2 className="jd-title">Job description</h2>
+              <JobDescription text={sessionData.jobDescription} />
+            </>
+          ) : (
+            <p className="jd-empty">No job description on this session.</p>
+          )}
 
-      <LiquidMetalButton disabled={genLoading.loading} onClick={handleGenerate}>
-        {genLoading.text}
-      </LiquidMetalButton>
+          <LiquidMetalButton disabled={genLoading.loading} onClick={handleGenerate}>
+            {genLoading.text}
+          </LiquidMetalButton>
+        </aside>
 
-      <div className="questions">
-        {questions.map((q) => <QuestionCard key={q.id} question={q} />)}
-          
+        {/* 右栏:生成出来的题目 */}
+        <div className="questions">
+          {questions.length === 0 ? (
+            <p className="questions-empty">
+              No questions yet — generate a set from the job description on the left.
+            </p>
+          ) : (
+            questions.map((q) => <QuestionCard key={q.id} question={q} />)
+          )}
+        </div>
       </div>
     </main>
   )

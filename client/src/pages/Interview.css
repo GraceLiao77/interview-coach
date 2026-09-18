@@ -10,11 +10,94 @@
   --surface: #fff;
   --surface-2: #fafafa;
 
-  max-width: 760px;
+  max-width: 1120px;
   margin: 2.5rem auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
   font-family: system-ui, -apple-system, sans-serif;
   color: var(--ink);
+}
+
+/* 左:JD + 等宽的生成按钮 · 右:题目列表 */
+.interview-body {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 1.75rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+.jd-panel {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  padding: 1.1rem 1.15rem;
+  max-height: calc(100vh - 3rem);
+}
+
+/* 按钮在 JD 正下方,和面板等宽 */
+.jd-panel .lmb {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.jd-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.jd-empty,
+.questions-empty {
+  color: var(--ink-3);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.questions-empty {
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+/* JD 正文:标题 / 列表 / 段落,长了自己滚,不撑高整页 */
+.jd-body {
+  overflow-y: auto;
+  min-height: 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.jd-body h3 {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.jd-body h3:first-child {
+  margin-top: 0;
+}
+.jd-body p {
+  margin: 0 0 0.6rem;
+}
+.jd-body ul {
+  margin: 0 0 0.7rem;
+  padding-left: 1.05rem;
+}
+.jd-body li {
+  margin-bottom: 0.3rem;
+}
+.jd-body li::marker {
+  color: var(--ink-4);
 }
 
 .interview-header {
@@ -39,16 +122,6 @@
   color: var(--ink);
 }
 
-.jd {
-  color: var(--ink-2);
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
 .error {
   color: #b42318;
   font-size: 0.875rem;
@@ -58,16 +131,15 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  margin-top: 1.75rem;
+  min-width: 0;
 }
 
 /* ============================================================
    Buttons
-   `.btn-ai` = 会触发 AI 生成的按钮(出题 / 评分),带一道流光。
-   普通操作用素色按钮,不抢视线。
+   `.btn-ai` = 会触发 AI 生成的按钮,带一道流光。页面级的出题按钮用的是
+   LiquidMetalButton(着色器),题卡里重复出现的提交按钮用这个更轻量的版本。
    ============================================================ */
 
-.primary-btn,
 .submit-btn {
   position: relative;
   overflow: hidden;
@@ -84,15 +156,12 @@
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
 }
-.primary-btn:hover:not(:disabled),
 .submit-btn:hover:not(:disabled) {
   background: #262626;
 }
-.primary-btn:active:not(:disabled),
 .submit-btn:active:not(:disabled) {
   transform: translateY(1px);
 }
-.primary-btn:disabled,
 .submit-btn:disabled {
   background: var(--ink-4);
   cursor: default;
@@ -124,10 +193,6 @@
   }
 }
 
-.primary-btn {
-  margin-top: 0.25rem;
-}
-
 /* ============================================================
    Question card
    ============================================================ */
@@ -139,17 +204,33 @@
   background: var(--surface);
 }
 
+/* 题目分类标签 —— 低饱和彩色药丸:淡底 + 深字,够区分但不吵 */
 .q-tier {
   display: inline-block;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--ink-2);
-  background: var(--surface-2);
-  border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 0.2rem 0.6rem;
+  padding: 0.22rem 0.7rem;
+  background: var(--tier-bg, #f5f5f5);
+  color: var(--tier-fg, #404040);
+  border: 1px solid var(--tier-line, #e5e5e5);
+}
+.q-tier--warmup {
+  --tier-bg: #eef4f9;
+  --tier-fg: #1f5878;
+  --tier-line: #d9e7f0;
+}
+.q-tier--behavioral {
+  --tier-bg: #edf5f0;
+  --tier-fg: #1f6347;
+  --tier-line: #d6e9df;
+}
+.q-tier--technical {
+  --tier-bg: #faf2e6;
+  --tier-fg: #7c5411;
+  --tier-line: #efe1c9;
 }
 
 .q-text {
@@ -326,6 +407,19 @@
 }
 
 /* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .interview-body {
+    grid-template-columns: 1fr;
+  }
+  .jd-panel {
+    position: static;
+    max-height: none;
+  }
+  .jd-body {
+    max-height: 260px;
+  }
+}
+
 @media (max-width: 560px) {
   .axes {
     grid-template-columns: 1fr;

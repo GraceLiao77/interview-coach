@@ -39,13 +39,32 @@
   cursor: default;
 }
 
+/* 停止 = 只有一个图标。实心黑留给卡片右下角的主提交,录音条里不该抢视线。 */
 .rec-stop {
-  background: #0a0a0a;
-  color: #fff;
-  border: 1px solid #0a0a0a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #404040;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.rec-stop svg {
+  width: 16px;
+  height: 16px;
 }
 .rec-stop:hover {
-  background: #262626;
+  background: #ececec;
+  color: #0a0a0a;
+}
+.rec-stop:focus-visible {
+  outline: 2px solid #0a0a0a;
+  outline-offset: 1px;
 }
 
 .rec-icon {

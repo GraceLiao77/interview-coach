@@ -35,11 +35,16 @@ export function Recorder({ onComplete, disabled, busyLabel = 'Transcribing…' }
             <span /><span /><span /><span /><span /><span /><span />
           </div>
           <span className="rec-time">{formatTime(seconds)}</span>
-          <button type="button" className="rec-btn rec-stop" onClick={stop}>
-            <svg className="rec-icon" viewBox="0 0 24 24" aria-hidden>
-              <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" />
+          <button
+            type="button"
+            className="rec-stop"
+            onClick={stop}
+            aria-label="Stop recording"
+            title="Stop recording"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden>
+              <rect x="7" y="7" width="10" height="10" rx="2.5" fill="currentColor" />
             </svg>
-            Stop
           </button>
         </div>
       ) : (

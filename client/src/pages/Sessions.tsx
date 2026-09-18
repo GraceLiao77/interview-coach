@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { CreateSessionRequest, SessionDto } from '@shared/types'
 import { api, ApiRequestError } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { normalizeJobDescription } from '../utils/jobDescription'
 
 export function Sessions() {
   const { user, logout } = useAuth()
@@ -34,8 +35,10 @@ export function Sessions() {
   async function createSession(e: React.FormEvent): Promise<void> {
     e.preventDefault()
     setError(null)
+    // 粘贴过来的 JD 先规范化成 markdown-lite 再存,否则库里就是一大坨没有结构的文本
+    const normalized = normalizeJobDescription(jobDescription)
     const body: CreateSessionRequest = {
-      jobDescription: jobDescription || undefined,
+      jobDescription: normalized || undefined,
     }
     try {
       await api<SessionDto>('/api/sessions', { method: 'POST', body: JSON.stringify(body) })
