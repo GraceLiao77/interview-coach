@@ -8,6 +8,7 @@ import { requireAuth } from '../middleware/requireAuth';
 import { transcribe } from '../services/transcriptionService'
 import multer from 'multer';
 import { logger } from '../utils/logger';
+import type { TranscribeResponse } from '@shared/types';
 
 export const questionsRouter = Router();
 
@@ -97,4 +98,42 @@ questionsRouter.post<{ id: string }>('/:id/answers/audio', upload.single('audio'
 
   res.json(saved)
 
+})
+
+// 只转写,不评分、不写库。前端把文字回填进 textarea,用户改完再走上面那条评分路由。
+// 归属校验照样要做:这个端点不写数据,但会花 Groq 的额度 —— 不验的话任何登录用户
+// 都能拿别人的 questionId 来白嫖转写。
+questionsRouter.post<{ id: string }>('/:id/transcribe', upload.single('audio'), async (req, res) => {
+  if (!req.file) {
+    res.status(400).json({ error: 'audio file is required' })
+    return
+  }
+
+  const question = await prisma.question.findFirst({
+    where: {
+      id: req.params.id,
+      session: { userId: req.userId },
+    },
+  })
+  if (!question) {
+    res.status(404).json({ error: 'question not found' })
+    return
+  }
+
+  let transcript: string
+  try {
+    transcript = await transcribe(req.file.buffer)
+  } catch (e) {
+    logger.error('Groq transcription failed', e) // 原始错误只进日志
+    res.status(502).json({ error: "We couldn't hear that clearly — please record again." })
+    return
+  }
+
+  if (!transcript.trim()) {
+    res.status(400).json({ error: 'No speech detected — move closer to the mic and try again.' })
+    return
+  }
+
+  const body: TranscribeResponse = { transcript }
+  res.json(body)
 })
