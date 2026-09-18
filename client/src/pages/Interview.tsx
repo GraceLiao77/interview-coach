@@ -65,16 +65,15 @@ export function Interview() {
     return byTier
   }, [questions])
 
-  // 当前 tab 一道题都没有时,自动跳到第一个有题的分类,免得进来就看到空列表。
-  // 依赖只写 questions:只在题目集合变化时纠正一次。
-  useEffect(() => {
-    if (questions.length === 0) return
-    if (questions.some((q) => q.tier === activeTier)) return
-    const firstWithQuestions = TIERS.find((t) => questions.some((q) => q.tier === t.id))
-    if (firstWithQuestions) setActiveTier(firstWithQuestions.id)
-  }, [questions])
+  // 选中的 tab 一道题都没有时(比如生成的这一套没有 warmup),落到第一个有题的分类。
+  // 这是从 activeTier + questions 推导出来的,不额外存一份 state —— 省掉一次
+  // useEffect 和它的依赖数组问题。
+  const effectiveTier =
+    counts[activeTier] > 0
+      ? activeTier
+      : (TIERS.find((t) => counts[t.id] > 0)?.id ?? activeTier)
 
-  const visible = questions.filter((q) => q.tier === activeTier)
+  const visible = questions.filter((q) => q.tier === effectiveTier)
 
   return (
     <main className="interview">
@@ -114,8 +113,8 @@ export function Interview() {
                     key={tier.id}
                     type="button"
                     role="tab"
-                    aria-selected={activeTier === tier.id}
-                    className={`tier-tab${activeTier === tier.id ? ' is-active' : ''}`}
+                    aria-selected={effectiveTier === tier.id}
+                    className={`tier-tab${effectiveTier === tier.id ? ' is-active' : ''}`}
                     onClick={() => setActiveTier(tier.id)}
                   >
                     {tier.label}
@@ -125,7 +124,7 @@ export function Interview() {
               </div>
 
               {visible.length === 0 ? (
-                <p className="questions-empty">No {activeTier} questions in this set.</p>
+                <p className="questions-empty">No {effectiveTier} questions in this set.</p>
               ) : (
                 visible.map((q) => <QuestionCard key={q.id} question={q} />)
               )}
