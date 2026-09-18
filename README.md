@@ -32,8 +32,11 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 2 | PostgreSQL (Supabase) + Prisma, session/question CRUD | ✅ |
 | 3 | JWT auth (register/login, bcrypt, `requireAuth`) | ✅ |
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
-| 5 | Resume (PDF) + job description match analysis | ⬜ |
-| 6 | Cross-session weakness profile + drills | ⬜ |
+| 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | ⬜ |
+| 6 | Retrieval over a company/role knowledge base (Supabase `pgvector`) to ground question generation | ⬜ |
+| 7 | Cost telemetry — per-call token accounting, tiered model selection, prompt caching | ⬜ |
+| 8 | Resume (PDF) + job description match analysis | ⬜ |
+| 9 | Cross-session weakness profile + drills | ⬜ |
 
 ## How a session works
 
@@ -44,6 +47,26 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 5. **Claude scores the transcript** on all three axes and returns the language error table plus both rewrite versions
 
 Both answer paths converge on the same scoring and persistence code; transcription simply slots in one step earlier.
+
+## Engineering notes
+
+An LLM feature is mostly ordinary systems work with a probabilistic component bolted into the middle. The parts that took the thinking:
+
+**Spending someone else's money is a failure mode.** Every model call costs real money and free-tier quota, so the code treats it like any other scarce resource:
+
+- **Two independent mock flags.** `MOCK_AI` (Claude) and `MOCK_TRANSCRIPTION` (Groq) are separate, so the voice path can be exercised against the live API while scoring stays free. Collapsing them into one switch means you end up commenting out a line to get the combination you want — and forget to put it back.
+- **Short-circuit before the expensive call.** An empty transcript returns 400 *before* `scoreAnswer` runs. A silent recording would otherwise cost a full scoring request.
+- **The ownership check guards quota, not just data.** `POST /:id/transcribe` writes nothing, but it spends Groq seconds, so it still verifies the question belongs to the caller through the session relation. Without it, any signed-in user could burn quota against someone else's question id.
+
+**Failures are categorised, not collapsed.** `502` when the upstream provider fails, `500` when it's our bug, `413` for an oversized upload, `400` for an empty recording. The `try` wraps only the provider call — wrapping the whole handler would flatten a DB timeout, a Groq outage and malformed model output into one unhelpful message. Raw provider errors go to the log; the user gets something actionable.
+
+**Model output is parsed, never trusted.** Scoring requests structured output against a Zod schema, so the response is validated at the boundary instead of being regex'd out of a markdown fence. A response that doesn't parse is an error, not a partially-populated score card.
+
+**Repeated calls are safe.** Question generation uses `createMany` + `skipDuplicates` behind a `@@unique(sessionId, text)` constraint — the database enforces idempotency, so a double-clicked button can't produce a duplicate set.
+
+**The interface is designed around the model being wrong.** The transcript is shown back to the user and is editable before scoring, so a bad score and a misheard word stay distinguishable — which matters much more for accented speech. And there are deliberately no live subtitles while recording: watching a transcript form makes you edit yourself mid-sentence, which is exactly the skill the practice is meant to exercise.
+
+Audio is held in memory and never written to disk; uploads are capped at 25 MB.
 
 ## Tech stack
 

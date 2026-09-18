@@ -27,5 +27,6 @@ dist/
 # Personal interview prep notes (not part of the product)
 /interview/
 
-# Diary notes kept local: fundamentals that don't belong in a public portfolio repo
+# Notes kept local: fundamentals and career planning that don't belong in a public repo
 docs/diary/local/
+docs/local/
