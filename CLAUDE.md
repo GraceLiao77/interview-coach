@@ -9,7 +9,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - **DB**: PostgreSQL on Supabase + Prisma 6 (`server/prisma/schema.prisma`); pooled `DATABASE_URL` (6543, pgbouncer) + `DIRECT_URL` (5432) for migrations
 - **Auth**: JWT (`jsonwebtoken`, 7d expiry) + bcryptjs; `requireAuth` middleware sets `req.userId`
 - **AI**: Claude API (analysis/questions/evaluation — output MUST be strict JSON, no markdown fences); **Groq-hosted** Whisper `whisper-large-v3-turbo` (authoritative transcription). Two independent mock flags: `MOCK_AI` (Claude) and `MOCK_TRANSCRIPTION` (Groq)
-- Monorepo `client/` + `server/` + `shared/`, **no pnpm workspaces**
+- One repo, `client/` + `server/` installed independently (each has its own `package.json` and `node_modules`), `shared/` is plain source imported via path aliases. **No workspace tooling** — don't add pnpm/npm workspaces, Nx or Turborepo
 - TypeScript **strict mode** everywhere; TS 7 (`baseUrl` removed — `paths` are tsconfig-relative)
 
 ## Conventions

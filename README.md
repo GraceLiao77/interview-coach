@@ -55,7 +55,7 @@ Both answer paths converge on the same scoring and persistence code; transcripti
 | Auth | JWT + bcrypt |
 | AI | Claude API (questions, strict-JSON three-axis scoring) · Groq-hosted Whisper `whisper-large-v3-turbo` (speech-to-text) |
 | Uploads | multer (in-memory, 25 MB cap) — audio never touches disk |
-| Repo | Monorepo: `client/` + `server/` + `shared/` types, TypeScript strict mode |
+| Repo | One repository, two independently installed apps (`client/`, `server/`) sharing `shared/types.ts` via TypeScript path aliases — no workspace tooling. Decoupled frontend/backend: the client is an SPA that only ever talks JSON to its own API. TypeScript strict mode throughout. |
 
 > **Voice answering is Chrome-only for now.** No mimeType negotiation — a deliberate MVP trade-off, not an oversight.
 
