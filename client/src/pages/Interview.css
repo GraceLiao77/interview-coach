@@ -1,63 +1,57 @@
-/* Interview page — presentation only (CSS by AI; logic is yours). */
+/* Interview page — 黑白为主的克制配色;只有评分区允许用彩色。 */
 
 .interview {
+  --ink: #0a0a0a;
+  --ink-2: #404040;
+  --ink-3: #737373;
+  --ink-4: #a3a3a3;
+  --line: #e5e5e5;
+  --line-soft: #f0f0f0;
+  --surface: #fff;
+  --surface-2: #fafafa;
+
   max-width: 760px;
   margin: 2.5rem auto;
   padding: 0 1.25rem;
-  font-family: system-ui, sans-serif;
-  color: #1a1a1a;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--ink);
 }
 
 .interview-header {
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 .interview-header h1 {
   font-size: 1.5rem;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 
 .back-link {
-  color: #2563eb;
+  color: var(--ink-3);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  transition: color 0.15s;
 }
 .back-link:hover {
-  text-decoration: underline;
+  color: var(--ink);
 }
 
 .jd {
-  color: #555;
-  background: #f5f6f8;
-  border: 1px solid #eceef1;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.primary-btn {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 9px;
-  padding: 0.6rem 1.15rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-.primary-btn:hover {
-  background: #1d4ed8;
-}
-.primary-btn:disabled {
-  opacity: 0.55;
-  cursor: default;
+  padding: 0.8rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .error {
-  color: #c0392b;
-  font-size: 0.9rem;
+  color: #b42318;
+  font-size: 0.875rem;
 }
 
 .questions {
@@ -67,31 +61,103 @@
   margin-top: 1.75rem;
 }
 
-/* ---- Question card ---- */
+/* ============================================================
+   Buttons
+   `.btn-ai` = 会触发 AI 生成的按钮(出题 / 评分),带一道流光。
+   普通操作用素色按钮,不抢视线。
+   ============================================================ */
+
+.primary-btn,
+.submit-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.primary-btn:hover:not(:disabled),
+.submit-btn:hover:not(:disabled) {
+  background: #262626;
+}
+.primary-btn:active:not(:disabled),
+.submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.primary-btn:disabled,
+.submit-btn:disabled {
+  background: var(--ink-4);
+  cursor: default;
+}
+
+/* 流光:一道斜向高光反复扫过,暗示"这颗按钮背后有模型在跑" */
+.btn-ai:not(:disabled)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.28) 48%,
+    rgba(255, 255, 255, 0.5) 52%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  animation: btn-shine 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes btn-shine {
+  0%,
+  65% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.primary-btn {
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   Question card
+   ============================================================ */
+
 .q-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 1.15rem 1.3rem;
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  padding: 1.25rem 1.35rem;
+  background: var(--surface);
 }
 
 .q-tier {
   display: inline-block;
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #2563eb;
-  background: #eef4ff;
+  font-weight: 600;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 0.18rem 0.65rem;
-  margin-bottom: 0.6rem;
+  padding: 0.2rem 0.6rem;
 }
 
 .q-text {
   font-weight: 600;
   font-size: 1.02rem;
-  margin: 0.2rem 0 0.85rem;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0.7rem 0 0.9rem;
 }
 
 .q-answer {
@@ -99,128 +165,164 @@
   box-sizing: border-box;
   resize: vertical;
   font: inherit;
-  padding: 0.6rem 0.7rem;
-  border: 1px solid #d1d5db;
-  border-radius: 9px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink);
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.q-answer::placeholder {
+  color: var(--ink-4);
 }
 .q-answer:focus {
-  outline: 2px solid #bfdbfe;
-  border-color: #93c5fd;
+  outline: none;
+  border-color: var(--ink-2);
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
 }
 
-.submit-btn {
-  margin-top: 0.7rem;
-  background: #111827;
-  color: #fff;
-  border: none;
-  border-radius: 9px;
-  padding: 0.5rem 1.05rem;
-  font-size: 0.9rem;
-  cursor: pointer;
+/* 底部操作条:录音在左,提交在右下角 */
+.q-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
 }
-.submit-btn:hover {
-  background: #000;
-}
-.submit-btn:disabled {
-  opacity: 0.45;
-  cursor: default;
+.q-actions .submit-btn {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
-/* ---- Score card ---- */
+/* ============================================================
+   Score card —— 唯一允许用彩色的区域
+   ============================================================ */
+
 .score-card {
-  margin-top: 1.1rem;
-  padding-top: 1.1rem;
-  border-top: 1px dashed #e5e7eb;
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.25rem;
 }
 .score-card h4 {
-  margin: 0 0 0.45rem;
-  font-size: 0.9rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
 .axes {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.9rem;
+  gap: 1rem;
 }
+
+.axis {
+  --axis: #4f46e5; /* 默认 = Content */
+}
+.axis--language {
+  --axis: #0d9488;
+}
+.axis--delivery {
+  --axis: #c2410c;
+}
+
 .axis-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
 .axis-label {
-  font-size: 0.82rem;
-  color: #4b5563;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--axis);
 }
 .axis-score {
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 .axis-max {
-  font-size: 0.72rem;
-  color: #9ca3af;
+  font-size: 0.7rem;
+  color: var(--ink-4);
   font-weight: 400;
   margin-left: 1px;
 }
 .axis-bar {
-  height: 6px;
-  background: #eef0f3;
+  height: 5px;
+  background: var(--line-soft);
   border-radius: 999px;
   overflow: hidden;
-  margin: 0.35rem 0;
+  margin: 0.4rem 0;
 }
 .axis-fill {
   height: 100%;
-  background: #2563eb;
+  background: var(--axis);
   border-radius: 999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .axis-note {
-  font-size: 0.76rem;
-  color: #6b7280;
-  margin: 0.3rem 0 0;
-  line-height: 1.4;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  margin: 0.35rem 0 0;
+  line-height: 1.5;
 }
 
-/* ---- Language errors table ---- */
+/* ---- Language errors ---- */
 .lang-errors table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.86rem;
+  font-size: 0.84rem;
 }
 .lang-errors th {
   text-align: left;
-  color: #9ca3af;
+  color: var(--ink-4);
   font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   padding: 0.35rem 0.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--line);
 }
 .lang-errors td {
-  padding: 0.45rem 0.5rem;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--line-soft);
   vertical-align: top;
+  line-height: 1.5;
 }
 .lang-errors .orig {
-  color: #b91c1c;
+  color: #b42318;
+  text-decoration: line-through;
+  text-decoration-color: rgba(180, 35, 24, 0.35);
 }
 .lang-errors .rewrite {
-  color: #15803d;
+  color: #067647;
+  font-weight: 500;
 }
 .lang-errors .pattern {
-  color: #6b7280;
-  font-size: 0.8rem;
+  color: var(--ink-3);
+  font-size: 0.78rem;
 }
 
 /* ---- Polished / exemplar ---- */
 .polished p,
 .exemplar p {
-  background: #f5f6f8;
-  border-radius: 9px;
-  padding: 0.65rem 0.85rem;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
   margin: 0;
+  color: var(--ink-2);
 }
 
 /* ---- Responsive ---- */
@@ -229,6 +331,19 @@
     grid-template-columns: 1fr;
   }
   .lang-errors table {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+  }
+  .q-actions .submit-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-ai::after {
+    animation: none;
+    opacity: 0;
+  }
+  .axis-fill {
+    transition: none;
   }
 }

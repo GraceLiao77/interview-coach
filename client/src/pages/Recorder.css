@@ -1,153 +1,159 @@
-/* Recorder — presentation only (CSS by AI; logic is yours). */
+/* Recorder —— 录音按钮和回放条排在同一行,和题卡的黑白主题一致。 */
 
 .recorder {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.6rem;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 /* ---- buttons ---- */
 .rec-btn {
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   border-radius: 9px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.5rem 0.85rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
+
+/* 录音不是 AI 操作 —— 用描边按钮,把实心黑留给 Submit */
 .rec-start {
-  background: #2563eb;
-  color: #fff;
+  background: #fff;
+  color: #0a0a0a;
+  border: 1px solid #d4d4d4;
 }
-.rec-start:hover {
-  background: #1d4ed8;
+.rec-start:hover:not(:disabled) {
+  background: #fafafa;
+  border-color: #0a0a0a;
 }
+.rec-start:disabled {
+  color: #a3a3a3;
+  border-color: #e5e5e5;
+  cursor: default;
+}
+
 .rec-stop {
-  background: #dc2626;
+  background: #0a0a0a;
   color: #fff;
+  border: 1px solid #0a0a0a;
 }
 .rec-stop:hover {
-  background: #b91c1c;
+  background: #262626;
+}
+
+.rec-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 /* ---- recording-in-progress row ---- */
 .rec-live {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  gap: 0.65rem;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.7rem;
 }
 
-/* pulsing red dot */
+/* 唯一的一点颜色:录音中的红点。它是功能信号,不是主题色。 */
 .rec-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #dc2626;
-  animation: rec-pulse 1s ease-in-out infinite;
+  animation: rec-pulse 1.2s ease-in-out infinite;
   flex-shrink: 0;
 }
 @keyframes rec-pulse {
   0%,
   100% {
     opacity: 1;
-    transform: scale(1);
   }
   50% {
-    opacity: 0.35;
-    transform: scale(0.85);
+    opacity: 0.25;
   }
 }
 
-/* animated fake waveform */
 .rec-wave {
   display: flex;
   align-items: center;
-  gap: 3px;
-  height: 22px;
+  gap: 2px;
+  height: 18px;
 }
 .rec-wave span {
-  width: 3px;
+  width: 2px;
   height: 100%;
-  background: #2563eb;
+  background: #0a0a0a;
   border-radius: 2px;
   transform-origin: center;
   animation: rec-bar 1s ease-in-out infinite;
 }
-.rec-wave span:nth-child(1) {
+.rec-wave span:nth-child(1),
+.rec-wave span:nth-child(7) {
   animation-delay: 0s;
 }
-.rec-wave span:nth-child(2) {
+.rec-wave span:nth-child(2),
+.rec-wave span:nth-child(6) {
   animation-delay: 0.12s;
 }
-.rec-wave span:nth-child(3) {
+.rec-wave span:nth-child(3),
+.rec-wave span:nth-child(5) {
   animation-delay: 0.24s;
 }
 .rec-wave span:nth-child(4) {
   animation-delay: 0.36s;
 }
-.rec-wave span:nth-child(5) {
-  animation-delay: 0.24s;
-}
-.rec-wave span:nth-child(6) {
-  animation-delay: 0.12s;
-}
-.rec-wave span:nth-child(7) {
-  animation-delay: 0s;
-}
 @keyframes rec-bar {
   0%,
   100% {
-    transform: scaleY(0.3);
+    transform: scaleY(0.25);
   }
   50% {
     transform: scaleY(1);
   }
 }
 
-/* timer */
 .rec-time {
   font-variant-numeric: tabular-nums;
-  font-size: 0.9rem;
-  color: #991b1b;
+  font-size: 0.82rem;
+  color: #404040;
   min-width: 3.5ch;
 }
 
-/* playback */
+/* ---- playback ---- */
 .rec-playback {
-  height: 38px;
-  max-width: 320px;
+  height: 34px;
+  max-width: 230px;
+  min-width: 0;
+  flex-shrink: 1;
+  filter: grayscale(1);
 }
 
-/* ---- disabled (uploading / scoring in progress) ---- */
-.rec-btn:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-.rec-btn:disabled:hover {
-  background: #2563eb;
-}
-
-/* ---- transcribing / uploading status ----
-   Markup: <p className="rec-status"><span className="rec-spinner" aria-hidden />Transcribing…</p> */
+/* ---- transcribing status ---- */
 .rec-status {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  font-size: 0.85rem;
-  color: #4b5563;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: #737373;
 }
 
 .rec-spinner {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
-  border: 2px solid #d1d5db;
-  border-top-color: #2563eb;
+  border: 2px solid #e5e5e5;
+  border-top-color: #0a0a0a;
   border-radius: 50%;
   animation: rec-spin 0.7s linear infinite;
 }
@@ -157,36 +163,14 @@
   }
 }
 
-/* ---- error (mic permission denied, upload failed, transcription failed) ----
-   Markup: <p className="rec-error" role="alert">…</p> */
+/* ---- error ---- */
 .rec-error {
+  flex-basis: 100%;
   margin: 0;
-  font-size: 0.85rem;
-  color: #991b1b;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 9px;
-  padding: 0.45rem 0.7rem;
+  font-size: 0.82rem;
+  color: #b42318;
 }
 
-/* ---- nested inside a question card ---- */
-.q-card .recorder {
-  margin-top: 0.7rem;
-  padding-top: 0.7rem;
-  border-top: 1px dashed #e5e7eb;
-  width: 100%;
-}
-
-/* "or record your answer" divider label, if you want one above the recorder */
-.rec-label {
-  margin: 0;
-  font-size: 0.78rem;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #9ca3af;
-}
-
-/* respect reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .rec-dot,
   .rec-wave span,

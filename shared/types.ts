@@ -96,6 +96,15 @@ export interface SubmitAnswerResponse {
   score: ScoreReportDto;
 }
 
+/**
+ * Response of POST /api/questions/:id/transcribe — speech to text only.
+ * Nothing is scored or persisted; the transcript goes back into the textarea
+ * so the user can correct it before submitting.
+ */
+export interface TranscribeResponse {
+  transcript: string;
+}
+
 // ---- Errors ----
 
 export interface ApiError {

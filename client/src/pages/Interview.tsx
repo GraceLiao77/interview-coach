@@ -57,7 +57,7 @@ export function Interview() {
 
      {sessionData?.jobDescription && <p className="jd">{sessionData.jobDescription}</p>}
 
-      <button className="primary-btn" disabled={genLoading.loading} onClick={handleGenerate}>{genLoading.text}</button>
+      <button className="primary-btn btn-ai" disabled={genLoading.loading} onClick={handleGenerate}>{genLoading.text}</button>
 
       <div className="questions">
         {questions.map((q) => <QuestionCard key={q.id} question={q} />)}
