@@ -4,6 +4,7 @@ import type { QuestionDto, SessionDto } from '@shared/types'
 import { QuestionCard } from './QuestionCard'
 import './Interview.css'
 import { useParams } from 'react-router-dom'
+import { LiquidMetalButton } from '../components/ui/liquid-metal-button'
 
 export function Interview() {
   const {sessionId } = useParams<{sessionId: string}>()
@@ -57,7 +58,9 @@ export function Interview() {
 
      {sessionData?.jobDescription && <p className="jd">{sessionData.jobDescription}</p>}
 
-      <button className="primary-btn btn-ai" disabled={genLoading.loading} onClick={handleGenerate}>{genLoading.text}</button>
+      <LiquidMetalButton disabled={genLoading.loading} onClick={handleGenerate}>
+        {genLoading.text}
+      </LiquidMetalButton>
 
       <div className="questions">
         {questions.map((q) => <QuestionCard key={q.id} question={q} />)}
