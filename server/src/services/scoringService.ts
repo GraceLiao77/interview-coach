@@ -2,6 +2,7 @@
 import { anthropic } from '../lib/anthropic';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';   // ① 引入 helper
 import { scoreReportSchema, ScoreReport } from '../schemas/scoring';           // ① 引入 schema
+import { MODELS, ModelId } from '../lib/aiConfig'
 import { env } from '../env';
 
 const MOCK_RESPONSE: ScoreReport ={
@@ -42,7 +43,7 @@ const MOCK_RESPONSE: ScoreReport ={
  ]
 }
 
-export async function scoreAnswer(question: String, answer: String) {
+export async function scoreAnswer(question: string, answer: string, model: ModelId = MODELS.scoring.id) {
     if (env.mockAi) {
         return MOCK_RESPONSE; // 如果启用 mockAI，则返回 mock 响应
     }
@@ -55,10 +56,9 @@ export async function scoreAnswer(question: String, answer: String) {
     Question: ${question}
     Answer: ${answer}`;
 
-    // basic call to anthropic api without and restri
     const response = await anthropic.messages.parse({
-        model: 'claude-sonnet-4-5', // demo model, later we will use the real model
-        max_tokens: 1000,
+        model,
+        max_tokens: 8000,
         messages: [{role: 'user', content: prompt}],
         output_config: {
             format: zodOutputFormat(scoreReportSchema),
