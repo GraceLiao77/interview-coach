@@ -35,8 +35,13 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - [x] 2. Prisma + Supabase; Session/Question CRUD
 - [x] 3. JWT register/login + `requireAuth`; client AuthContext + Login/Register/Sessions pages
 - [x] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite). Voice is **Chrome-only** (deliberate MVP trade-off, no mimeType negotiation)
-- [ ] 5. Resume upload (PDF) + JD match analysis (match score, missing skills → priority question topics)
-- [ ] 6. Cross-session weakness profile + targeted drills
+- [ ] 5. Eval harness — labelled test set, scoring rubric, regression run before any prompt change (v1 covers the scoring prompt only)
+- [ ] 6. Retrieval over a company/role knowledge base (Supabase `pgvector`) to ground question generation
+- [ ] 7. Cost telemetry — per-call token accounting, tiered model selection, prompt caching
+- [ ] 8. Resume upload (PDF) + JD match analysis (match score, missing skills → priority question topics)
+- [ ] 9. Cross-session weakness profile + targeted drills
+
+Domain vocabulary lives in `CONTEXT.md` — use its terms (e.g. **Interview**, not "session", in prose).
 
 ## MVP constraints
 
