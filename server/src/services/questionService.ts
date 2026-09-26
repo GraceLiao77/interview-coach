@@ -3,7 +3,7 @@ import { anthropic } from '../lib/anthropic';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';   // ① 引入 helper
 import { questionSetSchema, Question, QuestionSet } from '../schemas/questions';           // ① 引入 schema
 import { env } from '../env';
-import { MODELS } from '../lib/aiConfig'
+import { MODELS, ModelId } from '../lib/aiConfig'
 import { prisma } from '../lib/prisma';
 
 const MOCK_RESPONSE: QuestionSet = {'questions':[
@@ -129,7 +129,7 @@ const MOCK_RESPONSE: QuestionSet = {'questions':[
     }
   ]}
 
-export async function generateQuestions(jobDescription: string) {
+export async function generateQuestions(jobDescription: string, model: ModelId = MODELS.questions.id) {
     if (env.mockAi) {
         return MOCK_RESPONSE
     }
@@ -149,8 +149,8 @@ export async function generateQuestions(jobDescription: string) {
 
     
     const response = await anthropic.messages.parse({
-        model: MODELS.questions, // demo model, later we will use the real model
-        max_tokens: 2000,
+        model,
+        max_tokens: 8000,
         system: SYSTEM_PROMPT,
         messages: [
             { role: 'user', content: `<job_description>\n${jobDescription}\n</job_description>\n\nGenerate the question set.` },
