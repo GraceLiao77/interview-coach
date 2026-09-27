@@ -1,0 +1,339 @@
+[
+  {
+    "id": "grammar-01",
+    "note": "Grammar group: one missing article ('tech lead' -> 'the tech lead'), one missing plural ('two round' -> 'two rounds'). Story 2. British spelling 'realised' and the correctly used article in 'a backfill script' must not be flagged.",
+    "category": "behavioral",
+    "question": "Give me an example of when you received critical feedback during a code review. How did you handle it and what did you learn?",
+    "answer": "At WDCC, where I volunteer, I worked on the Projects Health Dashboard, and I picked up a backfill script for the missing months of GitHub history. The old branches were deleted, so I went through the PRs instead. I assumed a commit counts in the week its PR was merged. In review, tech lead pointed out that it should count in the week it was written. I switched to each commit's own time. Then I realised commits come in different states, so I raised that too, and we agreed to count all of them. It took two round of review and ten commits. Now I try to find these problems before I open a PR.",
+    "expect": {
+      "content": {
+        "min": 4,
+        "max": 5
+      },
+      "language": {
+        "min": 3,
+        "max": 4
+      },
+      "mustCatch": [
+        {
+          "span": "tech lead",
+          "patternCode": "missing-article"
+        },
+        {
+          "span": "round",
+          "patternCode": "missing-plural"
+        }
+      ],
+      "mustNotFlag": [
+        "realised",
+        "a backfill script"
+      ]
+    }
+  },
+  {
+    "id": "vocab-01",
+    "note": "Vocabulary group: one wrong word ('seeing' for 'checking'), one bad collocation ('did typos' for 'made typos'). Story 7. 'by hand' and the passive 'the spec was agreed' are correct and must not be flagged. Boundary warning: 'seeing' is only wrong next to 'the API docs', so a model may label it improper-collocation. If that happens, check the two code definitions before blaming the model.",
+    "category": "technical",
+    "question": "Describe your experience integrating React applications with REST APIs. What challenges have you encountered?",
+    "answer": "At New Oriental, we built a new marking dashboard on top of the backend's REST APIs. The biggest challenge was the response data. It was deeply nested and it changed often. In plain JavaScript we kept seeing the API docs for field names, and we did typos that only showed up in QA. So I set up openapi-typescript to generate types straight from the backend's Swagger spec. We were design-first, so the spec was agreed before the endpoints were built. That meant I could build against the types while the backend team was still writing the API. Nobody wrote the API types by hand, and the editor gave us autocomplete for every field.",
+    "expect": {
+      "content": {
+        "min": 4,
+        "max": 5
+      },
+      "language": {
+        "min": 3,
+        "max": 4
+      },
+      "mustCatch": [
+        {
+          "span": "seeing",
+          "patternCode": "wrong-word-choice"
+        },
+        {
+          "span": "did typos",
+          "patternCode": "improper-collocation"
+        }
+      ],
+      "mustNotFlag": [
+        "by hand",
+        "the spec was agreed"
+      ]
+    }
+  },
+  {
+    "id": "structure-01",
+    "note": "Sentence-structure group: one embedded question with question word order ('what could I reuse'), one dropped subject ('Didn't know' -> 'I didn't know'). Story 2, told as learning a new backend quickly. Compound modifier 'rate-limit helpers' must not be flagged. Content 3-4: the question asks about a new technology or tool, but the answer is about learning a new codebase, so it is slightly off-topic.",
+    "category": "behavioral",
+    "question": "Tell me about a time when you had to rapidly learn and implement a new technology or tool. How did you approach it and what was the outcome?",
+    "answer": "At WDCC I started on the frontend, and then I picked up my first backend ticket: a backfill script for the missing months of GitHub history. Didn't know the backend well, so before writing anything, I read the ticket and worked out how the weekly job worked. I wanted to know what could I reuse. My script used the same function for the weekly numbers and the same identity and rate-limit helpers. The old branches were deleted, so I went through the PRs instead. After two rounds of review and ten commits, the missing months came back. I also learned that a ticket is rarely as simple as its description.",
+    "expect": {
+      "content": {
+        "min": 3,
+        "max": 4
+      },
+      "language": {
+        "min": 3,
+        "max": 4
+      },
+      "mustCatch": [
+        {
+          "span": "could I reuse",
+          "patternCode": "embedded-question-order"
+        },
+        {
+          "span": "Didn't know",
+          "patternCode": "dropped-subject"
+        }
+      ],
+      "mustNotFlag": [
+        "rate-limit helpers",
+        "the missing months came back"
+      ]
+    }
+  },
+  {
+    "id": "register-01",
+    "note": "Register group: two too-informal words ('stuff', 'gonna') in an interview answer. Background facts only. Sentence-final preposition 'depend on' is correct and must not be flagged.",
+    "category": "warmup",
+    "question": "Can you tell me about yourself and what drew you to apply for this React Developer role at Youtap?",
+    "answer": "I'm a frontend and full-stack engineer with about five years of experience at ByteDance and New Oriental in China. There I built internal dashboards and component library stuff. Right now I'm doing a Master of Software Engineering at the University of Auckland, and I'm gonna graduate at the end of October. I also volunteer at WDCC, where I work on a full-stack Projects Health Dashboard. I'm applying for this role because I want to keep building React products, and I'd like to work on something that real customers depend on.",
+    "expect": {
+      "content": {
+        "min": 3,
+        "max": 4
+      },
+      "language": {
+        "min": 3,
+        "max": 4
+      },
+      "mustCatch": [
+        {
+          "span": "stuff",
+          "patternCode": "too-informal"
+        },
+        {
+          "span": "gonna",
+          "patternCode": "too-informal"
+        }
+      ],
+      "mustNotFlag": [
+        "depend on",
+        "full-stack"
+      ]
+    }
+  },
+  {
+    "id": "coherence-01",
+    "note": "Coherence group: one correlative-conjunction redundancy ('Although ... but'); span is only 'but'. Story 2 (the counting rule changed mid-ticket); Story 4 did not fit changing requirements. Only one error in an otherwise native answer, so language 4-5. Sentence-final 'is for' must not be flagged.",
+    "category": "behavioral",
+    "question": "Describe a situation where you had to adapt quickly to changing requirements or priorities in a project. What was your approach?",
+    "answer": "On my first backend ticket at WDCC, the requirement changed halfway through. I was writing a backfill script for missing GitHub history, and the original rule only counted commits in merged PRs. Although my first version followed that rule, but I realised it didn't fit what the dashboard is for. It tracks activity, not shipping. Commits in open or closed PRs, or on branches with no PR at all, are real work too. I raised it with the tech lead, and we agreed to count all of them. So I added a second pass over every non-main branch and made every write an upsert, so nothing is counted twice.",
+    "expect": {
+      "content": {
+        "min": 4,
+        "max": 5
+      },
+      "language": {
+        "min": 4,
+        "max": 5
+      },
+      "mustCatch": [
+        {
+          "span": "but",
+          "patternCode": "correlative-conjunction-redundancy"
+        }
+      ],
+      "mustNotFlag": [
+        "what the dashboard is for",
+        "real work"
+      ]
+    }
+  },
+  {
+    "id": "native-01",
+    "note": "Near-native, no seeded errors. Story 1 answers #18 (most challenging technical problem) better than #11, and #11 is used by strong-content-01. Only real numbers: LCP 3.5s -> 2.6s, cached read ~20ms. British 'realised' and repetition 'again and again' must not be flagged.",
+    "category": "behavioral",
+    "question": "Tell me about the most challenging technical problem you've solved in a React project. What made it difficult and how did you solve it?",
+    "answer": "The hardest one was the order page in our merchant console. Merchants said a competitor's console felt more responsive. I added code splitting, and LCP improved from about 3.5 seconds to 2.6, but the complaint was still there. When our team visited some merchants, I saw them run the same filter hundreds of times a day, reload the page and keep several tabs open. That's when I realised I was measuring the wrong thing. The real problem was the same request, again and again. With a senior engineer, I went through the request logs, and we used stale-while-revalidate in a Service Worker. A cached read came back in about 20 milliseconds, and the complaint went away.",
+    "expect": {
+      "content": {
+        "min": 4,
+        "max": 5
+      },
+      "language": {
+        "min": 4,
+        "max": 5
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        "realised",
+        "again and again",
+        "the request logs"
+      ]
+    }
+  },
+  {
+    "id": "native-02",
+    "note": "Near-native, no seeded errors. Story 4, answers #9 directly (the challenge is the disagreement): proposed a modal; ended with a 'View details' link that opens a panel. Written in simple spoken English (IELTS 6 level) on purpose: simple is not wrong, so Language should still be 4-5. Idiom 'met in the middle', fixed phrase 'side by side' and the conditional 'If your mouse slips, both tooltips close' must not be flagged.",
+    "category": "behavioral",
+    "question": "Can you share an experience where you collaborated with cross-functional teams? What challenges did you face and how did you overcome them?",
+    "answer": "At ByteDance, we built a word cloud of the top keywords in video comments. When you hovered over a keyword, a tooltip showed its numbers. Inside that tooltip, there was a second tooltip. I talked to the PM about it, because the analysts needed to compare keywords. If your mouse slips, both tooltips close, and you can't keep two open side by side. I didn't just say no. I suggested a modal, so they could read and compare the detail. The PM wanted the detail close to the chart, so we met in the middle: we added a 'View details' link to the tooltip, and it opened the detail in a panel next to the chart. I learned to disagree about the user, not about my own taste.",
+    "expect": {
+      "content": {
+        "min": 4,
+        "max": 5
+      },
+      "language": {
+        "min": 4,
+        "max": 5
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        "met in the middle",
+        "side by side",
+        "If your mouse slips, both tooltips close"
+      ]
+    }
+  },
+  {
+    "id": "strong-content-01",
+    "note": "Strong content (full STAR, real metrics), weak language: four errors from four groups - missing-article (grammar), wrong-word-choice (vocabulary), dropped-subject (structure), too-informal (register). Four errors, but the meaning is always clear, so language 3-4 (2 = hard to follow). Story 1. 'hundreds of times a day' and 'code splitting' (uncountable, no article) must not be flagged.",
+    "category": "behavioral",
+    "question": "Describe a project where you had to optimize application performance. What steps did you take and what were the results?",
+    "answer": "Merchants said our order page felt slower than a competitor's console. First I ran Lighthouse audit and added code splitting. The bundle got smaller, and LCP developed from about 3.5 seconds to 2.6. But the complaint was still there. When our team visited some merchants, I saw them use the same filter hundreds of times a day, reload the page and keep several tabs open. So the slow part was kinda the same request, again and again. After going through the request logs with a senior engineer, we used stale-while-revalidate in a Service Worker. Rolled it out to a small group first, then to everyone. A cached read came back in about 20 milliseconds, and the complaint went away.",
+    "expect": {
+      "content": {
+        "min": 4,
+        "max": 5
+      },
+      "language": {
+        "min": 3,
+        "max": 4
+      },
+      "mustCatch": [
+        {
+          "span": "Lighthouse audit",
+          "patternCode": "missing-article"
+        },
+        {
+          "span": "developed",
+          "patternCode": "wrong-word-choice"
+        },
+        {
+          "span": "Rolled it out",
+          "patternCode": "dropped-subject"
+        },
+        {
+          "span": "kinda",
+          "patternCode": "too-informal"
+        }
+      ],
+      "mustNotFlag": [
+        "hundreds of times a day",
+        "code splitting"
+      ]
+    }
+  },
+  {
+    "id": "weak-content-01",
+    "note": "Perfect grammar, vague content: no example, no project, no STAR, only generic principles. Content 2-3 (it does answer the question, just vaguely; 1 = does not answer), language 4-5. Generic plural without article and 'best practices' must not be flagged.",
+    "category": "technical",
+    "question": "Explain your approach to breaking down a UI/UX design into reusable React components. What principles do you follow?",
+    "answer": "I think breaking down a design is really important. First, I look at the design and try to understand it. Then I split it into components that make sense. I try to keep components small and reusable, because reusable components are easier to maintain. I also think about how the components will work together. Good naming is important too, so other developers can understand the code. In general, I follow best practices and try to write clean code. It depends on the project, but I always try to keep things simple and consistent. Communication with designers is also important.",
+    "expect": {
+      "content": {
+        "min": 2,
+        "max": 3
+      },
+      "language": {
+        "min": 4,
+        "max": 5
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        "reusable components are easier to maintain",
+        "best practices"
+      ]
+    }
+  },
+  {
+    "id": "empty-01",
+    "note": "Nearly empty answer. Content 1-1. Language 2-3: the two sentences are correct, but seven words give no evidence of range, fluency or accuracy under load, so the language score should not be high; it should not be 1 either, because nothing is wrong. Nothing should be flagged. NOTE: the rubric anchors have no 'too short to judge' case; the grading prompt must add this rule or the model has no basis for 2-3.",
+    "category": "behavioral",
+    "question": "Tell me about a time when you had to balance speed of delivery with code quality. How did you make that decision?",
+    "answer": "I'm not sure. I think it depends.",
+    "expect": {
+      "content": {
+        "min": 1,
+        "max": 1
+      },
+      "language": {
+        "min": 2,
+        "max": 3
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        "I think it depends"
+      ]
+    }
+  },
+  {
+    "id": "real-01",
+    "note": "Real, unedited answer written by a Chinese-L1 speaker (Story 4, same facts as native-02). Not seeded: tests authentic errors. Spelling and capitalisation are deliberately NOT labelled (the prompt must ignore them: the product scores spoken English). mustCatch covers only errors that affect how a native listener understands: at/in a company, 'took a requirement', 'cloud chart' for word cloud, present tense in a past story, 'hover' without 'over', missing article, 'share to' for 'share with', model/modal, 'complicate' for 'complicated'. Content 2-3: the core reason (analysts compare keywords) is missing and replaced by the vague 'a little unsuitable for client'.",
+    "category": "behavioral",
+    "question": "Can you share an experience where you collaborated with cross-functional teams? What challenges did you face and how did you overcome them?",
+    "answer": "when i worked in Bytedance, I took a requirement which impliment a cloud chart with tootip. there is a second tootip inside the first tootip When i hover the data. it's just showing the comparation data. but it's a litte unsuitable for client. we had a discussion. Then i shared a new design to the PM. It used a model to show the comparation data. but she thought it's to complicate. throught trade off finally we found a middle design which is show a detail link clicked that opened a panel on the could chat side. reflection: i think we should think about how user use more comfortable instead of own best design",
+    "expect": {
+      "content": {
+        "min": 2,
+        "max": 3
+      },
+      "language": {
+        "min": 2,
+        "max": 3
+      },
+      "mustCatch": [
+        {
+          "span": "in Bytedance",
+          "patternCode": "improper-collocation"
+        },
+        {
+          "span": "took a requirement",
+          "patternCode": "improper-collocation"
+        },
+        {
+          "span": "cloud chart",
+          "patternCode": "wrong-word-choice"
+        },
+        {
+          "span": "there is",
+          "patternCode": "wrong-tense-narrative"
+        },
+        {
+          "span": "hover the data",
+          "patternCode": "improper-collocation"
+        },
+        {
+          "span": "for client",
+          "patternCode": "missing-article"
+        },
+        {
+          "span": "shared a new design to",
+          "patternCode": "improper-collocation"
+        },
+        {
+          "span": "model",
+          "patternCode": "wrong-word-choice"
+        },
+        {
+          "span": "to complicate",
+          "patternCode": "wrong-word-choice"
+        }
+      ],
+      "mustNotFlag": [
+        "we had a discussion"
+      ]
+    }
+  }
+]

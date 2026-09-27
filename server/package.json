@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "eval": "tsx eval/runEval.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
