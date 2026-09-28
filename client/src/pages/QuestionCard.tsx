@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { QuestionDto, ScoreReportDto } from '@shared/types'
 import { submitAnswer, transcribeAudio } from '../api/interview'
 import { Recorder } from './Recorder'
+import { PATTERN_INFO } from '@shared/errorPatterns'
 
 const TIER_LABELS: Record<QuestionDto['tier'], string> = {
   warmup: 'Warmup',
@@ -92,7 +93,9 @@ function ScoreCard({ score }: { score: ScoreReportDto }) {
       <div className="axes">
         <Axis tone="content" label="Content" value={score.contentScore} note={score.contentContext} />
         <Axis tone="language" label="Language" value={score.languageScore} note={score.languageContext} />
-        <Axis tone="delivery" label="Delivery" value={score.deliveryScore} note={score.deliveryContext} />
+        {score.deliveryScore !== null && score.deliveryContext !== null && (
+          <Axis tone="delivery" label="Delivery" value={score.deliveryScore} note={score.deliveryContext} />
+        )}
       </div>
 
       {score.languageErrorList.length > 0 && (
@@ -104,6 +107,7 @@ function ScoreCard({ score }: { score: ScoreReportDto }) {
                 <th>Your words</th>
                 <th>Native rewrite</th>
                 <th>Pattern</th>
+                <th>Severity</th>
               </tr>
             </thead>
             <tbody>
@@ -111,7 +115,8 @@ function ScoreCard({ score }: { score: ScoreReportDto }) {
                 <tr key={i}>
                   <td className="orig">{e.original}</td>
                   <td className="rewrite">{e.rewrite}</td>
-                  <td className="pattern">{e.pattern}</td>
+                  <td className="pattern">{PATTERN_INFO[e.patternCode].name}</td>
+                  <td><span className={`sev sev--${e.severity}`}>{e.severity}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -150,11 +155,11 @@ function Axis({
         <span className="axis-label">{label}</span>
         <span className="axis-score">
           {value}
-          <span className="axis-max">/10</span>
+          <span className="axis-max">/5</span>
         </span>
       </div>
       <div className="axis-bar">
-        <div className="axis-fill" style={{ width: `${value * 10}%` }} />
+        <div className="axis-fill" style={{ width: `${value * 20}%` }} />
       </div>
       <p className="axis-note">{note}</p>
     </div>

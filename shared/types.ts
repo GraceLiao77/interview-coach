@@ -1,5 +1,7 @@
 // Shared API request/response types — single source of truth for client and server.
 
+import type { PatternCode, Severity } from "./errorPatterns";
+
 // ---- Health (step 1) ----
 
 export interface HealthResponse {
@@ -68,11 +70,17 @@ export interface AnswerDto {
   createdAt: string;
 }
 
-/** One ESL language mistake: the user's words, a native rewrite, and the pattern name. */
+/** One ESL language mistake: the user's words, a native rewrite, and the pattern code. */
 export interface LanguageError {
   original: string;
   rewrite: string;
-  pattern: string;
+  patternCode: PatternCode;
+  severity: Severity;
+  /** Only set when patternCode is 'other': the model's suggestion for a new pattern. */
+  proposedPattern: {
+    code: string;
+    reason: string;
+  } | null;
 }
 
 export interface ScoreReportDto {
@@ -80,10 +88,10 @@ export interface ScoreReportDto {
   answerId: string;
   contentScore: number;
   languageScore: number;
-  deliveryScore: number;
+  deliveryScore: number | null;
   contentContext: string;
   languageContext: string;
-  deliveryContext: string;
+  deliveryContext: string | null;
   languageErrorList: LanguageError[];
   polishedVersion: string;
   structuralExemplar: string;
