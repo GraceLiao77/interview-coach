@@ -30,3 +30,6 @@ dist/
 # Notes kept local: fundamentals and career planning that don't belong in a public repo
 docs/diary/local/
 docs/local/
+
+# Eval harness: mock runs are regenerated every time; only real-model baselines are committed
+server/eval/baselines/mock.json

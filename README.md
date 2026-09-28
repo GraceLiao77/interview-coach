@@ -32,7 +32,7 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 2 | PostgreSQL (Supabase) + Prisma, session/question CRUD | ✅ |
 | 3 | JWT auth (register/login, bcrypt, `requireAuth`) | ✅ |
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
-| 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | ⬜ |
+| 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | 🟡 harness runs; first real baseline next |
 | 6 | Retrieval over a company/role knowledge base (Supabase `pgvector`) to ground question generation | ⬜ |
 | 7 | Cost telemetry — per-call token accounting, tiered model selection, prompt caching | ⬜ |
 | 8 | Resume (PDF) + job description match analysis | ⬜ |
@@ -68,6 +68,45 @@ An LLM feature is mostly ordinary systems work with a probabilistic component bo
 
 Audio is held in memory and never written to disk; uploads are capped at 25 MB.
 
+## Eval harness
+
+Changing a prompt is easy. Knowing whether it got better is not. A tweak that catches more missing articles can also start flagging correct English, and you won't notice that by reading a few outputs. So the scoring prompt is tested against a fixed, labelled Test Set before any change ships.
+
+**The Test Set** (`server/eval/cases.json`) holds 11 Eval Cases. Each one pairs a question and an answer with what a correct score report must and must not contain:
+
+- **Seeded errors.** A correct native answer with a known error injected (a dropped article, *although … but*, *gonna*), one case for each group of error patterns. Because the error was put there on purpose, its label is right by construction, not by a non-native labeller's judgement.
+- **Near-native answers.** These contain nothing to catch. They include things that look wrong but aren't: NZ spelling (*realised*), idioms (*met in the middle*), and deliberately simple spoken English. The model must leave them alone.
+- **Axis independence.** One answer has strong content and weak grammar, and another is fluent but empty. Content and Language have to be scored separately.
+- **One real answer.** A real, unedited answer from a Chinese-L1 speaker, with the errors a native listener would trip over labelled.
+
+**Grading is code, not another model.** For each case, the harness checks four things:
+
+| Check | Passes when | Measures |
+|---|---|---|
+| Content / Language band | the score falls inside the expected range | calibration |
+| Must-catch errors | some flagged error contains the labelled span | recall |
+| Must-not-flag spans | no flagged error overlaps a correct span | false positives |
+
+Grading is a pure function over the saved model output. When the grading rules change, old runs can be re-graded without paying for the model calls again. Grading is also free and gives the same result every time, which an LLM judge wouldn't.
+
+**The harness had its own bugs, too.** A must-not-flag check used `&&` where it needed `||`, so it only caught exact matches. The mock data couldn't expose that. And a short span like *but* produced a false pass by matching an unrelated error, so a match will also have to agree on the error pattern.
+
+```bash
+cd server
+MOCK_AI=true npm run eval    # free: checks the plumbing with canned model output
+MOCK_AI=false npm run eval   # real run: costs about NZ$0.5–1 for the whole set
+```
+
+```
+ ✓ 11 cases loaded
+grammar-01           content ❌ 3 (4-5)   language ✅ 4 (3-4)   catch 0/2   noFlag 2/2
+...
+content 4/11 · language 9/11 · mustCatch 1/22 · mustNotFlag 22/22 · errors 0
+✓ saved eval/baselines/mock.json
+```
+
+The run stops with exit code 1 on a malformed case, a span that isn't in its answer, or a duplicate id. Each run saves a baseline named after the model it tested (`eval/baselines/<model>.json`), with the summary, the per-case results and the raw model output. A prompt or model change is compared against the last committed baseline before it ships.
+
 ## Tech stack
 
 | Layer | Choice |
@@ -89,6 +128,7 @@ interview-coach/
 ├── shared/types.ts             # API request/response types shared by both sides
 ├── server/
 │   ├── prisma/                 # schema + migrations
+│   ├── eval/                   # eval harness: cases.json (Test Set), runEval.ts, grade.ts, baselines/
 │   └── src/
 │       ├── index.ts            # Express app (CORS, routes, error handler incl. MulterError)
 │       ├── env.ts              # loads + validates .env once, at startup
