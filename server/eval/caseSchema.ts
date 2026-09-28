@@ -15,10 +15,10 @@ export const EvalCaseSchema = z.object({
     expect: z.object({
         content: BandSchema,
         language: BandSchema,
-        mustCatch: z.array(z.object({
+        mustCatch: z.array(z.object({ // recall 召回率
             span: z.string(), patternCode: z.string()
         })),
-        mustNotFlag: z.array(z.string()),
+        mustNotFlag: z.array(z.string()), // precision 精确率
     })
 })
 // 惯例类型

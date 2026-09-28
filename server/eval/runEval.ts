@@ -1,9 +1,15 @@
 // 读取 cases.json 文件
-import { readFile } from "fs/promises";
+import { readFile, mkdir, writeFile } from "fs/promises";
+
 import { EvalCaseSchema } from "./caseSchema";
 import { z } from "zod";
 import path from "path";
 import { scoreAnswer } from "../src/services/scoringService";
+import { CaseResult, gradeCase } from "./grade";
+import { formatCaseLine, summarize, formatSummary } from "./report";
+import { ScoreReport } from "../src/schemas/scoring";
+import { env } from "../src/env";
+import { MODELS } from "../src/lib/aiConfig";
 
 const filePath = path.join(import.meta.dirname, "cases.json") 
 const raw = JSON.parse(await readFile(filePath, "utf-8")); // // 文本-> 对象 
@@ -48,15 +54,29 @@ if (ErrList.length > 0) {
 }
 console.log(` ✓ ${cases.data.length} cases loaded`);
 
-const successList = []
 // call scoreAnswer
+const results: CaseResult[] = []
+const reports: {id: string, report: ScoreReport}[] = []
+
 for (const item of cases.data) {
     try {
         const res = await scoreAnswer(item.question, item.answer)
-        successList.push([item.id, res.contentScore, res.languageScore])
+        results.push(gradeCase(item, res)) // 批改结果
+        reports.push({id: item.id, report: res}) // 原始答卷
     } catch (e) {
         console.error(item.id, e)
     }
 }
+// format result
+for (const r of results) console.log(formatCaseLine(r));
+const summary = summarize(results, cases.data.length);
+console.log(formatSummary(summary));
+// write transcript to baselines file
+const baselineDir = path.join(import.meta.dirname, "baselines");   // 文件夹
+await mkdir(baselineDir, { recursive: true });                      // 创建文件夹
+const name = env.mockAi ? "mock" : MODELS.scoring.id;
+const baselineFile = path.join(baselineDir, `${name}.json`);        // 文件夹里的文件
+const content = { model: name, runAt: new Date().toISOString(), summary, results, reports };
 
-console.log(successList, 'error: ', cases.data.length-successList.length)
+await writeFile(baselineFile, JSON.stringify(content, null, 2));
+console.log(`✓ saved ${baselineFile}`);
