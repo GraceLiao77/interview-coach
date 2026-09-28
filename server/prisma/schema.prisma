@@ -56,10 +56,10 @@ model ScoreReport {
   answer             Answer   @relation(fields: [answerId], references: [id], onDelete: Cascade)
   contentScore       Int
   languageScore      Int
-  deliveryScore      Int
+  deliveryScore      Int?
   contentContext     String
   languageContext    String
-  deliveryContext    String
+  deliveryContext    String?
   languageErrorList  Json
   polishedVersion    String
   structuralExemplar String
