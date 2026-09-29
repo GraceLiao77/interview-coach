@@ -1,0 +1,828 @@
+{
+  "model": "claude-sonnet-5",
+  "runAt": "2026-09-29T12:02:48.533Z",
+  "complete": true,
+  "only": null,
+  "summary": {
+    "total": 11,
+    "graded": 11,
+    "errors": 0,
+    "content": {
+      "passed": 11,
+      "total": 11
+    },
+    "language": {
+      "passed": 10,
+      "total": 11
+    },
+    "mustCatch": {
+      "passed": 17,
+      "total": 22
+    },
+    "mustNotFlag": {
+      "passed": 21,
+      "total": 22
+    }
+  },
+  "results": [
+    {
+      "id": "grammar-01",
+      "content": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "language": {
+        "min": 3,
+        "max": 4,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "tech lead",
+          "pass": true
+        },
+        {
+          "span": "round",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "realised",
+          "pass": true
+        },
+        {
+          "span": "a backfill script",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "vocab-01",
+      "content": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "language": {
+        "min": 3,
+        "max": 4,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "seeing",
+          "pass": true
+        },
+        {
+          "span": "did typos",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "by hand",
+          "pass": true
+        },
+        {
+          "span": "the spec was agreed",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "structure-01",
+      "content": {
+        "min": 3,
+        "max": 4,
+        "actual": 4,
+        "pass": true
+      },
+      "language": {
+        "min": 3,
+        "max": 4,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "could I reuse",
+          "pass": true
+        },
+        {
+          "span": "Didn't know",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "rate-limit helpers",
+          "pass": true
+        },
+        {
+          "span": "the missing months came back",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "register-01",
+      "content": {
+        "min": 3,
+        "max": 4,
+        "actual": 3,
+        "pass": true
+      },
+      "language": {
+        "min": 3,
+        "max": 4,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "stuff",
+          "pass": true
+        },
+        {
+          "span": "gonna",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "depend on",
+          "pass": true
+        },
+        {
+          "span": "full-stack",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "coherence-01",
+      "content": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "language": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "but",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "what the dashboard is for",
+          "pass": true
+        },
+        {
+          "span": "real work",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "native-01",
+      "content": {
+        "min": 4,
+        "max": 5,
+        "actual": 5,
+        "pass": true
+      },
+      "language": {
+        "min": 4,
+        "max": 5,
+        "actual": 5,
+        "pass": true
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        {
+          "span": "realised",
+          "pass": true
+        },
+        {
+          "span": "again and again",
+          "pass": true
+        },
+        {
+          "span": "the request logs",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "native-02",
+      "content": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "language": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        {
+          "span": "met in the middle",
+          "pass": true
+        },
+        {
+          "span": "side by side",
+          "pass": true
+        },
+        {
+          "span": "If your mouse slips, both tooltips close",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "id": "strong-content-01",
+      "content": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "language": {
+        "min": 3,
+        "max": 4,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "Lighthouse audit",
+          "pass": true
+        },
+        {
+          "span": "developed",
+          "pass": true
+        },
+        {
+          "span": "Rolled it out",
+          "pass": true
+        },
+        {
+          "span": "kinda",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "hundreds of times a day",
+          "pass": true
+        },
+        {
+          "span": "code splitting",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "weak-content-01",
+      "content": {
+        "min": 2,
+        "max": 3,
+        "actual": 2,
+        "pass": true
+      },
+      "language": {
+        "min": 4,
+        "max": 5,
+        "actual": 4,
+        "pass": true
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        {
+          "span": "reusable components are easier to maintain",
+          "pass": true
+        },
+        {
+          "span": "best practices",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "empty-01",
+      "content": {
+        "min": 1,
+        "max": 1,
+        "actual": 1,
+        "pass": true
+      },
+      "language": {
+        "min": 2,
+        "max": 3,
+        "actual": 4,
+        "pass": false
+      },
+      "mustCatch": [],
+      "mustNotFlag": [
+        {
+          "span": "I think it depends",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "id": "real-01",
+      "content": {
+        "min": 2,
+        "max": 3,
+        "actual": 3,
+        "pass": true
+      },
+      "language": {
+        "min": 2,
+        "max": 3,
+        "actual": 2,
+        "pass": true
+      },
+      "mustCatch": [
+        {
+          "span": "in Bytedance",
+          "pass": false
+        },
+        {
+          "span": "took a requirement",
+          "pass": false
+        },
+        {
+          "span": "cloud chart",
+          "pass": false
+        },
+        {
+          "span": "there is",
+          "pass": false
+        },
+        {
+          "span": "hover the data",
+          "pass": false
+        },
+        {
+          "span": "for client",
+          "pass": true
+        },
+        {
+          "span": "shared a new design to",
+          "pass": true
+        },
+        {
+          "span": "model",
+          "pass": true
+        },
+        {
+          "span": "to complicate",
+          "pass": true
+        }
+      ],
+      "mustNotFlag": [
+        {
+          "span": "we had a discussion",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "id": "grammar-01",
+      "report": {
+        "contentScore": 4,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer gives a concrete, specific example (backfill script for GitHub history at WDCC) and follows a clear situation-feedback-action-result arc: it explains the assumption made, the tech lead's correction, the follow-up issue the candidate proactively raised, and a brief statement of the lesson learned. This meets the core expectations of the question. It loses a point because the reflection on 'what I learned' is thin - it's summarized in one short sentence ('Now I try to find these problems before I open a PR') without elaborating on how that changed their review habits or what specifically made them realize the gap in their assumption, which would make the growth more convincing.",
+        "languageContext": "The response is fluent and easy to follow, with consistent past-tense narrative and natural phrasing overall. The main issues are a couple of missing articles before 'tech lead' and 'review', and one missing plural ('two round' instead of 'two rounds'). These are minor and don't obscure meaning, so the response reads as a fairly strong, natural spoken answer with a few small slips typical of non-native speakers under time pressure.",
+        "deliveryContext": null,
+        "polishedVersion": "At WDCC, where I volunteer, I worked on the Projects Health Dashboard, and I picked up a backfill script for the missing months of GitHub history. The old branches had been deleted, so I went through the PRs instead. I assumed a commit should count in the week its PR was merged. In the review, the tech lead pointed out that it should count in the week it was written. I switched to using each commit's own timestamp. Then I realized commits come in different states, so I raised that too, and we agreed to count all of them. It took two rounds of review and ten commits. Now I try to catch these problems before I open a PR.",
+        "structuralExemplar": "[Situation: Where and on what project did this happen?] I worked on [specific project] at [organization/team]. [Task: What was I responsible for?] I was assigned to [specific task]. [Initial approach/assumption: What did I do first, and what assumption did I make?] I decided to [approach], assuming that [assumption]. [Feedback: What critical feedback did I receive, and from whom?] During review, [reviewer role] pointed out that [specific issue]. [Reaction/Action: How did I respond and what did I change?] I [specific action taken to address feedback], and then I also noticed [additional issue I proactively caught], so I [action]. [Result: What was the outcome?] This took [effort/iterations], resulting in [outcome]. [Learning: What concrete habit or mindset changed?] Since then, I now [specific new practice], which has helped me [benefit].",
+        "languageErrorList": [
+          {
+            "original": "tech lead pointed out",
+            "rewrite": "the tech lead pointed out",
+            "patternCode": "missing-article",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "In review,",
+            "rewrite": "In the review,",
+            "patternCode": "missing-article",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "two round of review",
+            "rewrite": "two rounds of review",
+            "patternCode": "missing-plural",
+            "severity": "must-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "vocab-01",
+      "report": {
+        "contentScore": 4,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer gives a concrete, specific example (marking dashboard at New Oriental) and clearly names a real challenge (deeply nested, frequently changing response data leading to typo bugs) plus a well-explained solution (openapi-typescript generating types from a design-first Swagger spec). It shows technical depth and a clear cause-effect narrative. It could be slightly stronger by mentioning a second distinct challenge (e.g., error handling, loading states, or race conditions) since the question asks about 'challenges' plurally, but the single challenge given is well-developed and directly answers the prompt.",
+        "languageContext": "The answer is largely fluent and natural, with correct tense usage and good sentence variety. There are a couple of word-choice/collocation slips ('did typos', 'kept seeing the API docs') that a native speaker would phrase differently, but they don't obscure meaning. Overall grammar, article usage, and subject-verb agreement are solid throughout.",
+        "deliveryContext": null,
+        "polishedVersion": "At New Oriental, we built a new marking dashboard on top of the backend's REST APIs. The biggest challenge was the response data: it was deeply nested and it changed often. In plain JavaScript we kept checking the API docs for field names, and we still made typos that only showed up in QA. So I set up openapi-typescript to generate types straight from the backend's Swagger spec. We worked design-first, so the spec was agreed before the endpoints were built. That meant I could build against the types while the backend team was still writing the API. Nobody wrote the API types by hand, and the editor gave us autocomplete for every field.",
+        "structuralExemplar": "[Context: project and tech stack] At New Oriental, we built a new marking dashboard on top of the backend's REST APIs. [Challenge: name the specific pain point] The biggest challenge was the response data. It was deeply nested and it changed often. [Concrete consequence: show the cost of the problem] In plain JavaScript we kept checking the API docs for field names, and we still made typos that only showed up in QA. [Action: the fix you introduced] So I set up openapi-typescript to generate types straight from the backend's Swagger spec. [Process detail: how the fix fit the team's workflow] We were design-first, so the spec was agreed before the endpoints were built. That meant I could build against the types while the backend team was still writing the API. [Result: measurable/qualitative outcome] Nobody wrote the API types by hand, and the editor gave us autocomplete for every field.",
+        "languageErrorList": [
+          {
+            "original": "we did typos",
+            "rewrite": "we still made typos",
+            "patternCode": "improper-collocation",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "we kept seeing the API docs",
+            "rewrite": "we kept checking the API docs",
+            "patternCode": "wrong-word-choice",
+            "severity": "should-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "structure-01",
+      "report": {
+        "contentScore": 4,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer gives a concrete, specific example (WDCC, a backfill script for missing GitHub history months) and shows a clear approach: reading the ticket, studying the existing weekly job, and reusing existing functions/helpers rather than reinventing them. The result (missing months restored) and a reflective takeaway ('a ticket is rarely as simple as its description') are both present, which is good. It could be slightly stronger by briefly stating why the technology/tool was new to the speaker and by quantifying the outcome (e.g., how much data, how long it took) to make the result more vivid.",
+        "languageContext": "The response is largely fluent and idiomatic, using natural collocations ('picked up a ticket', 'went through the PRs', 'rounds of review'). There are only a couple of minor slips: a dropped subject at the start of a sentence and an embedded question that keeps direct-question word order. Neither error impedes understanding, and the overall register and phrasing sound like natural spoken English suitable for an interview.",
+        "deliveryContext": null,
+        "polishedVersion": "At WDCC I started on the frontend, and then I picked up my first backend ticket: a backfill script for the missing months of GitHub history. I didn't know the backend well, so before writing anything, I read the ticket and worked out how the weekly job worked. I wanted to know what I could reuse. My script ended up using the same function for the weekly numbers and the same identity and rate-limit helpers. The old branches had been deleted, so I went through the PRs instead. After two rounds of review and ten commits, the missing months were restored. I also learned that a ticket is rarely as simple as its description.",
+        "structuralExemplar": "[Situation: brief context of role/team] At WDCC I started on the frontend, and then I picked up my first backend ticket... [Task: the specific challenge] a backfill script for the missing months of GitHub history... [Action: steps taken to learn/adapt] I didn't know the backend well, so I read the ticket, studied the weekly job, and reused existing functions and helpers... [Result: concrete outcome] After two rounds of review and ten commits, the missing months were restored... [Reflection: lesson learned] I also learned that a ticket is rarely as simple as its description.",
+        "languageErrorList": [
+          {
+            "original": "Didn't know the backend well",
+            "rewrite": "I didn't know the backend well",
+            "patternCode": "dropped-subject",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "what could I reuse",
+            "rewrite": "what I could reuse",
+            "patternCode": "embedded-question-order",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "the missing months came back",
+            "rewrite": "the missing months were restored",
+            "patternCode": "improper-collocation",
+            "severity": "nice-to-have",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "register-01",
+      "report": {
+        "contentScore": 3,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer covers the essential self-introduction elements—background, current studies, side project, and motivation—but stays generic. It never ties the applicant's skills or interests to Youtap specifically (e.g., its product, tech stack, or mission), which weakens the 'why this role/company' part of the question. The experience described (dashboards, component libraries) is relevant to a React role, which is a plus, but the answer would benefit from one concrete detail linking past work to what Youtap does.",
+        "languageContext": "The grammar is solid overall—tenses, articles, and word order are handled correctly. The main issues are two informal fillers ('stuff', 'gonna') that are fine in casual speech but slightly undercut the professionalism expected in an interview setting.",
+        "deliveryContext": null,
+        "polishedVersion": "I'm a frontend and full-stack engineer with about five years of experience at ByteDance and New Oriental in China. There I built internal dashboards and component libraries. Right now I'm doing a Master of Software Engineering at the University of Auckland, and I'll graduate at the end of October. I also volunteer at WDCC, where I work on a full-stack Projects Health Dashboard. I'm applying for this role because I want to keep building React products, and I'd like to work on something that real customers depend on.",
+        "structuralExemplar": "I'm a [role/title] with [X years] of experience at [company/companies]. There I [built/worked on specific projects relevant to the target role]. Right now I'm [current activity, e.g., studying/working], and I'll [upcoming milestone, e.g., graduate/finish project] by [timeframe]. I also [side project or volunteer work that reinforces relevant skills]. I'm applying for this role at [Company] because [specific reason tied to the company's product/mission], and I'd like to [personal goal that connects your skills to their needs].",
+        "languageErrorList": [
+          {
+            "original": "component library stuff",
+            "rewrite": "component libraries",
+            "patternCode": "too-informal",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "I'm gonna graduate",
+            "rewrite": "I'll graduate",
+            "patternCode": "too-informal",
+            "severity": "should-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "coherence-01",
+      "report": {
+        "contentScore": 4,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer gives a concrete, specific example (a backfill script for GitHub history at WDCC) and clearly shows the changing requirement (counting only merged-PR commits vs. all real work). The approach is well explained: recognizing the mismatch with the dashboard's purpose, raising it with the tech lead, and implementing a technical fix (second pass, upsert logic). This demonstrates good technical judgment and collaboration. It could be slightly stronger with an explicit statement of the outcome/impact of the change (e.g., how it affected the dashboard's accuracy or the team), which would round out the STAR structure.",
+        "languageContext": "The language is fluent and mostly natural, with accurate tense usage and good technical vocabulary. There is one clear redundancy error combining 'although' and 'but' in the same clause, which is a common ESL pattern. Otherwise, sentence structure, word choice, and collocations are natural and idiomatic for a technical interview setting.",
+        "deliveryContext": null,
+        "polishedVersion": "On my first backend ticket at WDCC, the requirements changed halfway through. I was writing a backfill script for missing GitHub history, and the original rule only counted commits in merged PRs. Although my first version followed that rule, I realized it didn't fit what the dashboard is for: it tracks activity, not just shipped work. Commits in open or closed PRs, or on branches with no PR at all, are real work too. I raised this with the tech lead, and we agreed to count all of them. So I added a second pass over every non-main branch and made every write an upsert, so nothing gets counted twice.",
+        "structuralExemplar": "Situation: [set up the context — project, ticket, and what you were originally asked to do] → Complication: [describe exactly how the requirement or priority changed and why] → Action: [explain the reasoning process and concrete steps taken to adapt, including any collaboration] → Result: [state the measurable or observable outcome of the change, e.g., improved accuracy, avoided a bug, or team impact]. This answer covers Situation, Complication, and Action well, but the Result section is thin — consider adding a brief closing line on the outcome, such as how the corrected counting logic affected the dashboard's accuracy or stakeholder trust.",
+        "languageErrorList": [
+          {
+            "original": "Although my first version followed that rule, but I realised",
+            "rewrite": "Although my first version followed that rule, I realized",
+            "patternCode": "correlative-conjunction-redundancy",
+            "severity": "should-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "native-01",
+      "report": {
+        "contentScore": 5,
+        "languageScore": 5,
+        "deliveryScore": null,
+        "contentContext": "This answer is excellent. It follows a clear problem-cause-solution arc: it names a concrete artifact (the order page), gives a plausible first attempt (code splitting) with specific before/after metrics, then shows genuine insight when that fix didn't resolve the complaint. The pivot—observing real user behavior to discover the true bottleneck (repeated identical requests)—demonstrates strong diagnostic thinking and intellectual honesty about initially 'measuring the wrong thing.' The final solution (stale-while-revalidate via Service Worker) is technically specific and credible, and mentioning collaboration with a senior engineer adds realism. The only minor gap is that the very end (result/impact) is slightly terse—it would be even stronger with a closing sentence on business impact (e.g., merchant satisfaction, retention) rather than just 'the complaint went away.'",
+        "languageContext": "The language is fluent, well-organized, and very close to native-level phrasing. Sentence structures are varied and natural, tenses are consistent with the narrative, and technical vocabulary (LCP, stale-while-revalidate, Service Worker) is used correctly and idiomatically. There is essentially one small slip: dropping the unit 'seconds' after '2.6,' which is a minor ellipsis that could momentarily confuse a listener. Otherwise there are no grammar, tense, or word-choice errors worth flagging.",
+        "deliveryContext": null,
+        "polishedVersion": "The hardest problem I've solved was on the order page in our merchant console. Merchants said a competitor's console felt more responsive. I added code splitting, and LCP improved from about 3.5 seconds to 2.6 seconds, but the complaint was still there. When our team visited some merchants, I saw them run the same filter hundreds of times a day, reload the page, and keep several tabs open. That's when I realized I was measuring the wrong thing—the real problem was the same request being made again and again. Working with a senior engineer, I went through the request logs, and we implemented stale-while-revalidate caching in a Service Worker. A cached read came back in about 20 milliseconds, and the complaint went away.",
+        "structuralExemplar": "The hardest problem was [specific technical challenge in a named feature/page]. [Stakeholders] reported or noticed [observable symptom]. I first tried [initial solution], which improved [specific metric] from [baseline] to [new value], but [the underlying issue persisted]. When I [investigated further / observed real usage], I discovered [root cause insight that reframed the problem]. The real issue was [restated true problem]. Working with [collaborator or team], I [diagnostic method, e.g., reviewed logs, profiled the app], and we implemented [specific technical solution]. As a result, [quantified outcome], and [broader impact, e.g., user satisfaction or business metric].",
+        "languageErrorList": [
+          {
+            "original": "3.5 seconds to 2.6,",
+            "rewrite": "3.5 seconds to 2.6 seconds,",
+            "patternCode": "other",
+            "severity": "nice-to-have",
+            "proposedPattern": {
+              "code": "dropped-unit-repetition",
+              "reason": "The unit of measurement (seconds) is omitted on the second number in a comparison, which is common in casual speech but slightly less clear in a formal interview context."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "native-02",
+      "report": {
+        "contentScore": 4,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer gives a concrete, well-scoped story: a nested-tooltip UI problem, a disagreement with the PM about how to display comparison data, and a negotiated compromise. It shows initiative ('I didn't just say no'), a specific alternative (a modal), and a collaborative outcome ('View details' panel). The reflection line ties it back to a broader lesson about advocating for users. What's missing is a clearer articulation of the 'challenge' as a challenge (e.g., differing priorities, time pressure, stakeholder pushback) and a quantifiable or verifiable result (e.g., analyst feedback, adoption, reduced complaints) that would prove the resolution actually worked. It reads as a solid but somewhat compressed STAR answer.",
+        "languageContext": "The English is fluent and mostly natural, with good use of idiom ('met in the middle') and clear cause-effect phrasing. The main recurring issue is dropping the plural on 'detail' when it should be 'details' (three occurrences), which is a minor but repeated slip. There's also a brief tense inconsistency where the narrative shifts from past to present ('If your mouse slips...') mid-story. The closing line ('disagree about the user') is a slightly unusual collocation that could be clearer. None of these block understanding, but fixing them would make the delivery sound more polished.",
+        "deliveryContext": null,
+        "polishedVersion": "At ByteDance, we built a word cloud of the top keywords in video comments. When you hovered over a keyword, a tooltip showed its numbers, and inside that tooltip there was a second tooltip. I talked to the PM about it because the analysts needed to compare keywords, but if your mouse slipped, both tooltips would close, so you couldn't keep two open side by side. I didn't just say no — I suggested a modal so they could read and compare the details. The PM wanted the details close to the chart, so we met in the middle: we added a 'View details' link to the tooltip that opened the details in a panel next to the chart. I learned to advocate for the user's needs, not just my own preferences.",
+        "structuralExemplar": "[Situation] At [company], while working on [project], I ran into a disagreement with [role] about [specific design/technical decision]. [Challenge] The core tension was that [my priority] conflicted with [their priority], and [describe the concrete friction, e.g., a usability problem or deadline pressure]. [Action] Instead of just pushing back, I proposed [specific alternative], explaining how it addressed [user/business need]. [Negotiation/Compromise] We didn't fully agree, so we found a middle ground: [describe the compromise solution]. [Result] This led to [measurable or observed outcome — e.g., positive analyst feedback, fewer complaints, faster workflow]. [Reflection] The experience taught me [transferable lesson about collaboration or advocacy].",
+        "languageErrorList": [
+          {
+            "original": "compare the detail",
+            "rewrite": "compare the details",
+            "patternCode": "missing-plural",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "wanted the detail close to the chart",
+            "rewrite": "wanted the details close to the chart",
+            "patternCode": "missing-plural",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "opened the detail in a panel",
+            "rewrite": "opened the details in a panel",
+            "patternCode": "missing-plural",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "If your mouse slips, both tooltips close",
+            "rewrite": "If your mouse slipped, both tooltips would close",
+            "patternCode": "wrong-tense-narrative",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "disagree about the user",
+            "rewrite": "advocate for the user's needs",
+            "patternCode": "improper-collocation",
+            "severity": "nice-to-have",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "strong-content-01",
+      "report": {
+        "contentScore": 4,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "Strong answer that follows a clear investigative arc: it starts with the reported problem, moves through an initial technical fix that didn't fully solve it, then shows genuine root-cause analysis by observing real merchant behavior and collaborating with a senior engineer, and ends with a concrete, quantified result plus a sensible staged rollout. This demonstrates good judgment (not just applying a generic optimization) and data-driven validation. It could be slightly stronger with a sentence on the broader business impact (e.g., how many merchants affected, any metric like support tickets or conversion) to fully close the loop, which keeps it from a top score.",
+        "languageContext": "The response is fluent and mostly natural, with a good range of vocabulary and sentence structures for describing a technical process. The errors are minor: a missing article, one word used in a slightly wrong sense, an informal filler word out of place in an interview, and one dropped subject. None of these obscure the meaning, but fixing them would make the delivery fully polished and consistently professional.",
+        "deliveryContext": null,
+        "polishedVersion": "Merchants said our order page felt slower than a competitor's console. First, I ran a Lighthouse audit and added code splitting. The bundle got smaller, and LCP improved from about 3.5 seconds to 2.6. But the complaint was still there. When our team visited some merchants, I saw them use the same filter hundreds of times a day, reload the page, and keep several tabs open. So the slow part was essentially the same request happening again and again. After going through the request logs with a senior engineer, we used stale-while-revalidate in a Service Worker. We rolled it out to a small group first, then to everyone. A cached read came back in about 20 milliseconds, and the complaint went away.",
+        "structuralExemplar": "[Problem/trigger: state what was reported and by whom] + [Initial hypothesis and action: describe the first technical step you took] + [Partial result: give a measurable improvement, then note the problem persisted] + [Deeper investigation: describe how you observed or gathered more data to find the real cause] + [Root cause: state what you discovered was actually driving the issue] + [Collaboration: mention who you worked with to validate the diagnosis] + [Solution: describe the technical fix you implemented] + [Rollout strategy: explain how you deployed it safely] + [Result: give a concrete, quantified outcome tied back to the original complaint]",
+        "languageErrorList": [
+          {
+            "original": "ran Lighthouse audit",
+            "rewrite": "ran a Lighthouse audit",
+            "patternCode": "missing-article",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "LCP developed from about 3.5 seconds to 2.6",
+            "rewrite": "LCP improved from about 3.5 seconds to 2.6",
+            "patternCode": "wrong-word-choice",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "kinda",
+            "rewrite": "essentially",
+            "patternCode": "too-informal",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "Rolled it out to a small group first",
+            "rewrite": "We rolled it out to a small group first",
+            "patternCode": "dropped-subject",
+            "severity": "should-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "weak-content-01",
+      "report": {
+        "contentScore": 2,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer stays at a very general level and never names a concrete methodology (e.g., atomic design, single-responsibility, composition over inheritance, prop-drilling vs. context) or gives a real example of decomposing a UI. Phrases like 'follow best practices', 'write clean code', and 'keep things simple and consistent' are true but generic and could apply to any engineering task, not specifically to React component decomposition. There is no mention of concrete signals used to decide component boundaries (visual repetition, data ownership, state locality, props interface design) nor of trade-offs (over-abstraction vs. duplication). The closing mention of designer communication is a nice touch but arrives disconnected from the rest and is not elaborated.",
+        "languageContext": "Grammar is largely correct with no major structural errors, but the response reads as a loosely connected list of statements rather than a reasoned explanation. The word 'important' is repeated three times, which flattens the vocabulary, and several sentences (especially the closing one about designer communication) are tacked on without a linking word that shows how they relate to the previous point. These are fluency/style issues rather than grammatical mistakes, so the language score stays high but not perfect.",
+        "deliveryContext": null,
+        "polishedVersion": "I think breaking down a design into components is really important. First, I look at the overall design and try to understand its structure. Then I split it into components that make logical sense. I try to keep each component small and reusable, since reusable components are easier to maintain over time. I also consider how these components will interact with one another. Clear naming conventions matter too, so other developers can quickly understand the code. In general, I follow established best practices and aim to write clean, consistent code, though the right level of abstraction really depends on the project. Finally, staying in close communication with designers is important, since it helps ensure the components I build truly match their intended design.",
+        "structuralExemplar": "[Opening principle] State the core philosophy behind your component decomposition (e.g., 'I decompose UI based on both visual patterns and data ownership'). [Concrete process] Describe the step-by-step process you follow, from analyzing the design to identifying repeatable visual elements. [Specific principle #1] Name a concrete principle (e.g., single responsibility) and explain why it matters with a short example. [Specific principle #2] Name a second principle (e.g., composition over prop drilling) with a brief illustration. [Trade-off awareness] Mention a trade-off you consider, such as over-abstracting too early vs. duplicating code. [Collaboration note] Connect the discussion to how you work with designers or teammates, showing how it ties back to the earlier principles rather than appearing as an isolated afterthought.",
+        "languageErrorList": [
+          {
+            "original": "Good naming is important too, so other developers can understand the code.",
+            "rewrite": "Clear naming conventions also help other developers quickly understand and maintain the code.",
+            "patternCode": "other",
+            "severity": "nice-to-have",
+            "proposedPattern": {
+              "code": "word-repetition",
+              "reason": "The word 'important' is used three times across the answer, making the language sound repetitive; varying vocabulary would make it more natural."
+            }
+          },
+          {
+            "original": "Communication with designers is also important.",
+            "rewrite": "Staying in close communication with designers is also important, since it helps ensure the components match their intended design.",
+            "patternCode": "missing-connector",
+            "severity": "should-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "empty-01",
+      "report": {
+        "contentScore": 1,
+        "languageScore": 4,
+        "deliveryScore": null,
+        "contentContext": "The answer does not address the question at all. It offers no concrete example, no description of a situation, decision-making process, or outcome. It's essentially a non-answer that would leave an interviewer with no information about the candidate's experience or judgment regarding balancing speed and quality.",
+        "languageContext": "The two sentences are grammatically correct with no structural errors, but the response is far too short to demonstrate real language competency. The phrasing is vague and non-committal, which combined with the brevity, comes across as underprepared or evasive rather than confidently spoken English.",
+        "deliveryContext": null,
+        "polishedVersion": "I'm not sure — it really depends on the situation.",
+        "structuralExemplar": "[Situation: Briefly set the scene — what project or task were you working on, and what pressure existed around timing?] [Task/Conflict: Explain the tension between speed and quality — e.g., a tight deadline versus known technical debt or risk.] [Action/Decision-making: Describe the specific factors you weighed — such as business impact, risk tolerance, reversibility — and how you decided to prioritize one over the other, or how you found a middle ground.] [Result: State the outcome — did it work out, what did you learn, would you decide the same way again?] The current answer contains none of these components; it should be replaced with a real, specific example following this structure.",
+        "languageErrorList": [
+          {
+            "original": "I'm not sure.",
+            "rewrite": "I'm not sure, but let me think of an example.",
+            "patternCode": "too-informal",
+            "severity": "nice-to-have",
+            "proposedPattern": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real-01",
+      "report": {
+        "contentScore": 3,
+        "languageScore": 2,
+        "deliveryScore": null,
+        "contentContext": "The answer offers a concrete, specific example (a tooltip/modal design disagreement with a PM at ByteDance) and touches on all parts of the question—collaboration, challenge, and resolution—but the narrative is underdeveloped: the actual interpersonal 'challenge' (disagreement with the PM) is mentioned only briefly, the process of resolving it ('trade off') is vague, and the reflection is generic rather than tied specifically to what was learned about cross-functional collaboration. A clearer STAR structure with more detail on the negotiation process and outcome would strengthen it.",
+        "languageContext": "The response has frequent grammatical and lexical errors that sometimes obscure meaning, especially in the description of the final design solution. Tense is inconsistent (mixing present and past when narrating a past event), several word choices are incorrect (e.g., 'model' for 'modal', 'comparation' for 'comparison', 'to complicate' for 'too complicated'), articles are frequently missing, and sentence structure is often run-on or fragmented, making the answer harder to follow at points.",
+        "deliveryContext": null,
+        "polishedVersion": "When I worked at ByteDance, I took on a requirement to implement a cloud chart with a tooltip. There was a second tooltip inside the first one, and when I hovered over the data, it only showed the comparison data, which was a bit unsuitable for the client. We had a discussion about it, and then I shared a new design with the PM that used a modal to show the comparison data. However, she thought it was too complicated. Through some trade-offs, we finally found a middle-ground design: a detail link that, when clicked, opened a panel on the side of the cloud chart. Reflection: I think we should focus more on how users can use the product comfortably, instead of just pushing our own 'best' design.",
+        "structuralExemplar": "[Situation: describe your role, the team, and the project] I was working with the PM and design team on a cloud chart feature. [Task: what you needed to do] My task was to implement tooltips showing comparison data when users hovered over the chart. [Challenge: the specific cross-functional conflict] The PM felt my proposed modal-based design was too complex for end users, creating a disagreement about the right approach. [Action: how you addressed it together] We discussed several alternatives, weighing usability against implementation complexity, and iterated through a few design options together. [Result: the concrete outcome] We agreed on a simpler solution—a clickable detail link that opened a side panel—which satisfied both usability and technical constraints. [Reflection: a specific, non-generic takeaway] This experience taught me to prioritize the end user's ease of use over my own preferred technical elegance, and to treat design disagreements as opportunities for compromise rather than as obstacles.",
+        "languageErrorList": [
+          {
+            "original": "i took a requirement which impliment a cloud chart",
+            "rewrite": "I took on a requirement to implement a cloud chart",
+            "patternCode": "wrong-tense-narrative",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "When i hover the data. it's just showing the comparation data.",
+            "rewrite": "When I hovered over the data, it only showed the comparison data.",
+            "patternCode": "wrong-tense-narrative",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "comparation data",
+            "rewrite": "comparison data",
+            "patternCode": "wrong-word-choice",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "unsuitable for client",
+            "rewrite": "unsuitable for the client",
+            "patternCode": "missing-article",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "i shared a new design to the PM",
+            "rewrite": "I shared a new design with the PM",
+            "patternCode": "improper-collocation",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "It used a model to show the comparation data",
+            "rewrite": "It used a modal to show the comparison data",
+            "patternCode": "wrong-word-choice",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "she thought it's to complicate",
+            "rewrite": "she thought it was too complicated",
+            "patternCode": "wrong-word-choice",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "throught trade off finally we found a middle design",
+            "rewrite": "through some trade-offs, we finally found a middle-ground design",
+            "patternCode": "missing-article",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "which is show a detail link clicked that opened a panel on the could chat side",
+            "rewrite": "which was a detail link that, when clicked, opened a panel on the side of the cloud chart",
+            "patternCode": "unnatural-word-order",
+            "severity": "must-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "how user use more comfortable",
+            "rewrite": "how users can use it more comfortably",
+            "patternCode": "subject-verb-agreement",
+            "severity": "should-fix",
+            "proposedPattern": null
+          },
+          {
+            "original": "instead of own best design",
+            "rewrite": "instead of pushing our own 'best' design",
+            "patternCode": "dropped-subject",
+            "severity": "should-fix",
+            "proposedPattern": null
+          }
+        ]
+      }
+    }
+  ]
+}

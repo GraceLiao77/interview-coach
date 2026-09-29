@@ -3,7 +3,14 @@ import { anthropic } from '../lib/anthropic';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';   // ① 引入 helper
 import { scoreReportSchema, ScoreReport } from '../schemas/scoring';           // ① 引入 schema
 import { MODELS, ModelId } from '../lib/aiConfig'
+import { PATTERN_CODES, PATTERN_INFO } from '@shared/errorPatterns';
 import { env } from '../env';
+
+// The Error Pattern list as the model sees it: one "- code: definition" line per pattern.
+// Built once at module load from PATTERN_INFO, so editing a definition there updates the prompt.
+const PATTERN_LIST = PATTERN_CODES
+    .map(code => `- ${code}: ${PATTERN_INFO[code].definition}`)
+    .join('\n');
 
 const MOCK_RESPONSE: ScoreReport ={
  contentScore: 3,
@@ -40,24 +47,39 @@ const MOCK_RESPONSE: ScoreReport ={
    },
  ]
 }
+const prompt = (question: string, answer: string): string => (`You are an ESL interview coach. Score the answer on two axes, each an integer from 1 to 5: content and language.
+Do not score delivery: set deliveryScore and deliveryContext to null.
+
+For language, list each error with:
+- original: copied exactly from the answer, word for word. Use the shortest part that shows the error.
+- rewrite: how a native speaker would say that part.
+- patternCode: one code from the list below.
+- severity:
+  - must-fix: it is wrong, or it makes the meaning unclear.
+  - should-fix: it is grammatical, but a native speaker would find it unnatural.
+  - nice-to-have: it is fine as it is, but could sound more natural. A style preference is never more than nice-to-have.
+- proposedPattern: only when patternCode is "other", suggest a new pattern as { code, reason }. Otherwise set it to null.
+
+Error patterns:
+${PATTERN_LIST}
+
+Also give a polishedVersion (fix only language, keep their content) and a structuralExemplar (annotate the gaps).
+
+Question: ${question}
+Answer: ${answer}`);
 
 export async function scoreAnswer(question: string, answer: string, model: ModelId = MODELS.scoring.id) {
     if (env.mockAi) {
         return MOCK_RESPONSE; // 如果启用 mockAI，则返回 mock 响应
     }
-
-    const prompt = `You are an ESL interview coach. Score the answer on three axes, each 0-10:
-    - content, language, delivery.
-    For language, list each error as { original, rewrite, pattern } — name the pattern
-    (e.g. "missing article — Chinese-L1 transfer"). Also give a polishedVersion (fix only
-    language, keep their content) and a structuralExemplar (annotate the gaps).
-    Question: ${question}
-    Answer: ${answer}`;
-
+    if (!model) {
+      throw new Error('Model no valid');
+    }
+    
     const response = await anthropic.messages.parse({
         model,
         max_tokens: 8000,
-        messages: [{role: 'user', content: prompt}],
+        messages: [{role: 'user', content: prompt(question, answer)}],
         output_config: {
             format: zodOutputFormat(scoreReportSchema),
         }
