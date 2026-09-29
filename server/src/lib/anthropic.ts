@@ -1,4 +1,4 @@
 import { Anthropic } from '@anthropic-ai/sdk';
+import { env } from '../env';
 
-// Single shared client — creating one per request would exhaust DB connections.
-export const anthropic = new Anthropic();
+export const anthropic = new Anthropic({ apiKey:env.anthropicApiKey });
