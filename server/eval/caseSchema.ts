@@ -1,3 +1,4 @@
+import { PATTERN_CODES } from "@shared/errorPatterns";
 import { z } from "zod";
 
 const ScoreSchema = z.number().int().min(1).max(5)
@@ -16,7 +17,7 @@ export const EvalCaseSchema = z.object({
         content: BandSchema,
         language: BandSchema,
         mustCatch: z.array(z.object({ // recall 召回率
-            span: z.string(), patternCode: z.string()
+            span: z.string(), patternCode: z.enum(PATTERN_CODES)
         })),
         mustNotFlag: z.array(z.string()), // precision 精确率
     })

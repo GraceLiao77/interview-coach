@@ -14,7 +14,7 @@ export type CaseResult = {
 // evalcase - original data, report - AI analysts answer
 export const gradeCase = (evalCase: EvalCase, report: ScoreReport): CaseResult => {
     const {expect: { content, language, mustCatch, mustNotFlag }} = evalCase
-    const originals = report.languageErrorList.map(e => e.original) // model marked all segments
+    const realErrors = report.languageErrorList.filter(e => e.severity !== 'nice-to-have')
     
     return {
         id: evalCase.id,
@@ -30,14 +30,11 @@ export const gradeCase = (evalCase: EvalCase, report: ScoreReport): CaseResult =
         },
         mustCatch: mustCatch.map(i => ({
             span: i.span,
-            pass: originals.some(o => o.includes(i.span)),
-            // 思路是两层：
-            // - 外层：数组里有没有至少一个元素满足条件 → some
-            // - 内层：这个元素（字符串）是否包含 span → 字符串的 includes
+            pass: report.languageErrorList.some(o => o.original.includes(i.span) && i.patternCode === o.patternCode),
         })),
         mustNotFlag: mustNotFlag.map(i => ({
             span: i,
-            pass: !originals.some(o => o.includes(i) || i.includes(o)),
+            pass: !realErrors.some(e => e.original.includes(i) || i.includes(e.original))
         }))
     }
 }

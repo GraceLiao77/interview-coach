@@ -31,5 +31,6 @@ dist/
 docs/diary/local/
 docs/local/
 
-# Eval harness: mock runs are regenerated every time; only real-model baselines are committed
-server/eval/baselines/mock.json
+# Eval harness: mock runs and one-case canaries are throwaway; only full real-model baselines are committed
+server/eval/baselines/mock*.json
+server/eval/baselines/*.only-*.json
