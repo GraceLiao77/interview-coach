@@ -125,19 +125,29 @@ for (let r = 1; r <= runsCount; r++) {
     // Added before the cases run, so a save halfway through this run already includes it.
     const run: RunDetail = { results: [], reports: [] };
     runDetails.push(run);
-    if (runsCount > 1) console.log(`-- run ${r} of ${runsCount}`);
+    console.log(`-- run ${r} of ${runsCount}`);
 
-    for (const item of cases) {
+    for (const [i, item] of cases.entries()) {
+        // One progress line per case, so a long paid run never looks stuck.
+        const label = `   [${i + 1}/${cases.length}] ${item.id.padEnd(18)}`;
+        const started = Date.now();
+        const seconds = () => `${((Date.now() - started) / 1000).toFixed(1)}s`;
         try {
             const report = await scoreAnswer(item.question, item.answer, model);
             run.reports.push({ id: item.id, report });     // the raw answer sheet
-            run.results.push(gradeCase(item, report));     // the graded result
+            const result = gradeCase(item, report);        // the graded result
+            run.results.push(result);
             await saveBaseline(false);
+            const caught = result.mustCatch.filter(m => m.pass).length;
+            const clean = result.mustNotFlag.filter(m => m.pass).length;
+            console.log(`${label} ✓ ${seconds().padStart(6)}   catch ${caught}/${result.mustCatch.length}   noFlag ${clean}/${result.mustNotFlag.length}`);
         } catch (e) {
+            console.log(`${label} ✗ ${seconds().padStart(6)}   failed (details below)`);
             console.error(`run ${r}, ${item.id}:`, e);
         }
     }
 }
+console.log("");
 
 // ---- 4. Report ----
 const allResults = runDetails.map(d => d.results);
