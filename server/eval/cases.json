@@ -175,14 +175,14 @@
   },
   {
     "id": "native-02",
-    "note": "Near-native, no seeded errors. Story 4, answers #9 directly (the challenge is the disagreement): proposed a modal; ended with a 'View details' link that opens a panel. Written in simple spoken English (IELTS 6 level) on purpose: simple is not wrong, so Language should still be 4-5. Idiom 'met in the middle', fixed phrase 'side by side' and the conditional 'If your mouse slips, both tooltips close' must not be flagged.",
+    "note": "Near-native, no seeded errors. Revised 2026-10-05 after the first Sonnet 5.5 baseline: 'the detail' became 'the details' (the model was right that 'the details' is more natural), the last line was rewritten, and content moved from 4-5 to 3-4 because the question asks about cross-functional teams and the answer only involves one PM. Story 4, answers #9 directly (the challenge is the disagreement): proposed a modal; ended with a 'View details' link that opens a panel. Written in simple spoken English (IELTS 6 level) on purpose: simple is not wrong, so Language should still be 4-5. Idiom 'met in the middle', fixed phrase 'side by side' and the conditional 'If your mouse slips, both tooltips close' must not be flagged.",
     "category": "behavioral",
     "question": "Can you share an experience where you collaborated with cross-functional teams? What challenges did you face and how did you overcome them?",
-    "answer": "At ByteDance, we built a word cloud of the top keywords in video comments. When you hovered over a keyword, a tooltip showed its numbers. Inside that tooltip, there was a second tooltip. I talked to the PM about it, because the analysts needed to compare keywords. If your mouse slips, both tooltips close, and you can't keep two open side by side. I didn't just say no. I suggested a modal, so they could read and compare the detail. The PM wanted the detail close to the chart, so we met in the middle: we added a 'View details' link to the tooltip, and it opened the detail in a panel next to the chart. I learned to disagree about the user, not about my own taste.",
+    "answer": "At ByteDance, we built a word cloud of the top keywords in video comments. When you hovered over a keyword, a tooltip showed its numbers. Inside that tooltip, there was a second tooltip. I talked to the PM about it, because the analysts needed to compare keywords. If your mouse slips, both tooltips close, and you can't keep two open side by side. I didn't just say no. I suggested a modal, so they could read and compare the details. The PM wanted the details close to the chart, so we met in the middle: we added a 'View details' link to the tooltip, and it opened the details in a panel next to the chart. I learned to argue from the user's needs, not my own taste.",
     "expect": {
       "content": {
-        "min": 4,
-        "max": 5
+        "min": 3,
+        "max": 4
       },
       "language": {
         "min": 4,
