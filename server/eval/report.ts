@@ -1,4 +1,5 @@
 import type { BandResult, CaseResult, SpanResult } from "./grade";
+import type { AggregatedCase, CheckStat, RunsSummary, Spread } from "./aggregate";
 
 export type Summary = {
     total: number;          // cases in the Test Set
@@ -52,5 +53,42 @@ export function formatSummary(s: Summary): string {
         `mustCatch ${s.mustCatch.passed}/${s.mustCatch.total}`,
         `mustNotFlag ${s.mustNotFlag.passed}/${s.mustNotFlag.total}`,
         `errors ${s.errors}`,
+    ].join(" · ");
+}
+
+// ---- Several runs ----
+
+
+// "passed/runs" summed over a list of checks, e.g. two spans over 3 runs -> "5/6".
+const sumStats = (stats: CheckStat[]) =>
+    `${stats.reduce((n, s) => n + s.passed, 0)}/${stats.reduce((n, s) => n + s.runs, 0)}`;
+
+const isFlaky = (c: AggregatedCase) =>
+    c.content.flaky || c.language.flaky || c.mustCatch.some(m => m.flaky) || c.mustNotFlag.some(m => m.flaky);
+
+// grammar-01         content 3/3   language 3/3   catch 6/6   noFlag 6/6
+// real-01            content 3/3   language 2/3   catch 11/27   noFlag 3/3   ⚠ flaky
+export function formatAggregatedLine(c: AggregatedCase): string {
+    return [
+        c.id.padEnd(18),
+        `content ${c.content.passed}/${c.content.runs}`,
+        `language ${c.language.passed}/${c.language.runs}`,
+        `catch ${sumStats(c.mustCatch)}`,
+        `noFlag ${sumStats(c.mustNotFlag)}`,
+        isFlaky(c) ? "⚠ flaky" : "",
+    ].join("   ").trimEnd();
+}
+
+// mustCatch 15-18/22 (17, 15, 18): a single number when every run agrees.
+const range = (s: Spread) =>
+    `${s.min === s.max ? s.min : `${s.min}-${s.max}`}/${s.total}${s.perRun.length > 1 ? ` (${s.perRun.join(", ")})` : ""}`;
+
+export function formatRunsSummary(s: RunsSummary): string {
+    return [
+        `content ${range(s.content)}`,
+        `language ${range(s.language)}`,
+        `mustCatch ${range(s.mustCatch)}`,
+        `mustNotFlag ${range(s.mustNotFlag)}`,
+        `errors ${s.errors.perRun.join(", ")}`,
     ].join(" · ");
 }
