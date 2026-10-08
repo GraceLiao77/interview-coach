@@ -37,10 +37,15 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - [x] 3. JWT register/login + `requireAuth`; client AuthContext + Login/Register/Sessions pages
 - [x] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite). Voice is **Chrome-only** (deliberate MVP trade-off, no mimeType negotiation)
 - [ ] 5. Eval harness — labelled test set, scoring rubric, regression run before any prompt change (v1 covers the scoring prompt only)
-- [ ] 6. Retrieval over a company/role knowledge base (Supabase `pgvector`) to ground question generation
-- [ ] 7. Cost telemetry — per-call token accounting, tiered model selection, prompt caching
-- [ ] 8. Resume upload (PDF) + JD match analysis (match score, missing skills → priority question topics)
-- [ ] 9. Cross-session weakness profile + targeted drills
+- [ ] 6. Cost guardrails, before anything goes public: an Anthropic Console spend limit, AI features only for allowed accounts (everyone else gets demo output), a per-user daily quota, a global daily budget cap, and `express-rate-limit` on auth and AI routes
+- [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
+- [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)
+- [ ] 9. MCP server exposing scoring as tools, so an interview can be practised from inside Claude
+- [ ] 10. Cost telemetry: per-call token accounting from `response.usage`, tiered model selection, prompt caching
+- [ ] 11. Resume upload (PDF) + JD match analysis (match score, missing skills → priority question topics)
+- [ ] 12. Cross-session weakness profile + targeted drills, plus an interviewer agent that asks follow-up questions using tools (weakness profile, question bank)
+
+Every step has to answer "what does this do for the user?". Adding a feature only so it can go on a CV is out of scope.
 
 Domain vocabulary lives in `CONTEXT.md` — use its terms (e.g. **Interview**, not "session", in prose).
 
