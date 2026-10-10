@@ -33,7 +33,7 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 3 | JWT auth (register/login, bcrypt, `requireAuth`) | ✅ |
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
 | 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | 🟡 first baseline done (Sonnet 5: 77% recall); prompt improvements next |
-| 6 | Cost guardrails: spend limit, allowed accounts, per-user daily quota, global budget cap, rate limiting | ⬜ |
+| 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | ⬜ |
 | 7 | Deploy with Terraform (S3 + CloudFront + App Runner); CI runs typechecks and the mock eval on every push | ⬜ |
 | 8 | RAG question bank: Python ingestion, embeddings in `pgvector`, retrieval measured with recall@k | ⬜ |
 | 9 | MCP server exposing scoring as tools, to practise from inside Claude | ⬜ |

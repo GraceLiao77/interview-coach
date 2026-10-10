@@ -37,7 +37,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - [x] 3. JWT register/login + `requireAuth`; client AuthContext + Login/Register/Sessions pages
 - [x] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite). Voice is **Chrome-only** (deliberate MVP trade-off, no mimeType negotiation)
 - [ ] 5. Eval harness — labelled test set, scoring rubric, regression run before any prompt change (v1 covers the scoring prompt only)
-- [ ] 6. Cost guardrails, before anything goes public: an Anthropic Console spend limit, AI features only for allowed accounts (everyone else gets demo output), a per-user daily quota, a global daily budget cap, and `express-rate-limit` on auth and AI routes
+- [ ] 6. Cost guardrails, before anything goes public (ADR 0002): AI routes only for Allowed Accounts (an email allowlist in server config), a no-sign-in Demo Interview for everyone else, `express-rate-limit` on auth and AI routes, and an Anthropic Console monthly spend limit. BYOK and charging are deferred until other people want to use the app
 - [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
 - [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)
 - [ ] 9. MCP server exposing scoring as tools, so an interview can be practised from inside Claude

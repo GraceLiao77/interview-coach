@@ -10,6 +10,14 @@ Mock interview practice for non-native English-speaking engineers, scored separa
 One mock interview practice built from a single job description, holding its set of questions and the candidate's answers. (Stored as the `Session` model in code.)
 _Avoid_: Session (clashes with login sessions)
 
+**Allowed Account**:
+An account on the owner's allowlist. Only these accounts can generate questions, transcribe or score, because every model call is paid for with the owner's credit (ADR 0002).
+_Avoid_: Admin, premium user
+
+**Demo Interview**:
+One real Interview recorded earlier, with real model output, that anyone can open without signing in. It makes no model calls.
+_Avoid_: Sample, mock interview (that is the product itself)
+
 **Question Category**:
 The kind of question: warmup, behavioral or technical. It says nothing about difficulty or rank.
 _Avoid_: Tier, level
