@@ -61,12 +61,12 @@ export const PATTERN_INFO: Record<PatternCode, PatternInfo> = {
   'wrong-word-choice': {
     group: 'Vocabulary',
     name: 'Wrong word',
-    definition: 'The word itself is wrong for what the speaker means, e.g. "model" instead of "modal".',
+    definition: 'The word itself is wrong for what the speaker means, e.g. "model" instead of "modal". A wrong preposition is improper-collocation, not this.',
   },
   'improper-collocation': {
     group: 'Vocabulary',
     name: "Words that don't go together",
-    definition: 'Each word is fine on its own, but native speakers do not use them together, e.g. "did typos" instead of "made typos".',
+    definition: 'Each word is fine on its own, but native speakers do not use them together, e.g. "did typos" instead of "made typos". This includes the wrong preposition, e.g. "arrived to the office" instead of "arrived at the office".',
   },
 
   // ---- Sentence Structure ----
