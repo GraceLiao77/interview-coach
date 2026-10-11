@@ -26,6 +26,7 @@ export interface UserDto {
   id: string;
   email: string;
   createdAt: string;
+  isAllowed: boolean;
 }
 
 export interface AuthResponse {

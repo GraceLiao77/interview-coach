@@ -5,6 +5,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/requireAuth';
+import { requireAllowed } from '../middleware/requireAllowed';
 import { transcribe } from '../services/transcriptionService'
 import multer from 'multer';
 import { logger } from '../utils/logger';
@@ -14,7 +15,10 @@ export const questionsRouter = Router();
 
 // 所有端点先验 JWT。少了这行 req.userId 是 undefined,而 Prisma 里
 // where: { userId: undefined } 意思是"忽略这个条件" → 下面的归属校验会全部失效。
-questionsRouter.use(requireAuth)
+// Every route here calls a model (Claude scoring, Groq transcription), so the whole router is
+// for Allowed Accounts only (ADR 0002). requireAllowed runs before multer, so a rejected
+// request is turned away before its audio upload is read into memory.
+questionsRouter.use(requireAuth, requireAllowed)
 
 const answerSchema = z.object({ answer: z.string().min(1) });
 

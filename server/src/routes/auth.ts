@@ -11,11 +11,12 @@ const credentialsSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters').max(72),
 });
 
-function buildAuthResponse(user: { id: string; email: string; createdAt: Date }): AuthResponse {
-  const token = jwt.sign({ userId: user.id }, env.jwtSecret, { expiresIn: '7d' });
+function buildAuthResponse(user: { id: string; email: string; isAllowed: boolean; createdAt: Date }): AuthResponse {
+  const token = jwt.sign({ userId: user.id, isAllowed: user.isAllowed }, env.jwtSecret, { expiresIn: '7d' });
   const userDto: UserDto = {
     id: user.id,
     email: user.email,
+    isAllowed: user.isAllowed,
     createdAt: user.createdAt.toISOString(),
   };
   return { token, user: userDto };

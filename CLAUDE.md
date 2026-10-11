@@ -27,7 +27,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - Server dev: `cd server && npm run dev` (port 3009)
 - Client dev: `cd client && npm run dev` (port 5173)
 - Typecheck: `npx tsc --noEmit` (server) / `npx tsc -b` (client)
-- Migrations: `cd server && npx prisma migrate dev`
+- Migrations: `cd server && npm run prisma:migrate <name>` (runs `prisma migrate dev --name <name>`; check the name before running, because an applied migration can't be renamed)
 - Eval harness: `cd server && MOCK_AI=true npm run eval` (free, canned output) / `MOCK_AI=false npm run eval -- --model <id> [--only <case-id>] [--runs N]` (real model calls, costs money). Set `MOCK_AI` explicitly: `server/.env` defaults it to `true`, and the command line overrides `.env`. Run a one-case `--only` canary before a full paid run; commit a prompt change together with the baseline it produced
 
 ## Progress (dev order — one new concept per step)

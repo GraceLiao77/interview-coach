@@ -6,6 +6,7 @@ import { env } from '../env';
 declare module 'express-serve-static-core' {
   interface Request {
     userId?: string;
+    isAllowed?: boolean;  // from the JWT; see requireAllowed
   }
 }
 
@@ -24,6 +25,9 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
       return;
     }
     req.userId = payload.userId;
+    // Only an explicit true counts. A token issued before isAllowed existed has no such
+    // field, and is treated as not allowed (secure by default).
+    req.isAllowed = payload.isAllowed === true;
     next();
   } catch {
     res.status(401).json({ error: 'Invalid or expired token' });
