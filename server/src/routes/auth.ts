@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { env } from '../env';
+import { loginLimiter, registerLimiter } from '../middleware/rateLimits';
 import type { AuthResponse, UserDto } from '@shared/types';
 
 const credentialsSchema = z.object({
@@ -24,7 +25,7 @@ function buildAuthResponse(user: { id: string; email: string; isAllowed: boolean
 
 export const authRouter = Router();
 
-authRouter.post('/register', async (req, res) => {
+authRouter.post('/register', registerLimiter, async (req, res) => {
   const parsed = credentialsSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
@@ -43,7 +44,7 @@ authRouter.post('/register', async (req, res) => {
   res.status(201).json(buildAuthResponse(user));
 });
 
-authRouter.post('/login', async (req, res) => {
+authRouter.post('/login', loginLimiter, async (req, res) => {
   const parsed = credentialsSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: 'Invalid email or password format' });

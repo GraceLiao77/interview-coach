@@ -5,6 +5,7 @@ import { requireAuth } from '../middleware/requireAuth';
 import type { QuestionDto, QuestionTier, SessionDto } from '@shared/types';
 import { generateQuestions } from '../services/questionService'
 import { requireAllowed } from '../middleware/requireAllowed';
+import { aiLimiter } from '../middleware/rateLimits';
 
 
 const createSessionSchema = z.object({
@@ -105,7 +106,7 @@ sessionsRouter.delete('/:id', async (req, res) => {
 
 // Generating questions calls the model, so it's for Allowed Accounts only (ADR 0002).
 // The other session routes don't spend anything and stay open to every signed-in user.
-sessionsRouter.post<{ id: string }>('/:id/generate-questions', requireAllowed, async(req, res) => {
+sessionsRouter.post<{ id: string }>('/:id/generate-questions', requireAllowed, aiLimiter, async(req, res) => {
   const session = await prisma.session.findFirst({ // findFirst返回第一条匹配的
     where: { id: req.params.id, userId: req.userId}
   })

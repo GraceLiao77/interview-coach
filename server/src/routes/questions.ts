@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/requireAuth';
 import { requireAllowed } from '../middleware/requireAllowed';
+import { aiLimiter, transcribeLimiter } from '../middleware/rateLimits';
 import { transcribe } from '../services/transcriptionService'
 import multer from 'multer';
 import { logger } from '../utils/logger';
@@ -23,7 +24,7 @@ questionsRouter.use(requireAuth, requireAllowed)
 const answerSchema = z.object({ answer: z.string().min(1) });
 
 // answer the question, so :id is questionId
-questionsRouter.post('/:id/answers', async(req, res) => {
+questionsRouter.post<{ id: string }>('/:id/answers', aiLimiter, async(req, res) => {
     // gain answer context
     const parsed = answerSchema.safeParse(req.body)
     if (!parsed.success) {
@@ -61,7 +62,7 @@ const upload = multer({
 
 // upload.single('audio') 挂在单条路由上,不能用 .use() —— 否则上面那条 JSON 路由
 // 也会被拿去解析 multipart。字段名 'audio' 必须和前端 form.append('audio', blob) 一致。
-questionsRouter.post<{ id: string }>('/:id/answers/audio', upload.single('audio'), async(req, res) => {
+questionsRouter.post<{ id: string }>('/:id/answers/audio', aiLimiter, upload.single('audio'), async(req, res) => {
   // 如果音频文件不存在
   if (!req.file) {
     res.status(400).json({ error: 'audio file is required'})
@@ -107,7 +108,7 @@ questionsRouter.post<{ id: string }>('/:id/answers/audio', upload.single('audio'
 // 只转写,不评分、不写库。前端把文字回填进 textarea,用户改完再走上面那条评分路由。
 // 归属校验照样要做:这个端点不写数据,但会花 Groq 的额度 —— 不验的话任何登录用户
 // 都能拿别人的 questionId 来白嫖转写。
-questionsRouter.post<{ id: string }>('/:id/transcribe', upload.single('audio'), async (req, res) => {
+questionsRouter.post<{ id: string }>('/:id/transcribe', transcribeLimiter, upload.single('audio'), async (req, res) => {
   if (!req.file) {
     res.status(400).json({ error: 'audio file is required' })
     return
