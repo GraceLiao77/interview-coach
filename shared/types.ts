@@ -45,6 +45,20 @@ export interface QuestionDto {
   order: number;
 }
 
+/** A question in GET /sessions/:id, with its most recent answer. null means not answered yet. */
+export interface QuestionDetailDto extends QuestionDto {
+  latestAttempt: {
+    answer: AnswerDto;
+    /** null when the stored report can't be read, e.g. one written by an older version. */
+    score: ScoreReportDto | null;
+  } | null;
+}
+
+/** GET /sessions/:id. The list and create routes return SessionDto, which has no answers. */
+export interface SessionDetailDto extends Omit<SessionDto, 'questions'> {
+  questions: QuestionDetailDto[];
+}
+
 export interface SessionDto {
   id: string;
   jobDescription: string | null;

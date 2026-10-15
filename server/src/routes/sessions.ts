@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
+import type { Prisma } from '@prisma/client';
+import { toAnswerDto, toScoreReportDto } from '../lib/dto';
 import { requireAuth } from '../middleware/requireAuth';
-import type { QuestionDto, QuestionTier, SessionDto } from '@shared/types';
+import type { QuestionDto, QuestionTier, SessionDetailDto, SessionDto, QuestionDetailDto } from '@shared/types';
 import { generateQuestions } from '../services/questionService'
 import { requireAllowed } from '../middleware/requireAllowed';
 import { aiLimiter } from '../middleware/rateLimits';
@@ -46,6 +48,42 @@ function toSessionDto(session: SessionWithQuestions): SessionDto {
   };
 }
 
+// GET /sessions/:id only: each question with its most recent answer and that answer's report.
+// orderBy + take: 1 is "ORDER BY createdAt DESC LIMIT 1" per question. Prisma runs one query
+// per relation level (sessions, questions, answers, reports), so there is no N+1.
+const withLatestAttempt = {
+  questions: {
+    orderBy: { order: 'asc' },
+    include: {
+      answers: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        include: { scoreReport: true },
+      },
+    },
+  },
+} satisfies Prisma.SessionInclude; // 检查这个对象是合法的 include，但保留它具体的形状（不会被放宽成一个笼统的类型）
+
+// The row type Prisma returns for that include, derived instead of written by hand.
+type SessionWithLatestAttempt = Prisma.SessionGetPayload<{ include: typeof withLatestAttempt }>;
+
+function toSessionDetailDto(session: SessionWithLatestAttempt): SessionDetailDto {
+  const { questions, ...rest } = toSessionDto(session);   // reuse the base fields
+  return {
+    ...rest,
+    questions: session.questions.map((q, i): QuestionDetailDto => {
+      const answer = q.answers[0];   // at most one, thanks to take: 1
+      return {
+        ...questions[i]!,
+        latestAttempt: answer === undefined ? null : {
+          answer: toAnswerDto(answer),
+          score: answer.scoreReport === null ? null : toScoreReportDto(answer.scoreReport),
+        },
+      };
+    }),
+  };
+}
+
 const questionsOrdered = { questions: { orderBy: { order: 'asc' as const } } };
 
 export const sessionsRouter = Router();
@@ -84,13 +122,13 @@ sessionsRouter.get('/:id', async (req, res) => {
   // findFirst with userId in the filter = ownership check and lookup in one query.
   const session = await prisma.session.findFirst({
     where: { id: req.params.id, userId: req.userId },
-    include: questionsOrdered,
+    include: withLatestAttempt,
   });
   if (!session) {
     res.status(404).json({ error: 'Session not found' });
     return;
   }
-  res.json(toSessionDto(session));
+  res.json(toSessionDetailDto(session));
 });
 
 sessionsRouter.delete('/:id', async (req, res) => {
