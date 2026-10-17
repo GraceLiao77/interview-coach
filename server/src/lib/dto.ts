@@ -1,7 +1,7 @@
 // Turns database rows into the API shapes in @shared/types.
 // One place for each conversion, so every route returns the same shape for the same thing.
 import type { Answer as AnswerRow, ScoreReport as ScoreReportRow } from '@prisma/client';
-import type { AnswerDto, ScoreReportDto } from '@shared/types';
+import type { AnswerDto, ScoreReportDto, SubmitAnswerResponse } from '@shared/types';
 import { scoreReportSchema } from '../schemas/scoring';
 import { logger } from '../utils/logger';
 
@@ -41,4 +41,12 @@ export function toScoreReportDto(row: ScoreReportRow): ScoreReportDto | null {
     structuralExemplar: row.structuralExemplar,
     createdAt: row.createdAt.toISOString(),
   };
+}
+
+// The response for a freshly scored answer. Its report was just checked against the strict
+// schema before saving, so a null here would mean a bug, not old data.
+export function toSubmitAnswerResponse(saved: { answer: AnswerRow; score: ScoreReportRow }): SubmitAnswerResponse {
+  const score = toScoreReportDto(saved.score);
+  if (score === null) throw new Error(`Report ${saved.score.id} failed its own schema right after being saved`);
+  return { answer: toAnswerDto(saved.answer), score };
 }

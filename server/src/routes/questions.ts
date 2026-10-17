@@ -10,6 +10,7 @@ import { aiLimiter, transcribeLimiter } from '../middleware/rateLimits';
 import { transcribe } from '../services/transcriptionService'
 import multer from 'multer';
 import { logger } from '../utils/logger';
+import { toSubmitAnswerResponse } from '../lib/dto';
 import type { TranscribeResponse } from '@shared/types';
 
 export const questionsRouter = Router();
@@ -52,7 +53,7 @@ questionsRouter.post<{ id: string }>('/:id/answers', aiLimiter, async(req, res) 
     // store answer + scoreReport
     const saved = await saveAnswerWithScore(question.id, answerText, report)
     
-    res.json(saved)
+    res.json(toSubmitAnswerResponse(saved))
   })
 
 const upload = multer({
@@ -101,7 +102,7 @@ questionsRouter.post<{ id: string }>('/:id/answers/audio', aiLimiter, upload.sin
   // store answer + scoreReport
   const saved = await saveAnswerWithScore(question.id, transcript, report)
 
-  res.json(saved)
+  res.json(toSubmitAnswerResponse(saved))
 
 })
 
