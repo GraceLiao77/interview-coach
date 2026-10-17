@@ -120,6 +120,18 @@
   margin-bottom: -0.25rem; /* 抵消一点 .questions 的 gap,让它贴近第一张卡 */
 }
 
+/* New / Practised and the tier tabs sit side by side, and wrap on narrow screens. */
+.question-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: -0.25rem;
+}
+.question-filters .tier-tabs {
+  margin-bottom: 0;
+}
+
 .tier-tab {
   display: inline-flex;
   align-items: baseline;

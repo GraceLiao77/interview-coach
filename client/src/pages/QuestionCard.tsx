@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { QuestionDto, ScoreReportDto } from '@shared/types'
+import type { QuestionDetailDto, QuestionDto, ScoreReportDto } from '@shared/types'
 import { submitAnswer, transcribeAudio } from '../api/interview'
 import { Recorder } from './Recorder'
 import { PATTERN_INFO } from '@shared/errorPatterns'
@@ -11,15 +11,17 @@ const TIER_LABELS: Record<QuestionDto['tier'], string> = {
 }
 
 interface QuestionCardProps {
-  question: QuestionDto
+  question: QuestionDetailDto
 }
 
 /** 一道题的卡片:自己管「答案输入 / 转写中 / 提交中 / 评分结果」这些 UI 状态。 */
 export function QuestionCard({ question }: QuestionCardProps) {
-  const [answer, setAnswer] = useState('')
+  // Start from the latest saved attempt, so a refresh shows what was already answered and scored.
+  // These initial values are only read on the first render; the parent changes the key to reset them.
+  const [answer, setAnswer] = useState(question.latestAttempt?.answer.content ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [transcribing, setTranscribing] = useState(false)
-  const [score, setScore] = useState<ScoreReportDto | null>(null)
+  const [score, setScore] = useState<ScoreReportDto | null>(question.latestAttempt?.score ?? null)
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit() {
