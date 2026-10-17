@@ -6,7 +6,8 @@
     "dev": "tsx watch src/index.ts",
     "typecheck": "tsc --noEmit",
     "eval": "tsx eval/runEval.ts",
-    "prisma:migrate": "prisma migrate dev --name"
+    "prisma:migrate": "prisma migrate dev --name",
+    "demo:export": "tsx scripts/exportDemo.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

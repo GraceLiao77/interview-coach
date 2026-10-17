@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
-import type { Prisma } from '@prisma/client';
-import { toAnswerDto, toScoreReportDto } from '../lib/dto';
+import { toSessionDto, toSessionDetailDto, withLatestAttempt } from '../lib/dto';
 import { requireAuth } from '../middleware/requireAuth';
-import type { QuestionDto, QuestionTier, SessionDetailDto, SessionDto, QuestionDetailDto } from '@shared/types';
+import type { QuestionTier } from '@shared/types';
 import { generateQuestions } from '../services/questionService'
 import { requireAllowed } from '../middleware/requireAllowed';
 import { aiLimiter } from '../middleware/rateLimits';
@@ -22,67 +21,6 @@ const createSessionSchema = z.object({
     )
     .optional(),
 });
-
-type SessionWithQuestions = {
-  id: string;
-  jobDescription: string | null;
-  status: string;
-  createdAt: Date;
-  questions: { id: string; tier: string; text: string; order: number }[];
-};
-
-function toSessionDto(session: SessionWithQuestions): SessionDto {
-  return {
-    id: session.id,
-    jobDescription: session.jobDescription,
-    status: session.status,
-    createdAt: session.createdAt.toISOString(),
-    questions: session.questions.map(
-      (q): QuestionDto => ({
-        id: q.id,
-        tier: q.tier as QuestionTier,
-        text: q.text,
-        order: q.order,
-      }),
-    ),
-  };
-}
-
-// GET /sessions/:id only: each question with its most recent answer and that answer's report.
-// orderBy + take: 1 is "ORDER BY createdAt DESC LIMIT 1" per question. Prisma runs one query
-// per relation level (sessions, questions, answers, reports), so there is no N+1.
-const withLatestAttempt = {
-  questions: {
-    orderBy: { order: 'asc' },
-    include: {
-      answers: {
-        orderBy: { createdAt: 'desc' },
-        take: 1,
-        include: { scoreReport: true },
-      },
-    },
-  },
-} satisfies Prisma.SessionInclude; // 检查这个对象是合法的 include，但保留它具体的形状（不会被放宽成一个笼统的类型）
-
-// The row type Prisma returns for that include, derived instead of written by hand.
-type SessionWithLatestAttempt = Prisma.SessionGetPayload<{ include: typeof withLatestAttempt }>;
-
-function toSessionDetailDto(session: SessionWithLatestAttempt): SessionDetailDto {
-  const { questions, ...rest } = toSessionDto(session);   // reuse the base fields
-  return {
-    ...rest,
-    questions: session.questions.map((q, i): QuestionDetailDto => {
-      const answer = q.answers[0];   // at most one, thanks to take: 1
-      return {
-        ...questions[i]!,
-        latestAttempt: answer === undefined ? null : {
-          answer: toAnswerDto(answer),
-          score: answer.scoreReport === null ? null : toScoreReportDto(answer.scoreReport),
-        },
-      };
-    }),
-  };
-}
 
 const questionsOrdered = { questions: { orderBy: { order: 'asc' as const } } };
 

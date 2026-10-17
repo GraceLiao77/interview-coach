@@ -1,0 +1,135 @@
+{
+  "note": "A sample interview. The company and job are fictional, and the answer was written for this demo with typical non-native errors. The questions and the feedback are real model output.",
+  "exportedAt": "2026-10-17T08:15:21.533Z",
+  "session": {
+    "id": "cmvc4eghs0001sb21hp35c46n",
+    "jobDescription": "## Kiwi Pay — Full-Stack Developer (Intermediate)\nAuckland CBD · Hybrid\n\nKiwi Pay helps small New Zealand businesses get paid faster, with invoicing and payment links that work on any device.\n\n## What you will do\n- Build customer-facing features in React and TypeScript, from design to production\n- Design and maintain REST APIs in Node.js, backed by PostgreSQL\n- Work closely with product and design to turn requirements into working software\n- Improve performance and reliability, and take part in code reviews\n\n## What we are looking for\n- 3+ years building web applications with React and TypeScript\n- Experience with Node.js, REST APIs and SQL databases\n- Clear communication, and comfort explaining technical trade-offs\n- Nice to have: AWS, CI/CD, or experience with payments",
+    "status": "draft",
+    "createdAt": "2026-10-17T08:14:09.663Z",
+    "questions": [
+      {
+        "id": "cmvc4emzh0002sb21jjla2jmj",
+        "tier": "warmup",
+        "text": "Kiwi Pay helps small New Zealand businesses get paid faster. What appeals to you about building invoicing and payment tools for that audience, and how does it fit with where you want to take your full-stack career?",
+        "order": 1,
+        "latestAttempt": null
+      },
+      {
+        "id": "cmvc4emzh0003sb21gfwtazkv",
+        "tier": "warmup",
+        "text": "Walk me through a recent project where you built customer-facing features in React and TypeScript from design through to production. What was your role, and what part are you proudest of?",
+        "order": 2,
+        "latestAttempt": null
+      },
+      {
+        "id": "cmvc4emzh0004sb215ki4ae2e",
+        "tier": "behavioral",
+        "text": "Tell me about a time you worked closely with product and design to turn vague requirements into working software. What was the situation, how did you clarify what was needed, and what was the outcome?",
+        "order": 3,
+        "latestAttempt": {
+          "answer": {
+            "id": "cmvc4fjp20001sbb99l46zdxl",
+            "questionId": "cmvc4emzh0004sb215ki4ae2e",
+            "content": "Last year our product manager asked me to build a new report page for merchants, but the requirement was very vague. It only said \"show sales data\". I did not want to guess, so I organise a short meeting with the PM and the designer. I asked them what decision merchant need to make with this page. We found that they mainly wanted to compare this week and last week sales. Designer made a simple mockup, and I build a prototype in React in two days. We tested it with three merchants and changed the chart twice. After the release, the support tickets about reports reduced a lot.",
+            "createdAt": "2026-10-17T08:15:00.470Z"
+          },
+          "score": {
+            "id": "cmvc4fjz20003sbb9wmvlbf4b",
+            "answerId": "cmvc4fjp20001sbb99l46zdxl",
+            "contentScore": 4,
+            "languageScore": 3,
+            "deliveryScore": null,
+            "contentContext": "This is a well-structured answer that follows a clear arc: a vague requirement, a proactive clarification meeting, a prototype, user testing and a result. The best moment is asking what decision merchants need to make, because it reframes the requirement around user value. Three gaps keep it from a 5. First, the outcome is not quantified: 'reduced a lot' needs a number or percentage. Second, the collaboration is thin. We don't hear how you worked with product and design after the first meeting, any disagreements or trade-offs, or why the chart was changed twice. Third, you don't say what you personally learned or how you now handle vague requirements.",
+            "languageContext": "The meaning is always clear and the vocabulary suits an interview. The main problems are repeated grammar slips. Two story verbs are in the present tense ('organise', 'build') instead of the past. One noun is missing its plural ('merchant'), one is missing its article ('Designer'), and the possessive is missing in 'this week and last week sales'. 'Reduced' is also used where a native speaker would say 'dropped'. These are small errors, but together they are noticeable, so tense consistency is the first thing to work on.",
+            "deliveryContext": null,
+            "languageErrorList": [
+              {
+                "original": "I organise",
+                "rewrite": "I organised",
+                "patternCode": "wrong-tense-narrative",
+                "severity": "must-fix",
+                "proposedPattern": null
+              },
+              {
+                "original": "merchant need",
+                "rewrite": "merchants needed",
+                "patternCode": "missing-plural",
+                "severity": "must-fix",
+                "proposedPattern": null
+              },
+              {
+                "original": "this week and last week sales",
+                "rewrite": "this week's sales with last week's",
+                "patternCode": "other",
+                "severity": "should-fix",
+                "proposedPattern": {
+                  "code": "missing-possessive",
+                  "reason": "The possessive 's is left off a noun used to show ownership or a time relation, e.g. 'last week sales' instead of 'last week's sales'. No current code covers a dropped possessive marker."
+                }
+              },
+              {
+                "original": "Designer made",
+                "rewrite": "The designer made",
+                "patternCode": "missing-article",
+                "severity": "must-fix",
+                "proposedPattern": null
+              },
+              {
+                "original": "I build a prototype",
+                "rewrite": "I built a prototype",
+                "patternCode": "wrong-tense-narrative",
+                "severity": "must-fix",
+                "proposedPattern": null
+              },
+              {
+                "original": "reduced a lot",
+                "rewrite": "dropped a lot",
+                "patternCode": "wrong-word-choice",
+                "severity": "should-fix",
+                "proposedPattern": null
+              }
+            ],
+            "polishedVersion": "Last year our product manager asked me to build a new report page for merchants, but the requirement was very vague. It only said \"show sales data\". I didn't want to guess, so I organised a short meeting with the PM and the designer. I asked them what decisions merchants needed to make with this page. We found that they mainly wanted to compare this week's sales with last week's. The designer made a simple mockup, and I built a prototype in React in two days. We tested it with three merchants and changed the chart twice. After the release, support tickets about reports dropped a lot.",
+            "structuralExemplar": "[Situation] Last year our PM asked me to build a new report page for merchants, but the requirement only said \"show sales data\". [GAP: Briefly say why this mattered, e.g. merchants were complaining or there was a deadline.] [Action – clarify] Instead of guessing, I organised a short meeting with the PM and the designer and asked what decisions merchants needed to make with this page. We found they mainly wanted to compare this week's sales with last week's. [GAP: Mention how you agreed on scope, e.g. what you decided to leave out for version one.] [Action – build together] The designer made a simple mockup, and I built a React prototype in two days. We tested it with three merchants and changed the chart twice. [GAP: Explain what feedback caused the changes and how you, the PM and the designer decided together.] [Result] After the release, support tickets about reports dropped a lot. [GAP: Quantify it, e.g. 'by about 40% in the first month', and add adoption or usage numbers if you have them.] [Reflection – GAP] End with what you learned, e.g. 'Now, whenever a requirement is vague, I start by asking what decision the user needs to make.'",
+            "createdAt": "2026-10-17T08:15:00.831Z"
+          }
+        }
+      },
+      {
+        "id": "cmvc4emzh0005sb21e13r7nsm",
+        "tier": "behavioral",
+        "text": "Describe a time you had to explain a technical trade-off to a non-technical stakeholder, such as speed of delivery versus reliability. What options did you present, how did you communicate them, and what was decided?",
+        "order": 4,
+        "latestAttempt": null
+      },
+      {
+        "id": "cmvc4emzh0006sb21t8fkltc2",
+        "tier": "behavioral",
+        "text": "Tell me about a code review that led to a disagreement or a significant change in your approach. What was the situation, how did you handle the feedback or give it, and what did you learn?",
+        "order": 5,
+        "latestAttempt": null
+      },
+      {
+        "id": "cmvc4emzh0007sb21f9ur2j3p",
+        "tier": "technical",
+        "text": "Suppose you are designing a REST API in Node.js for creating invoices and generating payment links, backed by PostgreSQL. How would you structure the endpoints, validate input, and model the data, and how would you make payment-related operations idempotent so a customer is never charged or invoiced twice?",
+        "order": 6,
+        "latestAttempt": null
+      },
+      {
+        "id": "cmvc4emzh0008sb21mnfg422f",
+        "tier": "technical",
+        "text": "A React and TypeScript payment page is loading slowly on mid-range mobile devices, which matters because customers pay from any device. How would you diagnose the cause, and what techniques would you use to improve performance on both the front end and the API and PostgreSQL side?",
+        "order": 7,
+        "latestAttempt": null
+      },
+      {
+        "id": "cmvc4emzh0009sb215qe7ll7t",
+        "tier": "technical",
+        "text": "An invoice listing endpoint backed by PostgreSQL has become slow as the data has grown. How would you investigate it using tools like EXPLAIN ANALYZE, what indexing or query changes would you consider, and how would you roll out the fix safely through a CI/CD pipeline without hurting reliability?",
+        "order": 8,
+        "latestAttempt": null
+      }
+    ]
+  }
+}
