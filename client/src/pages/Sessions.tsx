@@ -11,6 +11,8 @@ export function Sessions() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [sessions, setSessions] = useState<SessionDto[]>([])
+  // false until the first load finishes, so "still loading" isn't shown as "no sessions"
+  const [loaded, setLoaded] = useState(false)
   const [jobDescription, setJobDescription] = useState('')
   const [error, setError] = useState<string | null>(null)
 
@@ -27,7 +29,10 @@ export function Sessions() {
   )
 
   const refresh = useCallback((): void => {
-    api<SessionDto[]>('/api/sessions').then(setSessions).catch(handleApiError)
+    api<SessionDto[]>('/api/sessions')
+      .then(setSessions)
+      .catch(handleApiError)
+      .finally(() => setLoaded(true))
   }, [handleApiError])
 
   useEffect(() => {
@@ -98,7 +103,9 @@ export function Sessions() {
 
       <section>
         <h2 className="panel-title">Your sessions</h2>
-        {sessions.length === 0 ? (
+        {!loaded ? (
+          <p className="empty-note">Loading your sessions…</p>
+        ) : sessions.length === 0 ? (
           <p className="empty-note">No sessions yet — create one above.</p>
         ) : (
           <ul className="session-list">

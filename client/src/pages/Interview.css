@@ -1,8 +1,8 @@
 /* Interview page。主题变量在 index.css 的 :root 里。 */
 
 .interview {
-  max-width: 1180px;
-  margin: 2.5rem auto;
+  max-width: var(--page-width);
+  margin: 0 auto 2.5rem;
   padding: 0 1.5rem;
   font-family: system-ui, -apple-system, sans-serif;
   color: var(--ink);
@@ -19,7 +19,7 @@
 
 .jd-panel {
   position: sticky;
-  top: 1.5rem;
+  top: calc(var(--header-h) + 0.75rem);
   display: flex;
   flex-direction: column;
   gap: 1rem; /* 渐隐和生成按钮之间留口气 */
@@ -98,6 +98,7 @@
   color: var(--ink-4);
 }
 
+/* Sticky top bar styles are shared with Home, in App.css. */
 .interview-header {
   margin-bottom: 0.25rem;
 }
@@ -121,12 +122,23 @@
 }
 
 /* New / Practised and the tier tabs sit side by side, and wrap on narrow screens. */
+/* Sticks just below the top bar while the cards scroll underneath.
+   Same frosted glass as the top bar, so the two read as one layer when stuck.
+   The padding gives the glass some room; the negative margins cancel it so the
+   resting position doesn't move. */
 .question-filters {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: -0.25rem;
+  padding-block: 0.75rem;
+  margin-top: -0.75rem;
+  margin-bottom: -1rem;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
 }
 .question-filters .tier-tabs {
   margin-bottom: 0;

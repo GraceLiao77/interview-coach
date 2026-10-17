@@ -1,11 +1,41 @@
 /* 全站共用的壳、按钮和列表。主题变量在 index.css 的 :root。 */
 
 main {
-  max-width: 820px;
-  margin: 2.5rem auto;
+  max-width: var(--page-width);
+  margin: 0 auto 2.5rem; /* no top margin: the sticky top bar sits flush with the top of the page */
   padding: 0 1.5rem;
   color: var(--ink);
 }
+
+/* The top bar on every page: stays put while the page scrolls.
+   It's frosted glass (translucent white, blurred, a soft hairline and shadow), so
+   content slides underneath it instead of meeting a hard grey block.
+   The glass is a ::before layer stretched to the full window width, while the bar's
+   own content stays inside main's max-width and lines up with the page. */
+.home-header,
+.interview-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  height: var(--header-h); /* fixed, so anything sticky below can use --header-h as its top */
+}
+.home-header::before,
+.interview-header::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: -1; /* behind the bar's content, still inside its stacking context */
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  box-shadow: 0 6px 20px -12px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
 
 /* ============================================================
    Buttons —— 两个页面共用
@@ -114,7 +144,6 @@ main {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
   margin-bottom: 1.75rem;
 }
 
@@ -122,8 +151,10 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
+  min-width: 0; /* the bar has a fixed height, so a long email is cut off rather than wrapping */
   font-size: 0.85rem;
   color: var(--ink-3);
+  white-space: nowrap;
 }
 
 .panel {
@@ -250,7 +281,7 @@ main {
 .auth-title {
   font-size: 1.35rem;
   letter-spacing: -0.02em;
-  margin: 0 0 1.5rem;
+  margin: 2.5rem 0 1.5rem; /* main has no top margin now; this page has no top bar to give it space */
 }
 .auth-form .submit-btn {
   align-self: flex-start;

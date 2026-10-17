@@ -11,6 +11,10 @@
   --surface-2: #fafafa;
   --surface-3: #f1f2f4;
   --danger: #b42318;
+
+  /* Page shell shared by every page, so Home and the interview line up. */
+  --page-width: 1180px;
+  --header-h: 3.5rem; /* the sticky top bar; other sticky parts stop just below it */
 }
 
 *,
@@ -26,6 +30,7 @@ body {
   color: var(--ink);
   background: var(--surface);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip; /* the full-width top bar layer must not add a sideways scrollbar; clip (unlike hidden) keeps sticky working */
 }
 
 button {
