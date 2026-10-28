@@ -32,8 +32,8 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 2 | PostgreSQL (Supabase) + Prisma, session/question CRUD | ✅ |
 | 3 | JWT auth (register/login, bcrypt, `requireAuth`) | ✅ |
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
-| 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | 🟡 first baseline done (Sonnet 5: 77% recall); prompt improvements next |
-| 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | ⬜ |
+| 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | ✅ harness + baselines; first prompt improvements measured and kept (more queued) |
+| 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | 🟡 allowed accounts + rate limits done; demo data exported, public `/demo` page next |
 | 7 | Deploy with Terraform (S3 + CloudFront + App Runner); CI runs typechecks and the mock eval on every push | ⬜ |
 | 8 | RAG question bank: Python ingestion, embeddings in `pgvector`, retrieval measured with recall@k | ⬜ |
 | 9 | MCP server exposing scoring as tools, to practise from inside Claude | ⬜ |
@@ -63,7 +63,13 @@ An LLM feature is mostly ordinary systems work with a probabilistic component bo
 
 **Failures are categorised, not collapsed.** `502` when the upstream provider fails, `500` when it's our bug, `413` for an oversized upload, `400` for an empty recording. The `try` wraps only the provider call — wrapping the whole handler would flatten a DB timeout, a Groq outage and malformed model output into one unhelpful message. Raw provider errors go to the log; the user gets something actionable.
 
-**Model output is parsed, never trusted.** Scoring requests structured output against a Zod schema, so the response is validated at the boundary instead of being regex'd out of a markdown fence. A response that doesn't parse is an error, not a partially-populated score card.
+**Only allowed accounts can spend money ([ADR 0002](docs/adr/0002-ai-features-for-allowed-accounts-only.md)).** Every model call is paid from the owner's own credit, so AI routes run only for accounts with `isAllowed` set in the database (off by default). The flag is put into the JWT at sign-in, so the check costs no extra query; changing it in the browser doesn't help, because the token is signed. Other accounts get a `403` that says the feature is invite-only. Everyone else will get a recorded **Demo Interview** that makes no model calls and needs no sign-in.
+
+**Rate limits, sized for each route** (`express-rate-limit`): sign-in 10 failed attempts per 10 minutes per IP (successful sign-ins don't count), sign-up 5 per hour per IP, scoring and question generation 4 per minute per user, transcription 10 per minute per user. The AI limits protect against the owner's own bugs, such as a client loop or a double click. The Anthropic Console spend limit is the last line of defence.
+
+**Model output is parsed, never trusted.** Scoring requests structured output against a Zod schema, so the response is validated at the boundary instead of being regex'd out of a markdown fence. One thing the eval found: the SDK turns a `z.enum` into a plain string with a hint, so the model can return an error code that isn't on the list, and that failed the whole report about once in 33 calls. The output is now parsed with a looser schema first, and an unlisted code is mapped to `other`, keeping the model's code as a proposed pattern for review. Output that is still bad (malformed, or a score outside 1–5) is retried once; network and rate-limit errors are left to the SDK's own retries. If scoring still fails, the UI shows the error and the user can submit again.
+
+**One shape per thing on the wire.** Database rows are turned into the DTOs in `shared/types.ts` in one place (`server/src/lib/dto.ts`), so every route returns the same shape for the same thing. Old report rows are checked against the same schema; a row in an old format is shown as "no report" with a warning in the log, instead of breaking the page. `GET /sessions/:id` returns each question's latest answer and report using `take: 1` per question, which Prisma runs as one query per relation level, not one per question.
 
 **Repeated calls are safe.** Question generation uses `createMany` + `skipDuplicates` behind a `@@unique(sessionId, text)` constraint — the database enforces idempotency, so a double-clicked button can't produce a duplicate set.
 
@@ -97,9 +103,9 @@ Grading is a pure function over the saved model output. When the grading rules c
 ```bash
 cd server
 MOCK_AI=true  npm run eval                                                   # free: canned model output, checks the plumbing
-MOCK_AI=false npm run eval -- --model claude-sonnet-5 --only grammar-01      # one paid case: a canary before the full run
-MOCK_AI=false npm run eval -- --model claude-sonnet-5                        # the full set, about NZ$0.5 on Sonnet 5
-MOCK_AI=false npm run eval -- --model claude-sonnet-5 --runs 3               # three runs, to see how much the scores move on their own
+MOCK_AI=false npm run eval -- --model claude-sonnet-5-5 --only grammar-01    # one paid case: a canary before the full run
+MOCK_AI=false npm run eval -- --model claude-sonnet-5-5                      # the full set
+MOCK_AI=false npm run eval -- --model claude-sonnet-5-5 --runs 3             # three runs, to see how much the scores move on their own
 ```
 
 The run stops with exit code 1 on a malformed case, a span that isn't in its answer, a duplicate id, an unknown `--model`, or an `--only` id that doesn't exist. A mistyped model is refused rather than quietly replaced by the default, because that would mean paying for the wrong run.
@@ -125,6 +131,23 @@ The totals looked good. The raw output showed what they missed:
 
 Those three findings are the next prompt changes, in that order. Each one is run against this baseline before it's kept.
 
+### First prompt improvements (Sonnet 5.5)
+
+Before changing the prompt, one Test Set case was fixed: the model was right that a "clean" answer had two unnatural phrases, so its labels changed and the baseline was re-run. Then three changes were measured together:
+
+- **#1** Give each error its own entry, even when one sentence has several. Per-pattern weakness tracking needs this.
+- **#1b** A wrong preposition is *improper collocation*, not *wrong word choice*. That boundary used to be ambiguous.
+- **#2** Correct English is never must-fix or should-fix: simple sentences, present tense for a fact that is still true, a preposition at the end of a clause. The prompt's examples are invented, never taken from the Test Set, so the eval can't be passed by copying.
+
+```
+claude-sonnet-5-5, 11 cases × 3 runs
+content 11/11 · language 10/11 · mustCatch 18-21/22 · mustNotFlag 22/22 · errors 0
+```
+
+Every guardrail held across six full runs. The first wording of #2 lost a real catch ("there is", 0/3); a narrower wording got it back (3/3). **What it doesn't prove:** on the real answer, recall averaged 7.1/9 over 8 runs against 6.3 before, short of the 7.5 set *before* the run. The change was kept because the data model needs it and nothing regressed, not because recall improved. The lesson: decide up front whether a change has to *improve* a number or only *not make it worse*.
+
+Still queued: a rule for very short answers, ignoring spelling and capitalisation in speech transcripts, `[GAP]` / `[SENIOR]` notes in the structural exemplar, and making sure the polished version keeps the meaning.
+
 ## Tech stack
 
 | Layer | Choice |
@@ -143,22 +166,26 @@ Those three findings are the next prompt changes, in that order. Each one is run
 
 ```
 interview-coach/
-├── shared/types.ts             # API request/response types shared by both sides
+├── shared/                     # types.ts (API shapes) + errorPatterns.ts (the curated Error Pattern list)
+├── docs/adr/                   # decision records: 0001 error pattern list, 0002 allowed accounts + demo
 ├── server/
 │   ├── prisma/                 # schema + migrations
 │   ├── eval/                   # eval harness: cases.json (Test Set), runEval.ts, grade.ts, baselines/
+│   ├── scripts/exportDemo.ts   # writes one recorded interview to client/src/demo/ as the Demo Interview
 │   └── src/
 │       ├── index.ts            # Express app (CORS, routes, error handler incl. MulterError)
 │       ├── env.ts              # loads + validates .env once, at startup
 │       ├── routes/             # auth.ts, sessions.ts, questions.ts
 │       ├── services/           # questionService, transcriptionService, scoringService, answerService
-│       ├── middleware/         # requireAuth (JWT)
-│       ├── lib/                # prisma.ts, anthropic.ts, groq.ts (shared clients)
+│       ├── middleware/         # requireAuth (JWT), requireAllowed (403 for AI routes), rateLimits
+│       ├── schemas/            # Zod schemas for model output (scoring: loose raw schema + normaliseReport)
+│       ├── lib/                # shared clients, aiConfig.ts (model per task), dto.ts (rows → API shapes)
 │       └── utils/logger.ts     # the only place allowed to touch the console
 └── client/
     └── src/
         ├── api/                # client.ts (fetch wrapper: base URL, JWT, FormData-aware), interview.ts
         ├── context/            # AuthContext
+        ├── demo/               # demoInterview.json (exported by server/scripts/exportDemo.ts)
         ├── hook/               # useAudioRecorder (MediaRecorder + timer + Blob)
         └── pages/              # AuthForm, Sessions, Interview, QuestionCard, Recorder
 ```
@@ -208,6 +235,12 @@ curl http://localhost:3009/api/health
 ```
 
 Then open http://localhost:5173, register an account, create a session with a job description, generate questions, and answer one — by typing or by hitting 🎙 and speaking.
+
+New accounts can't use the AI features until they're allowed. For your own account, set it in the database and sign in again (the flag is read into the token at sign-in):
+
+```sql
+UPDATE "User" SET "isAllowed" = true WHERE email = 'you@example.com';
+```
 
 ---
 

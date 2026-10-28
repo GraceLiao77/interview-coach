@@ -36,8 +36,15 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - [x] 2. Prisma + Supabase; Session/Question CRUD
 - [x] 3. JWT register/login + `requireAuth`; client AuthContext + Login/Register/Sessions pages
 - [x] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite). Voice is **Chrome-only** (deliberate MVP trade-off, no mimeType negotiation)
-- [ ] 5. Eval harness — labelled test set, scoring rubric, regression run before any prompt change (v1 covers the scoring prompt only)
-- [ ] 6. Cost guardrails, before anything goes public (ADR 0002): AI routes only for Allowed Accounts (an email allowlist in server config), a no-sign-in Demo Interview for everyone else, `express-rate-limit` on auth and AI routes, and an Anthropic Console monthly spend limit. BYOK and charging are deferred until other people want to use the app
+- [x] 5. Eval harness — labelled test set, scoring rubric, regression run before any prompt change (v1 covers the scoring prompt only). Baseline: `eval/baselines/claude-sonnet-5-5.json`. Queued prompt changes: #3 very short answers, #4 ignore spelling/capitalisation, #5 `[GAP]`/`[SENIOR]` exemplar, #6 polished version keeps the meaning
+- [ ] 6. Cost guardrails, before anything goes public (ADR 0002): AI routes only for Allowed Accounts, a no-sign-in Demo Interview for everyone else, `express-rate-limit` on auth and AI routes, and an Anthropic Console monthly spend limit. BYOK and charging are deferred until other people want to use the app
+  - [x] `User.isAllowed` (default false), carried in the JWT; `requireAllowed` → 403 on AI routes
+  - [x] Rate limits (`middleware/rateLimits.ts`)
+  - [x] D1 `GET /sessions/:id` returns each question's `latestAttempt` · D2 client shows saved answers/reports, New/Practised tabs · D3 `npm run demo:export -- --session <id>` → `client/src/demo/demoInterview.json`
+  - [ ] D4 public read-only `/demo` route (no RequireLogin, no API/AI calls): split Interview into a data-loading container + a presentational view with a `readOnly` prop; client tsconfig needs `resolveJsonModule`. Jin writes the logic, Claude the CSS
+  - [ ] D5 "Try the demo" link on the login page; the 403 message links to the demo
+  - [ ] Confirm the Anthropic Console monthly spend limit is set
+  - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
 - [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
 - [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)
 - [ ] 9. MCP server exposing scoring as tools, so an interview can be practised from inside Claude
