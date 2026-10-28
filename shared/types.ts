@@ -55,10 +55,11 @@ export interface QuestionDetailDto extends QuestionDto {
 }
 
 /** GET /sessions/:id. The list and create routes return SessionDto, which has no answers. */
+//  题目 + latestAttempt（回答 + 打分报告）
 export interface SessionDetailDto extends Omit<SessionDto, 'questions'> {
   questions: QuestionDetailDto[];
 }
-
+//  只有题目本身（text、tier）
 export interface SessionDto {
   id: string;
   jobDescription: string | null;
