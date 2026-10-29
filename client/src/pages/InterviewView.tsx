@@ -3,7 +3,6 @@ import type { QuestionDetailDto, QuestionTier, SessionDetailDto } from '@shared/
 import { QuestionCard } from './QuestionCard'
 import { JobDescription } from './JobDescription'
 import { LiquidMetalButton } from '../components/ui/liquid-metal-button'
-import { ErrorMessage } from '../components/ErrorMessage'
 
 /**
  * Draws an Interview: the job description, the filter tabs and the question cards.
@@ -40,12 +39,10 @@ interface InterviewViewProps {
   generating: boolean
   /** Generates more questions. Resolves when the new questions are on the page. */
   onGenerate?: () => Promise<void>
-  /** Why the last Generate failed; shown under the button */
-  generateError?: unknown
   readOnly?: boolean
 }
 
-export function InterviewView({ session, loaded, generating, onGenerate, generateError, readOnly = false }: InterviewViewProps) {
+export function InterviewView({ session, loaded, generating, onGenerate, readOnly = false }: InterviewViewProps) {
   const questions = session?.questions ?? NO_QUESTIONS
   // 第二排 tab 你点了哪个（Warmup / Behavioral / Technical）
   const [activeTier, setActiveTier] = useState<QuestionTier>('warmup')
@@ -106,7 +103,6 @@ export function InterviewView({ session, loaded, generating, onGenerate, generat
         {!readOnly && <LiquidMetalButton disabled={generating} onClick={handleGenerate}>
           {generating ? 'Generating…' : 'Generate Questions'}
         </LiquidMetalButton>}
-        {!readOnly && <ErrorMessage error={generateError} />}
       </aside>
 
       {/* 右栏:按类别分 tab 的题目 */}

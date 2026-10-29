@@ -3,7 +3,6 @@ import type { QuestionDetailDto, QuestionDto, ScoreReportDto } from '@shared/typ
 import { submitAnswer, transcribeAudio } from '../api/interview'
 import { Recorder } from './Recorder'
 import { PATTERN_INFO } from '@shared/errorPatterns'
-import { ErrorMessage } from '../components/ErrorMessage'
 
 const TIER_LABELS: Record<QuestionDto['tier'], string> = {
   warmup: 'Warmup',
@@ -24,8 +23,7 @@ export function QuestionCard({ question, readOnly = false }: QuestionCardProps) 
   const [submitting, setSubmitting] = useState(false)
   const [transcribing, setTranscribing] = useState(false)
   const [score, setScore] = useState<ScoreReportDto | null>(question.latestAttempt?.score ?? null)
-  // Kept as the thrown value, not its message, so ErrorMessage can tell a 403 apart.
-  const [error, setError] = useState<unknown>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit() {
     setSubmitting(true)
@@ -34,7 +32,7 @@ export function QuestionCard({ question, readOnly = false }: QuestionCardProps) 
       const res = await submitAnswer(question.id, answer)
       setScore(res.score)
     } catch (e) {
-      setError(e)
+      setError(e instanceof Error ? e.message : String(e))
     } finally {
       setSubmitting(false)
     }
@@ -48,7 +46,7 @@ export function QuestionCard({ question, readOnly = false }: QuestionCardProps) 
       const res = await transcribeAudio(question.id, blob)
       setAnswer(res.transcript)
     } catch (e) {
-      setError(e)
+      setError(e instanceof Error ? e.message : String(e))
     } finally {
       setTranscribing(false)
     }
@@ -88,7 +86,7 @@ export function QuestionCard({ question, readOnly = false }: QuestionCardProps) 
         </button>
       </div>}
 
-      <ErrorMessage error={error} />
+      {error && <p className="error">{error}</p>}
       {score && <ScoreCard score={score} />}
     </section>
   )

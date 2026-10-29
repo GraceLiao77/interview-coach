@@ -42,7 +42,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - [x] Rate limits (`middleware/rateLimits.ts`)
   - [x] D1 `GET /sessions/:id` returns each question's `latestAttempt` · D2 client shows saved answers/reports, New/Practised tabs · D3 `npm run demo:export -- --session <id>` → `client/src/demo/demoInterview.json`
   - [x] D4 public read-only `/demo` (`DemoPage.tsx`, no RequireLogin, no API calls): `Interview` fetches, `InterviewView` draws; `readOnly` hides Generate, Record and Submit. Demo transcription stays off (a public endpoint would expose the Groq key)
-  - [x] D5 "Try the demo" link on the login page; a 403 from any AI route (Generate, transcribe, score) shows `ErrorMessage` with a link to `/demo`
+  - [ ] D5 "Try the demo" link on the login page; the 403 message links to the demo
   - [ ] Confirm the Anthropic Console monthly spend limit is set
   - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
 - [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
