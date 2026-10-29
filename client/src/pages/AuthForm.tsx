@@ -60,9 +60,15 @@ export function AuthForm({ mode }: AuthFormProps) {
         </button>
       </form>
       {mode === 'login' ? (
-        <p>
-          No account? <Link to="/register">Register</Link>
-        </p>
+        <>
+          <p>
+            No account? <Link to="/register">Register</Link>
+          </p>
+          {/* AI features are for Allowed Accounts only (ADR 0002), so point everyone else at the demo */}
+          <p>
+            Just looking? <Link to="/demo">Try the demo</Link>, no sign-in needed.
+          </p>
+        </>
       ) : (
         <p>
           Already have an account? <Link to="/login">Log in</Link>
