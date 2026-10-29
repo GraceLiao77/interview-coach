@@ -1,6 +1,6 @@
 # Registration is closed; accounts are invite-only
 
-The owner is the only person using the app, and every model call is paid for with the owner's own API credit. So public sign-up is turned off, and an account exists only if the owner created it. This replaces one sentence of ADR 0002, "Registration stays open"; the rest of ADR 0002 still holds. The register endpoint stays in place but always answers `403 { error: "Registration is invite-only" }`, before it reads the body or touches the database. The login page says "Sign-up is invite-only for now. Just looking? Try the demo." and opening `/register` sends the visitor to `/login`. Anyone without an account, including recruiters opening a link from a CV, still gets the Demo Interview.
+The owner is the only person using the app, and every model call is paid for with the owner's own API credit. So public sign-up is turned off, and an account exists only if the owner created it. This replaces one sentence of ADR 0002, "Registration stays open"; the rest of ADR 0002 still holds. The register endpoint stays in place, behind a `REGISTRATION_OPEN` flag in `server/src/routes/auth.ts` that is `false` for now. While it is off, the endpoint answers `403 { error: "Registration is invite-only" }` before it reads the body or touches the database. The login page says "Sign-up is invite-only for now. Just looking? Try the demo." and opening `/register` sends the visitor to `/login`. Anyone without an account, including recruiters opening a link from a CV, still gets the Demo Interview.
 
 ## Considered Options
 
@@ -13,5 +13,5 @@ The owner is the only person using the app, and every model call is paid for wit
 
 - To add someone for now, the owner inserts the user row by hand in Supabase, with a bcrypt hash and `isAllowed = true`. A `user:create` script is deferred until there is someone to invite.
 - `isAllowed` stays. Every account is now one the owner created, but the flag is still the switch that cuts an account off from model calls without deleting it.
-- `registerLimiter` is no longer needed, since the endpoint does no work.
+- The registration code is kept behind the flag rather than deleted or commented out, so it is still typechecked and reopening sign-up is a one-line change. `registerLimiter` stays for the same reason.
 - The Demo Interview and its link are unchanged, and it becomes the main way for anyone else to see the app.
