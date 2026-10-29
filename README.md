@@ -208,7 +208,7 @@ npm run dev                 # http://localhost:3009
 # 2. Client (new terminal)
 cd client
 npm install
-npm run dev                 # http://localhost:5173
+npm run dev                 # http://localhost:5174
 ```
 
 `server/.env` values:
@@ -234,7 +234,7 @@ curl http://localhost:3009/api/health
 # → {"status":"ok","timestamp":"..."}
 ```
 
-Then open http://localhost:5173, register an account, create a session with a job description, generate questions, and answer one — by typing or by hitting 🎙 and speaking.
+Then open http://localhost:5174, register an account, create a session with a job description, generate questions, and answer one — by typing or by hitting 🎙 and speaking.
 
 New accounts can't use the AI features until they're allowed. For your own account, set it in the database and sign in again (the flag is read into the token at sign-in):
 

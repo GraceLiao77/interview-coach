@@ -11,8 +11,8 @@ import multer from 'multer';
 
 const app = express();
 
-// The Vite dev server runs on 5173; without this, the browser blocks cross-origin fetches.
-app.use(cors({ origin: 'http://localhost:5173' }));
+// The Vite dev server runs on 5174; without this, the browser blocks cross-origin fetches.
+app.use(cors({ origin: 'http://localhost:5174' }));
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {

@@ -25,7 +25,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 ## Commands
 
 - Server dev: `cd server && npm run dev` (port 3009)
-- Client dev: `cd client && npm run dev` (port 5173)
+- Client dev: `cd client && npm run dev` (port 5174; 5173 is taken by another local project)
 - Typecheck: `npx tsc --noEmit` (server) / `npx tsc -b` (client)
 - Migrations: `cd server && npm run prisma:migrate <name>` (runs `prisma migrate dev --name <name>`; check the name before running, because an applied migration can't be renamed)
 - Eval harness: `cd server && MOCK_AI=true npm run eval` (free, canned output) / `MOCK_AI=false npm run eval -- --model <id> [--only <case-id>] [--runs N]` (real model calls, costs money). Set `MOCK_AI` explicitly: `server/.env` defaults it to `true`, and the command line overrides `.env`. Run a one-case `--only` canary before a full paid run; commit a prompt change together with the baseline it produced
@@ -41,7 +41,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - [x] `User.isAllowed` (default false), carried in the JWT; `requireAllowed` → 403 on AI routes
   - [x] Rate limits (`middleware/rateLimits.ts`)
   - [x] D1 `GET /sessions/:id` returns each question's `latestAttempt` · D2 client shows saved answers/reports, New/Practised tabs · D3 `npm run demo:export -- --session <id>` → `client/src/demo/demoInterview.json`
-  - [ ] D4 public read-only `/demo` route (no RequireLogin, no API/AI calls): split Interview into a data-loading container + a presentational view with a `readOnly` prop; client tsconfig needs `resolveJsonModule`. Jin writes the logic, Claude the CSS
+  - [x] D4 public read-only `/demo` (`DemoPage.tsx`, no RequireLogin, no API calls): `Interview` fetches, `InterviewView` draws; `readOnly` hides Generate, Record and Submit. Demo transcription stays off (a public endpoint would expose the Groq key)
   - [ ] D5 "Try the demo" link on the login page; the 403 message links to the demo
   - [ ] Confirm the Anthropic Console monthly spend limit is set
   - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
