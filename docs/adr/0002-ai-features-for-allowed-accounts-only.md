@@ -1,5 +1,7 @@
 # AI features run only for allowed accounts; everyone else sees a recorded demo
 
+> Partly superseded by [ADR 0003](0003-registration-is-invite-only.md): registration is now closed.
+
 Every model call is paid for with the owner's own API credit, so the app is used by its owner for now. Generating questions, transcribing and scoring only run for accounts on an allowlist kept in server config. Anyone else, including recruiters opening a link from a CV, gets a Demo Interview: one real interview recorded earlier, with real model output, that makes no model calls and needs no sign-in. Registration stays open, but an account that isn't allowed gets a clear "invite only" message from the AI routes rather than an error.
 
 ## Considered Options
