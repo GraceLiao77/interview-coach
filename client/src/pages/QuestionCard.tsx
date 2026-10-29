@@ -59,14 +59,16 @@ export function QuestionCard({ question, readOnly = false }: QuestionCardProps) 
       <span className={`q-tier q-tier--${question.tier}`}>{TIER_LABELS[question.tier]}</span>
       <p className="q-text">{question.text}</p>
 
-      <textarea
-        readOnly={readOnly}
+      {/* Read-only (the demo): the answer as text, or nothing if this question wasn't answered */}
+      {readOnly && answer && <p className="q-answer-text">{answer}</p>}
+
+      {!readOnly && <textarea
         className="q-answer"
         rows={5}
         placeholder="Type your answer, or record it and edit the transcript…"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
-      />
+      />}
 
      {!readOnly && <div className="q-actions">
         <Recorder

@@ -256,6 +256,20 @@
   box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
 }
 
+/* The answer as text, on the read-only demo: all of it is shown, no inner scroll.
+   pre-wrap keeps the answer's own line breaks and still wraps long lines. */
+.q-answer-text {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding: 0.7rem 0.9rem;
+  border-left: 3px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 0 10px 10px 0;
+}
+
 /* 底部操作条:录音在左,提交在右下角 */
 .q-actions {
   display: flex;
