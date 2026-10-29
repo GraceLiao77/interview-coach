@@ -25,7 +25,13 @@ function buildAuthResponse(user: { id: string; email: string; isAllowed: boolean
 
 export const authRouter = Router();
 
+// Registration is temporarily disabled (ADR 0003) . Set this to true to reopen it.
+const REGISTRATION_OPEN = false
 authRouter.post('/register', registerLimiter, async (req, res) => {
+  if (!REGISTRATION_OPEN) {
+    res.status(403).json({ error: 'Registration is invite-only' });
+    return;
+  }
   const parsed = credentialsSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
