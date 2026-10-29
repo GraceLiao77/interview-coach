@@ -12,10 +12,11 @@ const TIER_LABELS: Record<QuestionDto['tier'], string> = {
 
 interface QuestionCardProps {
   question: QuestionDetailDto
+  readOnly?: boolean
 }
 
 /** 一道题的卡片:自己管「答案输入 / 转写中 / 提交中 / 评分结果」这些 UI 状态。 */
-export function QuestionCard({ question }: QuestionCardProps) {
+export function QuestionCard({ question, readOnly = false }: QuestionCardProps) {
   // Start from the latest saved attempt, so a refresh shows what was already answered and scored.
   // These initial values are only read on the first render; the parent changes the key to reset them.
   const [answer, setAnswer] = useState(question.latestAttempt?.answer.content ?? '')
@@ -59,6 +60,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
       <p className="q-text">{question.text}</p>
 
       <textarea
+        readOnly={readOnly}
         className="q-answer"
         rows={5}
         placeholder="Type your answer, or record it and edit the transcript…"
@@ -66,7 +68,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
         onChange={(e) => setAnswer(e.target.value)}
       />
 
-      <div className="q-actions">
+     {!readOnly && <div className="q-actions">
         <Recorder
           onComplete={(blob) => void handleAudio(blob)}
           disabled={transcribing}
@@ -80,7 +82,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
         >
           {submitting ? 'Scoring…' : 'Submit & Score'}
         </button>
-      </div>
+      </div>}
 
       {error && <p className="error">{error}</p>}
       {score && <ScoreCard score={score} />}

@@ -5,6 +5,7 @@ import { AuthForm } from './pages/AuthForm'
 import { Sessions } from './pages/Sessions'
 import './App.css'
 import { Interview } from './pages/Interview'
+import { DemoPage } from './pages/DemoPage'
 
 function RequireLogin({ children }: { children: ReactNode }) {
   const { user } = useAuth()
@@ -19,6 +20,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<AuthForm mode="login" />} />
           <Route path="/register" element={<AuthForm mode="register" />} />
+          {/* Public: no RequireLogin, and the page makes no API calls */}
+          <Route path="/demo" element={<DemoPage />} />
           <Route path="/interview/:sessionId" element={
              <RequireLogin>
                <Interview />

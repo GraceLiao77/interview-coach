@@ -39,9 +39,10 @@ interface InterviewViewProps {
   generating: boolean
   /** Generates more questions. Resolves when the new questions are on the page. */
   onGenerate?: () => Promise<void>
+  readOnly?: boolean
 }
 
-export function InterviewView({ session, loaded, generating, onGenerate }: InterviewViewProps) {
+export function InterviewView({ session, loaded, generating, onGenerate, readOnly = false }: InterviewViewProps) {
   const questions = session?.questions ?? NO_QUESTIONS
   // 第二排 tab 你点了哪个（Warmup / Behavioral / Technical）
   const [activeTier, setActiveTier] = useState<QuestionTier>('warmup')
@@ -99,9 +100,9 @@ export function InterviewView({ session, loaded, generating, onGenerate }: Inter
           <p className="jd-empty">No job description on this session.</p>
         )}
 
-        <LiquidMetalButton disabled={generating} onClick={handleGenerate}>
+        {!readOnly && <LiquidMetalButton disabled={generating} onClick={handleGenerate}>
           {generating ? 'Generating…' : 'Generate Questions'}
-        </LiquidMetalButton>
+        </LiquidMetalButton>}
       </aside>
 
       {/* 右栏:按类别分 tab 的题目 */}
@@ -153,7 +154,7 @@ export function InterviewView({ session, loaded, generating, onGenerate }: Inter
           // The key includes the latest attempt's id: useState only reads its initial value
           // on first render, so a new attempt from a reload needs a fresh card.
           visible.map((q) => (
-            <QuestionCard key={`${q.id}:${q.latestAttempt?.answer.id ?? 'none'}`} question={q} />
+            <QuestionCard readOnly={readOnly} key={`${q.id}:${q.latestAttempt?.answer.id ?? 'none'}`} question={q} />
           ))
         )}
       </div>
