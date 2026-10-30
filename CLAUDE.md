@@ -42,7 +42,9 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - [x] Rate limits (`middleware/rateLimits.ts`)
   - [x] D1 `GET /sessions/:id` returns each question's `latestAttempt` · D2 client shows saved answers/reports, New/Practised tabs · D3 `npm run demo:export -- --session <id>` → `client/src/demo/demoInterview.json`
   - [x] D4 public read-only `/demo` (`DemoPage.tsx`, no RequireLogin, no API calls): `Interview` fetches, `InterviewView` draws; `readOnly` hides Generate, Record and Submit. Demo transcription stays off (a public endpoint would expose the Groq key)
-  - [ ] D5 "Try the demo" link on the login page; the 403 message links to the demo
+  - [x] D5 Sign-up closed (ADR 0003): `REGISTRATION_OPEN = false` on the server (register → 403) and the client (`/register` → `/login`); the login page says "Sign-up is invite-only for now. Just looking? Try the demo."
+  - [ ] Generate Questions shows its error on the page instead of `console.log` (state lives in `Interview`, passed to `InterviewView` as a prop)
+  - [ ] Create Interview: job description required (button disabled while empty; server Zod rejects a blank one) and no double submit (button disabled and shows "Creating…" while the request is in flight)
   - [ ] Confirm the Anthropic Console monthly spend limit is set
   - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
 - [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
