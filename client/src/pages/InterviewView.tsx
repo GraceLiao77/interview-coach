@@ -40,9 +40,10 @@ interface InterviewViewProps {
   /** Generates more questions. Resolves when the new questions are on the page. */
   onGenerate?: () => Promise<void>
   readOnly?: boolean
+  generateError?: string | null
 }
 
-export function InterviewView({ session, loaded, generating, onGenerate, readOnly = false }: InterviewViewProps) {
+export function InterviewView({ session, loaded, generating, onGenerate, readOnly = false, generateError }: InterviewViewProps) {
   const questions = session?.questions ?? NO_QUESTIONS
   // 第二排 tab 你点了哪个（Warmup / Behavioral / Technical）
   const [activeTier, setActiveTier] = useState<QuestionTier>('warmup')
@@ -100,9 +101,12 @@ export function InterviewView({ session, loaded, generating, onGenerate, readOnl
           <p className="jd-empty">No job description on this session.</p>
         )}
 
-        {!readOnly && <LiquidMetalButton disabled={generating} onClick={handleGenerate}>
-          {generating ? 'Generating…' : 'Generate Questions'}
-        </LiquidMetalButton>}
+        {!readOnly && <>
+          <LiquidMetalButton disabled={generating} onClick={handleGenerate}>
+            {generating ? 'Generating…' : 'Generate Questions'}
+          </LiquidMetalButton>
+          {generateError && <div role="alert" className="error">{generateError}</div>}
+        </>}
       </aside>
 
       {/* 右栏:按类别分 tab 的题目 */}

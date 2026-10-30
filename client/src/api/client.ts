@@ -34,8 +34,13 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   // get token from localstorage
   const token = getToken()
   if (token) headers.set('Authorization', `Bearer ${token}`)
-
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers })
+  let res: Response;
+  // fetch itself only throws when the server can't be reached; HTTP errors are handled below
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...options, headers })
+  } catch {
+    throw new Error('Can’t reach the server. Check your connection and try again.')
+  }
   if (res.status === 204) return undefined as T // no content: delete successful
 
   const body: unknown = await res.json().catch(() => null)

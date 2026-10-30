@@ -17,6 +17,8 @@ export function Interview() {
   const [loaded, setLoaded] = useState(false)
   //  Generate 按钮是不是正在转。点了以后按钮变成 "Generating…" 并且不能再点
   const [generating, setGenerating] = useState(false)
+  // 
+  const [generateError, setGenerateError] = useState<string | null>(null)
 
   // The one place the page reads the interview: questions plus each one's latest attempt.
   const loadSession = useCallback(async () => {
@@ -35,13 +37,14 @@ export function Interview() {
   // It returns the promise, so the view can wait for it and then switch to the New tab.
   const handleGenerate = async () => {
     setGenerating(true)
+    setGenerateError(null)
     try {
       // The generate route returns questions without their attempts, so its body isn't used:
       // putting it into state would wipe every report off the page. Reload the full detail instead.
       await post(`/api/sessions/${sessionId}/generate-questions`)
       await loadSession()
     } catch (err) {
-      console.log(err)
+      setGenerateError(err instanceof Error ? err.message : String(err))
     } finally {
       setGenerating(false)
     }
@@ -58,7 +61,7 @@ export function Interview() {
         />
       </header>
 
-      <InterviewView session={sessionData} loaded={loaded} generating={generating} onGenerate={handleGenerate} />
+      <InterviewView session={sessionData} loaded={loaded} generating={generating} generateError={generateError} onGenerate={handleGenerate} />
     </main>
   )
 }
