@@ -90,6 +90,14 @@ main {
   border-color: #e8b4ae;
   background: #fef4f3;
 }
+/* Disabled (e.g. "Deleting…"): greyed out, and hover no longer turns it red */
+.ghost-btn:disabled,
+.ghost-btn:disabled:hover {
+  color: var(--ink-4);
+  border-color: var(--line);
+  background: var(--surface);
+  cursor: default;
+}
 
 .submit-btn:focus-visible,
 .ghost-btn:focus-visible {

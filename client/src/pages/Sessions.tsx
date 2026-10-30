@@ -60,12 +60,20 @@ export function Sessions() {
     }
   }
 
+  // Which card is being deleted, so only its button is disabled and shows "Deleting…"
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
   async function deleteSession(id: string): Promise<void> {
+    setDeletingId(id)
     try {
       await api<void>(`/api/sessions/${id}`, { method: 'DELETE' })
-      refresh()
+      // The server confirmed it, so drop the card here instead of reloading the whole list:
+      // refresh() can't be awaited, and the button would flash back to "Delete" in between.
+      setSessions((prev) => prev.filter((s) => s.id !== id))
     } catch (err: unknown) {
       handleApiError(err)
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -136,9 +144,10 @@ export function Sessions() {
                   <button
                     type="button"
                     className="ghost-btn ghost-btn--danger"
+                    disabled={s.id === deletingId}
                     onClick={() => void deleteSession(s.id)}
                   >
-                    Delete
+                    {s.id === deletingId ? 'Deleting…' : 'Delete'}
                   </button>
                 </div>
               </li>
