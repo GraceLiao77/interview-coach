@@ -105,8 +105,8 @@ export function Sessions() {
             placeholder="Paste the job description here — it's what the questions get generated from."
             rows={5}
           />
-          <button disabled={creating || Boolean(jobDescription.trim())} type="submit" className="submit-btn">
-            {creating ? 'Creating' : 'Create Interview'}
+          <button disabled={creating || !jobDescription.trim()} type="submit" className="submit-btn">
+            {creating ? 'Creating…' : 'Create interview'}
           </button>
         </form>
       </section>
@@ -116,9 +116,9 @@ export function Sessions() {
       <section>
         <h2 className="panel-title">Your interviews</h2>
         {!loaded ? (
-          <p className="empty-note">Loading your interview...</p>
+          <p className="empty-note">Loading your interviews…</p>
         ) : sessions.length === 0 ? (
-          <p className="empty-note">No interview yet — create one above.</p>
+          <p className="empty-note">No interviews yet — create one above.</p>
         ) : (
           <ul className="session-list">
             {sessions.map((s) => (

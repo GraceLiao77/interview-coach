@@ -16,7 +16,7 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 
 ## Screenshots
 
-**Sessions** — paste a job description, and each saved session tracks its own question set.
+**Home** — paste a job description, and each saved Interview tracks its own question set.
 
 ![Sessions list: a form for pasting a job description, and saved sessions showing status, date and question count](docs/screenshots/home.png)
 
@@ -33,7 +33,7 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 3 | JWT auth (register/login, bcrypt, `requireAuth`) | ✅ |
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
 | 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | ✅ harness + baselines; first prompt improvements measured and kept (more queued) |
-| 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | 🟡 allowed accounts + rate limits done; demo data exported, public `/demo` page next |
+| 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | 🟡 allowed accounts, rate limits, public `/demo` and invite-only sign-up done; the Anthropic Console spend limit is left |
 | 7 | Deploy with Terraform (S3 + CloudFront + App Runner); CI runs typechecks and the mock eval on every push | ⬜ |
 | 8 | RAG question bank: Python ingestion, embeddings in `pgvector`, retrieval measured with recall@k | ⬜ |
 | 9 | MCP server exposing scoring as tools, to practise from inside Claude | ⬜ |
@@ -41,9 +41,9 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 11 | Resume (PDF) + job description match analysis | ⬜ |
 | 12 | Cross-session weakness profile + drills, and an interviewer agent that asks follow-up questions | ⬜ |
 
-## How a session works
+## How an Interview works
 
-1. Paste a job description when you create a session
+1. Paste a job description (required) when you create an Interview
 2. **Generate questions** — Claude produces a tiered set (warmup / behavioural / technical) from the JD
 3. **Answer by typing or by voice** — recording shows only a waveform and a timer, never live subtitles, so you can't quietly correct yourself mid-sentence
 4. The recording is uploaded, transcribed by **Groq-hosted Whisper**, and the transcript is shown back to you — so a low score and a misheard word stay distinguishable
@@ -63,15 +63,19 @@ An LLM feature is mostly ordinary systems work with a probabilistic component bo
 
 **Failures are categorised, not collapsed.** `502` when the upstream provider fails, `500` when it's our bug, `413` for an oversized upload, `400` for an empty recording. The `try` wraps only the provider call — wrapping the whole handler would flatten a DB timeout, a Groq outage and malformed model output into one unhelpful message. Raw provider errors go to the log; the user gets something actionable.
 
-**Only allowed accounts can spend money ([ADR 0002](docs/adr/0002-ai-features-for-allowed-accounts-only.md)).** Every model call is paid from the owner's own credit, so AI routes run only for accounts with `isAllowed` set in the database (off by default). The flag is put into the JWT at sign-in, so the check costs no extra query; changing it in the browser doesn't help, because the token is signed. Other accounts get a `403` that says the feature is invite-only. Everyone else will get a recorded **Demo Interview** that makes no model calls and needs no sign-in.
+**Only allowed accounts can spend money ([ADR 0002](docs/adr/0002-ai-features-for-allowed-accounts-only.md)).** Every model call is paid from the owner's own credit, so AI routes run only for accounts with `isAllowed` set in the database (off by default). The flag is put into the JWT at sign-in, so the check costs no extra query; changing it in the browser doesn't help, because the token is signed. Other accounts get a `403` that says the feature is invite-only, and the page shows that message instead of failing silently. Everyone else can open a recorded **Demo Interview** at `/demo`: one real interview with real model output, read-only, with no model calls and no sign-in.
 
-**Rate limits, sized for each route** (`express-rate-limit`): sign-in 10 failed attempts per 10 minutes per IP (successful sign-ins don't count), sign-up 5 per hour per IP, scoring and question generation 4 per minute per user, transcription 10 per minute per user. The AI limits protect against the owner's own bugs, such as a client loop or a double click. The Anthropic Console spend limit is the last line of defence.
+**Sign-up is closed ([ADR 0003](docs/adr/0003-registration-is-invite-only.md)).** The owner is the only user, so the register endpoint answers `403` before it reads the body or touches the database, and `/register` in the client redirects to `/login`. The login page says sign-up is invite-only and links to the demo. The register code stays behind a `REGISTRATION_OPEN` flag on each side instead of being deleted, so it's still typechecked and reopening sign-up is a one-line change.
+
+**Rate limits, sized for each route** (`express-rate-limit`): sign-in 10 failed attempts per 10 minutes per IP (successful sign-ins don't count), sign-up 5 per hour per IP (kept for when sign-up reopens), scoring and question generation 4 per minute per user, transcription 10 per minute per user. The AI limits protect against the owner's own bugs, such as a client loop or a double click. The Anthropic Console spend limit is the last line of defence.
 
 **Model output is parsed, never trusted.** Scoring requests structured output against a Zod schema, so the response is validated at the boundary instead of being regex'd out of a markdown fence. One thing the eval found: the SDK turns a `z.enum` into a plain string with a hint, so the model can return an error code that isn't on the list, and that failed the whole report about once in 33 calls. The output is now parsed with a looser schema first, and an unlisted code is mapped to `other`, keeping the model's code as a proposed pattern for review. Output that is still bad (malformed, or a score outside 1–5) is retried once; network and rate-limit errors are left to the SDK's own retries. If scoring still fails, the UI shows the error and the user can submit again.
 
 **One shape per thing on the wire.** Database rows are turned into the DTOs in `shared/types.ts` in one place (`server/src/lib/dto.ts`), so every route returns the same shape for the same thing. Old report rows are checked against the same schema; a row in an old format is shown as "no report" with a warning in the log, instead of breaking the page. `GET /sessions/:id` returns each question's latest answer and report using `take: 1` per question, which Prisma runs as one query per relation level, not one per question.
 
-**Repeated calls are safe.** Question generation uses `createMany` + `skipDuplicates` behind a `@@unique(sessionId, text)` constraint — the database enforces idempotency, so a double-clicked button can't produce a duplicate set.
+**Repeated calls are safe.** Question generation uses `createMany` + `skipDuplicates` behind a `@@unique(sessionId, text)` constraint — the database enforces idempotency, so a double-clicked button can't produce a duplicate set. Buttons that create or delete are disabled while their request runs and say so ("Creating…", "Deleting…"), because a click with no visible response gets clicked again. Delete tracks which card is in flight, so only that card's button is disabled.
+
+**A job description is required, and the server is what enforces it.** The Create button stays disabled until the textarea has more than whitespace, but that only helps the user; Zod (`trim().min(1)`) is what rejects a blank one. Older Interviews created before the rule can still have no job description, so question generation returns `400` for them instead of sending Claude a placeholder.
 
 **The interface is designed around the model being wrong.** The transcript is shown back to the user and is editable before scoring, so a bad score and a misheard word stay distinguishable — which matters much more for accented speech. And there are deliberately no live subtitles while recording: watching a transcript form makes you edit yourself mid-sentence, which is exactly the skill the practice is meant to exercise.
 
@@ -167,7 +171,7 @@ Still queued: a rule for very short answers, ignoring spelling and capitalisatio
 ```
 interview-coach/
 ├── shared/                     # types.ts (API shapes) + errorPatterns.ts (the curated Error Pattern list)
-├── docs/adr/                   # decision records: 0001 error pattern list, 0002 allowed accounts + demo
+├── docs/adr/                   # decision records: 0001 error pattern list, 0002 allowed accounts + demo, 0003 invite-only sign-up
 ├── server/
 │   ├── prisma/                 # schema + migrations
 │   ├── eval/                   # eval harness: cases.json (Test Set), runEval.ts, grade.ts, baselines/
@@ -187,7 +191,7 @@ interview-coach/
         ├── context/            # AuthContext
         ├── demo/               # demoInterview.json (exported by server/scripts/exportDemo.ts)
         ├── hook/               # useAudioRecorder (MediaRecorder + timer + Blob)
-        └── pages/              # AuthForm, Sessions, Interview, QuestionCard, Recorder
+        └── pages/              # AuthForm, Sessions, Interview (fetches) + InterviewView (draws), DemoPage, QuestionCard, Recorder
 ```
 
 ## Getting started
@@ -234,13 +238,17 @@ curl http://localhost:3009/api/health
 # → {"status":"ok","timestamp":"..."}
 ```
 
-Then open http://localhost:5174, register an account, create a session with a job description, generate questions, and answer one — by typing or by hitting 🎙 and speaking.
+Open http://localhost:5174/demo to see the Demo Interview; it needs no account and no API keys.
 
-New accounts can't use the AI features until they're allowed. For your own account, set it in the database and sign in again (the flag is read into the token at sign-in):
+To use the app itself you need an account, and sign-up is closed ([ADR 0003](docs/adr/0003-registration-is-invite-only.md)). To create your first one locally, set `REGISTRATION_OPEN` to `true` in both `server/src/routes/auth.ts` and `client/src/App.tsx`, register at http://localhost:5174/register, then set both back to `false`.
+
+New accounts can't use the AI features until they're allowed. Set it in the database and sign in again (the flag is read into the token at sign-in):
 
 ```sql
 UPDATE "User" SET "isAllowed" = true WHERE email = 'you@example.com';
 ```
+
+Then create an Interview with a job description, generate questions, and answer one — by typing or by hitting 🎙 and speaking.
 
 ---
 
