@@ -3,7 +3,8 @@ node_modules/
 
 # Build output
 dist/
-*.tsbuildinfo   # tsc -b's incremental cache
+# tsc -b's incremental cache
+*.tsbuildinfo
 
 # Secrets / env — ignore all env files except the committed template
 .env
