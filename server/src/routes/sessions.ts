@@ -10,7 +10,7 @@ import { aiLimiter } from '../middleware/rateLimits';
 
 
 const createSessionSchema = z.object({
-  jobDescription: z.string().max(20_000).optional(),
+  jobDescription: z.string().trim().min(1, 'Job description is required').max(20_000),
   questions: z
     .array(
       z.object({
@@ -90,7 +90,11 @@ sessionsRouter.post<{ id: string }>('/:id/generate-questions', requireAllowed, a
     res.status(404).json({ error: 'session not found'})
     return;
   }
-  const result = await generateQuestions(session.jobDescription ?? 'please upload jobscription')
+  if (!session.jobDescription) {
+    res.status(400).json({ error: 'This interview has no job description. Create a new interview with one.'})
+    return;
+  }
+  const result = await generateQuestions(session.jobDescription)
   await prisma.question.createMany({
     data: result.questions.map((q) => ({
       sessionId: session.id,

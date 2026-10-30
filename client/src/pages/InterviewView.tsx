@@ -98,7 +98,7 @@ export function InterviewView({ session, loaded, generating, onGenerate, readOnl
             <JobDescription text={session.jobDescription} />
           </>
         ) : (
-          <p className="jd-empty">No job description on this session.</p>
+          <p className="jd-empty">No job description on this interview.</p>
         )}
 
         {!readOnly && <>

@@ -15,6 +15,7 @@ export function Sessions() {
   const [loaded, setLoaded] = useState(false)
   const [jobDescription, setJobDescription] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [creating, setCreating] = useState<boolean>(false)
 
   const handleApiError = useCallback(
     (err: unknown): void => {
@@ -42,10 +43,11 @@ export function Sessions() {
   async function createSession(e: React.FormEvent): Promise<void> {
     e.preventDefault()
     setError(null)
+    setCreating(true)
     // 粘贴过来的 JD 先规范化成 markdown-lite 再存,否则库里就是一大坨没有结构的文本
     const normalized = normalizeJobDescription(jobDescription)
     const body: CreateSessionRequest = {
-      jobDescription: normalized || undefined,
+      jobDescription: normalized,
     }
     try {
       await api<SessionDto>('/api/sessions', { method: 'POST', body: JSON.stringify(body) })
@@ -53,6 +55,8 @@ export function Sessions() {
       refresh()
     } catch (err: unknown) {
       handleApiError(err)
+    } finally {
+      setCreating(false)
     }
   }
 
@@ -85,7 +89,7 @@ export function Sessions() {
       </header>
 
       <section className="panel">
-        <h2 className="panel-title">New mock session</h2>
+        <h2 className="panel-title">New mock interview</h2>
         <form onSubmit={createSession} className="session-form">
           <textarea
             value={jobDescription}
@@ -93,8 +97,8 @@ export function Sessions() {
             placeholder="Paste the job description here — it's what the questions get generated from."
             rows={5}
           />
-          <button type="submit" className="submit-btn">
-            Create session
+          <button disabled={creating || Boolean(jobDescription.trim())} type="submit" className="submit-btn">
+            {creating ? 'Creating' : 'Create Interview'}
           </button>
         </form>
       </section>
@@ -102,11 +106,11 @@ export function Sessions() {
       {error && <p className="error">{error}</p>}
 
       <section>
-        <h2 className="panel-title">Your sessions</h2>
+        <h2 className="panel-title">Your interviews</h2>
         {!loaded ? (
-          <p className="empty-note">Loading your sessions…</p>
+          <p className="empty-note">Loading your interview...</p>
         ) : sessions.length === 0 ? (
-          <p className="empty-note">No sessions yet — create one above.</p>
+          <p className="empty-note">No interview yet — create one above.</p>
         ) : (
           <ul className="session-list">
             {sessions.map((s) => (

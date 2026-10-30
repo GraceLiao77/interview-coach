@@ -69,7 +69,7 @@ export interface SessionDto {
 }
 
 export interface CreateSessionRequest {
-  jobDescription?: string;
+  jobDescription: string;
   questions?: Array<{
     tier: QuestionTier;
     text: string;
