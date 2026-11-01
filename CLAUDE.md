@@ -37,7 +37,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 - [x] 3. JWT register/login + `requireAuth`; client AuthContext + Login/Register/Sessions pages
 - [x] 4. Claude + Whisper: generate questions → voice answer → transcribe → three-axis scoring (Content / Language / Delivery — never one collapsed total; language feedback must name the error pattern, e.g. Chinese-L1 transfer, with original → native rewrite). Voice is **Chrome-only** (deliberate MVP trade-off, no mimeType negotiation)
 - [x] 5. Eval harness — labelled test set, scoring rubric, regression run before any prompt change (v1 covers the scoring prompt only). Baseline: `eval/baselines/claude-sonnet-5-5.json`. Queued prompt changes: #3 very short answers, #4 ignore spelling/capitalisation, #5 `[GAP]`/`[SENIOR]` exemplar, #6 polished version keeps the meaning
-- [ ] 6. Cost guardrails, before anything goes public (ADR 0002): AI routes only for Allowed Accounts, a no-sign-in Demo Interview for everyone else, `express-rate-limit` on auth and AI routes, and an Anthropic Console monthly spend limit. BYOK and charging are deferred until other people want to use the app
+- [x] 6. Cost guardrails, before anything goes public (ADR 0002): AI routes only for Allowed Accounts, a no-sign-in Demo Interview for everyone else, `express-rate-limit` on auth and AI routes, and an Anthropic Console monthly spend limit. BYOK and charging are deferred until other people want to use the app
   - [x] `User.isAllowed` (default false), carried in the JWT; `requireAllowed` → 403 on AI routes
   - [x] Rate limits (`middleware/rateLimits.ts`)
   - [x] D1 `GET /sessions/:id` returns each question's `latestAttempt` · D2 client shows saved answers/reports, New/Practised tabs · D3 `npm run demo:export -- --session <id>` → `client/src/demo/demoInterview.json`
@@ -45,9 +45,10 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - [x] D5 Sign-up closed (ADR 0003): `REGISTRATION_OPEN = false` on the server (register → 403) and the client (`/register` → `/login`); the login page says "Sign-up is invite-only for now. Just looking? Try the demo."
   - [x] Generate Questions shows its error on the page instead of `console.log` (state lives in `Interview`, passed to `InterviewView` as a prop); `api()` turns a failed `fetch` into "Can't reach the server…"
   - [x] Create Interview: job description required (button disabled while empty; server Zod rejects a blank one) and no double submit (button disabled and shows "Creating…" while the request is in flight); Delete likewise (`deletingId` disables only that card's button and shows "Deleting…")
-  - [ ] Confirm the Anthropic Console monthly spend limit is set
+  - Deferred to step 7: the Anthropic Console monthly spend limit (owner's call: the app only runs locally for now, so only the owner can reach the AI routes)
   - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
 - [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
+  - [ ] Before the first public deploy: set the Anthropic Console monthly spend limit (deferred from step 6)
 - [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)
 - [ ] 9. MCP server exposing scoring as tools, so an interview can be practised from inside Claude
 - [ ] 10. Cost telemetry: per-call token accounting from `response.usage`, tiered model selection, prompt caching
