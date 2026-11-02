@@ -1,6 +1,8 @@
 # The backend deploys to Google Cloud Run; the frontend stays on AWS
 
-The plan was AWS throughout: S3 + CloudFront for the client and App Runner for the server. App Runner stopped accepting new customers on 30 April 2026, and the owner's AWS account was created after that, so it can't use App Runner. The backend now runs as a Docker container on Google Cloud Run in `australia-southeast1` (Sydney), with the maximum number of instances set to 1. The frontend stays on S3 + CloudFront. Both are described in Terraform, with the AWS and Google providers.
+The plan was AWS throughout: S3 + CloudFront for the client and App Runner for the server. App Runner stopped accepting new customers on 30 April 2026, and the owner's AWS account was created after that, so it can't use App Runner. The backend now runs as a Docker container on Google Cloud Run in `asia-northeast1` (Tokyo), with the maximum number of instances set to 1. The frontend stays on S3 + CloudFront. Both are described in Terraform, with the AWS and Google providers.
+
+The backend is in Tokyo, not Sydney, because the Supabase database is in `ap-northeast-1` (Tokyo). One request from the browser crosses to the backend once, but the backend then queries the database several times, and Sydney to Tokyo is roughly 100 ms each way and back. So the backend sits next to the database: a request from New Zealand pays the long trip once instead of on every query. Moving the database to Sydney instead would mean a new Supabase project and a data migration, which isn't worth it yet. The S3 bucket is in Sydney; CloudFront serves the files from edge locations near each visitor anyway.
 
 Two things decided it. First, the Demo Interview is static: it's bundled into the client and makes no API calls. Recruiters only ever load the frontend, so the frontend has to be always on and fast, while the backend serves only the owner and can sleep. Cloud Run scales to zero when idle, so occasional use by one person fits inside its free tier, and a cold start of a few seconds only ever costs the owner. Second, the project is also how the owner learns the skills New Zealand job ads ask for: PostgreSQL, Terraform, Docker and AWS. This split still covers Terraform (two providers), Docker, S3, CloudFront and IAM.
 
@@ -21,4 +23,4 @@ Two things decided it. First, the Demo Interview is static: it's bundled into th
 - The client's API base URL can't stay hard-coded to `localhost:3009`, and the server's CORS has to allow the CloudFront domain.
 - Rate limits stay in memory, which is only correct while there is one instance. Raising the instance limit means moving them to a shared store first.
 - There are two cloud accounts to look after: AWS (free plan until 2 May 2027; an account that isn't upgraded by then is deleted 90 days later) and Google Cloud (needs a billing account for the free tier).
-- The Supabase project's region should be close to Sydney, or every query crosses an ocean.
+- The backend's region follows the database. If the database ever moves (to Sydney, say), the Cloud Run region moves with it.

@@ -5,7 +5,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 ## Tech stack (FIXED — do not change)
 
 - **Client**: React + Vite + TypeScript (`client/`), deploys to **AWS** (S3 + CloudFront)
-- **Server**: Express 5 + TypeScript, NOT Next.js (`server/`), runs with `tsx`, deploys as a Docker container to **Google Cloud Run** (Sydney, max 1 instance; ADR 0004 — App Runner closed to new customers)
+- **Server**: Express 5 + TypeScript, NOT Next.js (`server/`), runs with `tsx`, deploys as a Docker container to **Google Cloud Run** (Tokyo `asia-northeast1`, next to the Supabase DB in `ap-northeast-1`; max 1 instance; ADR 0004 — App Runner closed to new customers)
 - **DB**: PostgreSQL on Supabase + Prisma 6 (`server/prisma/schema.prisma`); pooled `DATABASE_URL` (6543, pgbouncer) + `DIRECT_URL` (5432) for migrations
 - **Auth**: JWT (`jsonwebtoken`, 7d expiry) + bcryptjs; `requireAuth` middleware sets `req.userId`
 - **AI**: Claude API (analysis/questions/evaluation — output MUST be strict JSON, no markdown fences); **Groq-hosted** Whisper `whisper-large-v3-turbo` (authoritative transcription). Two independent mock flags: `MOCK_AI` (Claude) and `MOCK_TRANSCRIPTION` (Groq)
