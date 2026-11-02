@@ -34,7 +34,7 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
 | 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | ✅ harness + baselines; first prompt improvements measured and kept (more queued) |
 | 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | ✅ allowed accounts, rate limits, public `/demo`, invite-only sign-up; the Anthropic Console spend limit is set before the first public deploy (step 7) |
-| 7 | Deploy with Terraform (S3 + CloudFront + App Runner); CI runs typechecks and the mock eval on every push | 🟡 CI done (lint, typecheck, build, mock eval); Terraform next |
+| 7 | Deploy with Terraform (client on S3 + CloudFront, server on Google Cloud Run); CI runs typechecks and the mock eval on every push | 🟡 CI done (lint, typecheck, build, mock eval); Terraform next |
 | 8 | RAG question bank: Python ingestion, embeddings in `pgvector`, retrieval measured with recall@k | ⬜ |
 | 9 | MCP server exposing scoring as tools, to practise from inside Claude | ⬜ |
 | 10 | Cost telemetry: per-call token accounting, tiered model selection, prompt caching | ⬜ |
@@ -157,7 +157,7 @@ Still queued: a rule for very short answers, ignoring spelling and capitalisatio
 | Layer | Choice |
 |-------|--------|
 | Frontend | React + Vite + TypeScript (deploys to **AWS** — S3 + CloudFront) |
-| Backend | Express 5 + TypeScript (deploys to **AWS** — App Runner) |
+| Backend | Express 5 + TypeScript (deploys as a Docker container to **Google Cloud Run** — [ADR 0004](docs/adr/0004-backend-on-cloud-run.md)) |
 | Database | PostgreSQL on Supabase + Prisma ORM |
 | Auth | JWT + bcrypt |
 | AI | Claude API (questions, strict-JSON scoring) · Groq-hosted Whisper `whisper-large-v3-turbo` (speech-to-text) |
@@ -171,7 +171,7 @@ Still queued: a rule for very short answers, ignoring spelling and capitalisatio
 ```
 interview-coach/
 ├── shared/                     # types.ts (API shapes) + errorPatterns.ts (the curated Error Pattern list)
-├── docs/adr/                   # decision records: 0001 error pattern list, 0002 allowed accounts + demo, 0003 invite-only sign-up
+├── docs/adr/                   # decision records: 0001 error pattern list, 0002 allowed accounts + demo, 0003 invite-only sign-up, 0004 backend on Cloud Run
 ├── server/
 │   ├── prisma/                 # schema + migrations
 │   ├── eval/                   # eval harness: cases.json (Test Set), runEval.ts, grade.ts, baselines/

@@ -5,7 +5,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
 ## Tech stack (FIXED — do not change)
 
 - **Client**: React + Vite + TypeScript (`client/`), deploys to **AWS** (S3 + CloudFront)
-- **Server**: Express 5 + TypeScript, NOT Next.js (`server/`), runs with `tsx`, deploys to **AWS** (App Runner)
+- **Server**: Express 5 + TypeScript, NOT Next.js (`server/`), runs with `tsx`, deploys as a Docker container to **Google Cloud Run** (Sydney, max 1 instance; ADR 0004 — App Runner closed to new customers)
 - **DB**: PostgreSQL on Supabase + Prisma 6 (`server/prisma/schema.prisma`); pooled `DATABASE_URL` (6543, pgbouncer) + `DIRECT_URL` (5432) for migrations
 - **Auth**: JWT (`jsonwebtoken`, 7d expiry) + bcryptjs; `requireAuth` middleware sets `req.userId`
 - **AI**: Claude API (analysis/questions/evaluation — output MUST be strict JSON, no markdown fences); **Groq-hosted** Whisper `whisper-large-v3-turbo` (authoritative transcription). Two independent mock flags: `MOCK_AI` (Claude) and `MOCK_TRANSCRIPTION` (Groq)
@@ -47,9 +47,14 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - [x] Create Interview: job description required (button disabled while empty; server Zod rejects a blank one) and no double submit (button disabled and shows "Creating…" while the request is in flight); Delete likewise (`deletingId` disables only that card's button and shows "Deleting…")
   - Deferred to step 7: the Anthropic Console monthly spend limit (owner's call: the app only runs locally for now, so only the owner can reach the AI routes)
   - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
-- [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
-  - [x] CI (`.github/workflows/ci.yml`, on push to main): client lint + `npm run build` (tsc -b + vite build); server `prisma generate` + `tsc --noEmit` + mock eval. Fake keys only; `cp .env.example .env` because `env.ts` requires the file (fix that when deploying, since App Runner has no .env either)
+- [ ] 7. Deploy (ADR 0004): Terraform for S3 + CloudFront (client) and Cloud Run (server); GitHub Actions CI runs both typechecks and the mock eval on every push
+  - [x] CI (`.github/workflows/ci.yml`, on push to main): client lint + `npm run build` (tsc -b + vite build); server `prisma generate` + `tsc --noEmit` + mock eval. Fake keys only; `cp .env.example .env` because `env.ts` requires the file (fix that in 7a, since Cloud Run has no .env either)
+  - [ ] 7a Docker: `env.ts` starts without a `.env` file (then drop the `cp` from CI); a server `Dockerfile`; run it locally with `docker run`
+  - [ ] 7b Terraform basics + client on S3 + CloudFront; the client's API base URL comes from `VITE_API_URL` instead of `localhost:3009`
+  - [ ] 7c Server on Cloud Run: Artifact Registry image, secrets in Secret Manager, CORS allows the CloudFront domain
+  - [ ] 7d CI deploys on push to main
   - [ ] Before the first public deploy: set the Anthropic Console monthly spend limit (deferred from step 6)
+  - Optional later: deploy the same image to AWS ECS Fargate with Terraform, then `destroy` (learn ECS for a few dollars)
 - [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)
 - [ ] 9. MCP server exposing scoring as tools, so an interview can be practised from inside Claude
 - [ ] 10. Cost telemetry: per-call token accounting from `response.usage`, tiered model selection, prompt caching
