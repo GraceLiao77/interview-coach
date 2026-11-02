@@ -48,6 +48,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - Deferred to step 7: the Anthropic Console monthly spend limit (owner's call: the app only runs locally for now, so only the owner can reach the AI routes)
   - Later: Vitest + TDD on the client (start with a pure `filterQuestions` function); fix the login timing attack (dummy bcrypt hash when the email doesn't exist); `@@index([questionId, createdAt])` on Answer, checked with EXPLAIN ANALYZE
 - [ ] 7. Deploy: Terraform for S3 + CloudFront + App Runner; GitHub Actions CI runs both typechecks and the mock eval on every push
+  - [x] CI (`.github/workflows/ci.yml`, on push to main): client lint + `npm run build` (tsc -b + vite build); server `prisma generate` + `tsc --noEmit` + mock eval. Fake keys only; `cp .env.example .env` because `env.ts` requires the file (fix that when deploying, since App Runner has no .env either)
   - [ ] Before the first public deploy: set the Anthropic Console monthly spend limit (deferred from step 6)
 - [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)
 - [ ] 9. MCP server exposing scoring as tools, so an interview can be practised from inside Claude

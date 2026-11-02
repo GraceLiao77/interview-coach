@@ -34,7 +34,7 @@ Most AI mock-interview tools score *what* you said. Interview Coach also cares a
 | 4 | AI core: question generation → voice answer → transcription → three-axis scoring | ✅ |
 | 5 | Eval harness — labelled test set, scoring rubric, regression run before any prompt change | ✅ harness + baselines; first prompt improvements measured and kept (more queued) |
 | 6 | Cost guardrails: AI features for allowed accounts only, a no-sign-in demo for everyone else, rate limiting, a spend limit | ✅ allowed accounts, rate limits, public `/demo`, invite-only sign-up; the Anthropic Console spend limit is set before the first public deploy (step 7) |
-| 7 | Deploy with Terraform (S3 + CloudFront + App Runner); CI runs typechecks and the mock eval on every push | ⬜ |
+| 7 | Deploy with Terraform (S3 + CloudFront + App Runner); CI runs typechecks and the mock eval on every push | 🟡 CI done (lint, typecheck, build, mock eval); Terraform next |
 | 8 | RAG question bank: Python ingestion, embeddings in `pgvector`, retrieval measured with recall@k | ⬜ |
 | 9 | MCP server exposing scoring as tools, to practise from inside Claude | ⬜ |
 | 10 | Cost telemetry: per-call token accounting, tiered model selection, prompt caching | ⬜ |
