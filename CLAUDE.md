@@ -51,6 +51,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
   - [x] CI (`.github/workflows/ci.yml`, on push to main): client lint + `npm run build` (tsc -b + vite build); server `prisma generate` + `tsc --noEmit` + mock eval. Fake keys only; `cp .env.example .env` because `env.ts` requires the file (fix that in 7a, since Cloud Run has no .env either)
   - [ ] 7a Docker: `env.ts` starts without a `.env` file (then drop the `cp` from CI); a server `Dockerfile`; run it locally with `docker run`
   - [ ] 7b Terraform basics + client on S3 + CloudFront; the client's API base URL comes from `VITE_API_URL` instead of `localhost:3009`
+    - AWS access (owner's Mac): new free-plan account with no root user; sign-in is an AWS Builder ID via Google + passkey. CLI is the official installer (not Homebrew: its Python broke `aws login`); `aws login` gives temporary credentials for `AccountFullAccessRole`; CLI default region `ap-southeast-2`. Re-run `aws login` on `ExpiredToken`
   - [ ] 7c Server on Cloud Run: Artifact Registry image, secrets in Secret Manager, CORS allows the CloudFront domain
   - [ ] 7d CI deploys on push to main
   - [ ] Before the first public deploy: set the Anthropic Console monthly spend limit (deferred from step 6)
