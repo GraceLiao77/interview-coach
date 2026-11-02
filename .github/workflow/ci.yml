@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # Each job runs on its own fresh machine, so each one checks out the code and installs Node.
+  client:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      # npm ci installs exactly what package-lock.json says, and fails if it doesn't match package.json
+      - run: npm ci
+      # -b follows the references in tsconfig.json; plain tsc would check no files at all
+      - run: npx tsc -b
+
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    # Fake values on purpose: typechecking and the mock eval never call an API.
+    # Real keys only belong where real calls happen (the deployed server).
+    env:
+      JWT_SECRET: ci-not-a-secret
+      ANTHROPIC_API_KEY: ci-not-a-key
+      GROQ_API_KEY: ci-not-a-key
+      MOCK_AI: 'true'
+      MOCK_TRANSCRIPTION: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      # env.ts calls process.loadEnvFile(), which throws if there is no .env file.
+      # The env values above win over the empty ones copied from the example.
+      - run: cp .env.example .env
+      # @prisma/client's types are generated from schema.prisma; this reads the file and needs no database
+      - run: npx prisma generate
+      - run: npx tsc --noEmit
+      - run: npm run eval
