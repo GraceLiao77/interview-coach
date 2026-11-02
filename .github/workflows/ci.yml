@@ -4,9 +4,14 @@ on:
   push:
     branches: [main]
 
+# Least privilege: the jobs only need to read the code
+permissions:
+  contents: read
+
 jobs:
   # Each job runs on its own fresh machine, so each one checks out the code and installs Node.
   client:
+    name: Client — lint, typecheck & build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -19,11 +24,17 @@ jobs:
           cache: npm
           cache-dependency-path: client/package-lock.json
       # npm ci installs exactly what package-lock.json says, and fails if it doesn't match package.json
-      - run: npm ci
-      # -b follows the references in tsconfig.json; plain tsc would check no files at all
-      - run: npx tsc -b
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      # "build" is tsc -b (which follows the references in tsconfig.json) then vite build,
+      # so it typechecks and also proves the bundle builds, which deploying will need
+      - name: Typecheck & build
+        run: npm run build
 
   server:
+    name: Server — typecheck & mock eval
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,11 +54,16 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: server/package-lock.json
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
       # env.ts calls process.loadEnvFile(), which throws if there is no .env file.
       # The env values above win over the empty ones copied from the example.
-      - run: cp .env.example .env
+      - name: Create .env from the example
+        run: cp .env.example .env
       # @prisma/client's types are generated from schema.prisma; this reads the file and needs no database
-      - run: npx prisma generate
-      - run: npx tsc --noEmit
-      - run: npm run eval
+      - name: Generate Prisma client
+        run: npx prisma generate
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Mock eval
+        run: npm run eval
