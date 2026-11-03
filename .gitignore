@@ -36,3 +36,10 @@ docs/local/
 # Eval harness: mock runs and one-case canaries are throwaway; only full real-model baselines are committed
 server/eval/baselines/mock*.json
 server/eval/baselines/*.only-*.json
+
+# Terraform: provider downloads and state. State can hold secrets and is never committed.
+# .terraform.lock.hcl IS committed: it pins the exact provider versions, like package-lock.json.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
