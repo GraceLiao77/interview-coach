@@ -55,7 +55,7 @@ Mock interview platform for **non-native English-speaking engineers** job-huntin
     - [ ] Step 2: bucket private (block public access) + CloudFront in front of it
     - AWS access (owner's Mac): new free-plan account with no root user; sign-in is an AWS Builder ID via Google + passkey. CLI is the official installer (not Homebrew: its Python broke `aws login`); `aws login` gives temporary credentials for `AccountFullAccessRole`; CLI default region `ap-southeast-2`. Re-run `aws login` on `ExpiredToken`
   - [ ] 7c Server on Cloud Run: Artifact Registry image, secrets in Secret Manager, CORS allows the CloudFront domain
-  - [ ] 7d CI deploys on push to main
+  - [ ] 7d CI deploys on push to main. First move Terraform state from the local `terraform.tfstate` to a remote S3 backend with locking, because CI can't read state on the owner's laptop (and a lost laptop would mean Terraform forgets every resource)
   - [ ] Before the first public deploy: set the Anthropic Console monthly spend limit (deferred from step 6)
   - Optional later: deploy the same image to AWS ECS Fargate with Terraform, then `destroy` (learn ECS for a few dollars)
 - [ ] 8. RAG question bank: a Python ingestion script (official APIs only, no scraping), chunking, embeddings in Supabase `pgvector`, and retrieval grounding question generation. Retrieval quality is measured with the eval harness (recall@k)

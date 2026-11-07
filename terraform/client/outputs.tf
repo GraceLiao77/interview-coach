@@ -5,3 +5,7 @@
 output "bucket_name" {
   value = aws_s3_bucket.client_bucket.bucket
 }
+
+output "cloudfront_distribution_domain_name" {
+  value = aws_cloudfront_distribution.client_distribution.domain_name
+}
